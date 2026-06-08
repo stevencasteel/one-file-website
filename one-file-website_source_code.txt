@@ -2,7 +2,7 @@
 │          STEVEN CASTEEL ARCHIVE PROJECT          │
 │        Vite + React (ESM CDN) + Tailwind CSS     │
 └──────────────────────────────────────────────────┘
- [SYSTEM] Generated: 6/8/2026, 4:46:26 PM
+ [SYSTEM] Generated: 6/8/2026, 5:06:32 PM
  [BASELINE]: React 18, HTM, Lucide React, Lenis Scroll, Tailwind CSS
 
 ─── ABRIDGED DIRECTORY STRUCTURE ───────────────────
@@ -579,40 +579,60 @@ protocol based on scope:
     // ── CUSTOM SCROLLBAR COMPONENT ───────────────────────────────────────────
     function GlobalScrollbar({ lenisInstance }) {
       const [scrollY, setScrollY] = useState(0);
-      const [maxScrollY, setMaxScrollY] = useState(1);
-      const [scrollOffset, setScrollOffset] = useState(0);
+      const [maxScrollY, setMaxScrollY] = useState(3000);
+      const [scrollOffset, setScrollOffset] = useState(380);
       const [isImgLoaded, setIsImgLoaded] = useState(false);
       const trackRef = useRef(null);
       const thumbRef = useRef(null);
 
-      useEffect(() => {
+      React.useLayoutEffect(() => {
         const handleScroll = () => {
           const hero = document.getElementById('hero-header');
-          const offset = hero ? (hero.offsetTop + hero.offsetHeight) : 0;
+          const offset = hero ? (hero.offsetTop + hero.offsetHeight) : 380;
           setScrollOffset(offset);
           setScrollY(window.scrollY);
           setMaxScrollY(document.documentElement.scrollHeight - window.innerHeight);
         };
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', handleScroll, { passive: true });
         window.addEventListener('resize', handleScroll);
+        window.addEventListener('load', handleScroll);
         handleScroll();
+        
+        const t1 = setTimeout(handleScroll, 100);
+        const t2 = setTimeout(handleScroll, 500);
+        const t3 = setTimeout(handleScroll, 1200);
+        const t4 = setTimeout(handleScroll, 2500);
+        
         return () => {
           window.removeEventListener('scroll', handleScroll);
           window.removeEventListener('resize', handleScroll);
+          window.removeEventListener('load', handleScroll);
+          clearTimeout(t1);
+          clearTimeout(t2);
+          clearTimeout(t3);
+          clearTimeout(t4);
         };
       }, [])
 
       const progress = maxScrollY > 0 ? scrollY / maxScrollY : 0;
       
-      const trackTopOffset = (window.innerWidth >= 768 ? 0 : 56) + 8;
-      const screenHeroBottom = Math.max(0, scrollOffset - scrollY);
-      const minTrackY = Math.max(0, screenHeroBottom - trackTopOffset);
+      const trackTopOffset = (window.innerWidth >= 768 ? 0 : 56) + 24;
       
       const trackHeight = trackRef.current ? trackRef.current.clientHeight : 1;
       const thumbHeight = thumbRef.current ? thumbRef.current.clientHeight : 0;
       const usableHeight = Math.max(1, trackHeight - thumbHeight);
       
-      const clampedProgress = Math.max(0, Math.min(1, Math.max(progress, minTrackY / usableHeight)));
+      const heroBottomPadding = 8;
+      const threshold = Math.max(0, scrollOffset + heroBottomPadding - trackTopOffset);
+      const initialProgress = Math.max(0, Math.min(1, (scrollOffset + heroBottomPadding - trackTopOffset) / usableHeight));
+      
+      let clampedProgress = initialProgress;
+      if (scrollY >= threshold) {
+        const remainingScroll = maxScrollY - threshold;
+        const progressInRemaining = remainingScroll > 0 ? (scrollY - threshold) / remainingScroll : 1;
+        clampedProgress = initialProgress + (1 - initialProgress) * progressInRemaining;
+      }
+      clampedProgress = Math.max(0, Math.min(1, clampedProgress));
 
       const handleTrackClick = (e) => {
         if (!trackRef.current || !thumbRef.current) return;
@@ -682,7 +702,7 @@ protocol based on scope:
             ref=${trackRef}
             onPointerDown=${handleTrackClick}
             class="absolute left-0 right-0 pointer-events-auto touch-none"
-            style=${{ top: `${trackTop + 8}px`, bottom: '8px' }}
+            style=${{ top: `${trackTop + 24}px`, bottom: '8px' }}
           >
 
             
