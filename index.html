@@ -10,7 +10,7 @@
 
   * SEPARATION OF CONCERNS (DURING DEVELOPMENT):
     For development efficiency and clean file management, the media list registries 
-    (ELF_STUFF, MISC_MEDIA, and AUDIO_TRACKS arrays) reside in an external file: 'media-data.js'. 
+    (MISC_ART, MISC_MEDIA, and AUDIO_TRACKS arrays) reside in an external file: 'media-data.js'. 
     The main app pulls them in via an import mapping. 
 
   * FINAL MERGE:
@@ -335,7 +335,7 @@
     } from 'lucide-react';
     
     // Import URL arrays and configurations from the external registry data file
-    import { ELF_STUFF, MISC_MEDIA, AUDIO_TRACKS } from 'media-data';
+    import { MISC_ART, MISC_MEDIA, AUDIO_TRACKS } from 'media-data';
 
     const html = htm.bind(React.createElement);
 
@@ -374,7 +374,7 @@
     };
 
     // Pre-shuffled order loaded on every new load of the page
-    const SHUFFLED_ART = shuffleArray(ELF_STUFF);
+    const SHUFFLED_ART = shuffleArray(MISC_ART);
     const SHUFFLED_MEDIA = shuffleArray(MISC_MEDIA);
 
     // Interactive SFX Handler
