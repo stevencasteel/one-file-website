@@ -397,7 +397,6 @@
     function GlobalScrollbar({ lenisInstance }) {
       const [scrollY, setScrollY] = useState(0);
       const [maxScrollY, setMaxScrollY] = useState(1);
-      const [headerHeight, setHeaderHeight] = useState(0);
       const [isImgLoaded, setIsImgLoaded] = useState(false);
       const trackRef = useRef(null);
       const thumbRef = useRef(null);
@@ -407,34 +406,29 @@
           setScrollY(window.scrollY);
           setMaxScrollY(document.documentElement.scrollHeight - window.innerHeight);
         };
-        const measureHeader = () => {
-          const header = document.getElementById('hero-header');
-          if (header) {
-            setHeaderHeight(header.offsetHeight);
-          }
-        };
         window.addEventListener('scroll', handleScroll);
-        window.addEventListener('resize', () => {
-          handleScroll();
-          measureHeader();
-        });
+        window.addEventListener('resize', handleScroll);
         handleScroll();
-        measureHeader();
-        const timer = setTimeout(measureHeader, 100);
         return () => {
           window.removeEventListener('scroll', handleScroll);
           window.removeEventListener('resize', handleScroll);
-          clearTimeout(timer);
         };
       }, [])
 
       const progress = maxScrollY > 0 ? scrollY / maxScrollY : 0;
 
       const handleTrackClick = (e) => {
-        if (!trackRef.current) return;
+        if (!trackRef.current || !thumbRef.current) return;
         const rect = trackRef.current.getBoundingClientRect();
+        const thumbRect = thumbRef.current.getBoundingClientRect();
+        const thumbHeight = thumbRect.height;
         const clickY = e.clientY - rect.top;
-        const ratio = Math.max(0, Math.min(1, clickY / rect.height));
+        
+        const usableHeight = rect.height - thumbHeight;
+        let ratio = 0;
+        if (usableHeight > 0) {
+          ratio = Math.max(0, Math.min(1, (clickY - thumbHeight / 2) / usableHeight));
+        }
         const targetY = ratio * maxScrollY;
         
         if (lenisInstance) {
@@ -446,16 +440,23 @@
 
       const handlePointerDown = (e) => {
         e.preventDefault();
+        e.stopPropagation();
         document.body.style.userSelect = 'none';
 
         const startY = e.clientY;
         const startScroll = window.scrollY;
 
         const handlePointerMove = (moveEvent) => {
-          if (!trackRef.current) return;
+          if (!trackRef.current || !thumbRef.current) return;
           const deltaY = moveEvent.clientY - startY;
           const trackHeight = trackRef.current.clientHeight;
-          const scrollDelta = (deltaY / trackHeight) * maxScrollY;
+          const thumbHeight = thumbRef.current.clientHeight;
+          const usableHeight = trackHeight - thumbHeight;
+          
+          let scrollDelta = 0;
+          if (usableHeight > 0) {
+            scrollDelta = (deltaY / usableHeight) * maxScrollY;
+          }
           const targetY = Math.max(0, Math.min(maxScrollY, startScroll + scrollDelta));
           
           if (lenisInstance) {
@@ -475,7 +476,7 @@
         document.addEventListener('pointerup', handlePointerUp);
       };
 
-      const trackTop = window.innerWidth >= 768 ? Math.max(0, headerHeight - scrollY) : 56;
+      const trackTop = window.innerWidth >= 768 ? 0 : 56;
 
       return html`
         <div class="global-scrollbar fixed inset-y-0 right-0 z-[80] w-[18px] md:w-12 pointer-events-none group transition-opacity duration-300">
@@ -1099,7 +1100,7 @@
 
   <!-- vanilla pointer coordinate controller -->
   <script>
-    const cursor = document.getElementById('custom-cursor');
+    const globalCursor = document.getElementById('custom-cursor');
     const arrow = document.getElementById('cursor-arrow');
     const ibeam = document.getElementById('cursor-ibeam');
     
@@ -1109,7 +1110,7 @@
     document.addEventListener('pointermove', (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+      globalCursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
     });
     
     // spring physical wind-up click states
