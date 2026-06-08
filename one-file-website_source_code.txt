@@ -2,7 +2,7 @@
 │          STEVEN CASTEEL ARCHIVE PROJECT          │
 │        Vite + React (ESM CDN) + Tailwind CSS     │
 └──────────────────────────────────────────────────┘
- [SYSTEM] Generated: 6/8/2026, 5:34:22 PM
+ [SYSTEM] Generated: 6/8/2026, 5:56:12 PM
  [BASELINE]: React 18, HTM, Lucide React, Lenis Scroll, Tailwind CSS
 
 ─── ABRIDGED DIRECTORY STRUCTURE ───────────────────
@@ -291,7 +291,7 @@ protocol based on scope:
       box-shadow: 0 0 15px rgba(255, 100, 255, 0.25);
     }
 
-    /* Custom Cursor styles */
+    /* Custom Cursor styles with translation improvements */
     .custom-cursor {
       position: fixed;
       top: 0;
@@ -300,7 +300,8 @@ protocol based on scope:
       height: 24px;
       pointer-events: none;
       z-index: 100000;
-      transform: translate(-50%, -50%);
+      transform: translate3d(-50%, -50%, 0);
+      will-change: transform;
       display: none;
     }
     @media (pointer: fine) {
@@ -321,7 +322,7 @@ protocol based on scope:
       background-size: 32px 32px;
     }
 
-    /* CSS Columns Masonry */
+    /* CSS Columns Masonry with inline-block vertical alignment and nested scale animations to bypass Safari fragmentation bugs */
     .masonry-cols {
       column-count: 2;
       column-gap: 1rem;
@@ -332,8 +333,20 @@ protocol based on scope:
     
     .masonry-item {
       display: inline-block;
+      vertical-align: top;
       width: 100%;
       margin-bottom: 1rem;
+      break-inside: avoid-column;
+      -webkit-column-break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .masonry-item .prismatic-border-hover {
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s, box-shadow 0.35s;
+    }
+    .masonry-item:hover .prismatic-border-hover {
+      transform: scale(1.03);
+      border-color: rgba(255, 100, 255, 0.4) !important;
+      box-shadow: 0 0 15px rgba(255, 100, 255, 0.25);
     }
 
     /* GPU-Accelerated Lightbox Overlay Animations */
@@ -402,29 +415,6 @@ protocol based on scope:
     }
     .animate-phosphor {
       animation: phosphor-flicker 0.25s infinite;
-    }
-
-    /* Prismatic mode animations & gradients */
-    @keyframes gradient-xy {
-      0%, 100% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-    }
-    .animate-gradient-xy {
-      animation: gradient-xy 15s ease infinite;
-    }
-    .bg-prismatic-gradient {
-      background-image: linear-gradient(
-        135deg,
-        #ff007f 0%,
-        #7f00ff 25%,
-        #00f0ff 50%,
-        #00ff7f 75%,
-        #ff007f 100%
-      );
     }
   </style>
 </head>
@@ -533,7 +523,7 @@ protocol based on scope:
   <div id="custom-cursor" class="custom-cursor">
     <div id="cursor-arrow" class="cursor-element" style="display: block;">
       <svg width="24" height="24" viewBox="0 0 100 100" fill="#22c55e" style="filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.8));">
-        <path d="M22.917,13.375l51.333,51.333l-19.03,-3.781l14.863,23.031l-8.833,8.834l-14.863,-23.032l-4.387,27.198l-19.083,-83.583Z" />
+        <path d="M22.917,13.375L74.25,64.708l-19.03,-3.781l14.863,23.031l-8.833,8.834l-14.863,-23.032l-4.387,27.198l-19.083,-83.583Z" />
       </svg>
     </div>
     <div id="cursor-ibeam" class="cursor-element" style="display: none;">
@@ -717,18 +707,13 @@ protocol based on scope:
       `;
     }
 
-    // ── GLASS CONTAINER COMPONENT (Prismatic Mode Permanent Active Default) ─
+    // ── HIGH-PERFORMANCE STATIC PANEL CONTAINER (Replaces unstable glass filters for Safari speed) ─
     function GlassContainer({ children, className = "" }) {
-      // Configured permanently to follow Prismatic Mode specifications
       const borderClass = "border-white/10";
-      const bgClass = "bg-white/[0.015]";
-      const glowClass = "shadow-[0_0_24px_rgba(255,100,255,0.12)]";
-      const overlayClass = "bg-prismatic-gradient bg-[length:400%_400%] animate-gradient-xy";
+      const bgClass = "bg-panel"; // crisp flat dark container (#111114) for fast GPU-layer caching
 
       return html`
-        <div class="relative rounded-xl border backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.5)] transition-all duration-500 ${borderClass} ${bgClass} ${glowClass} ${className}">
-          <!-- Dynamic Background Overlay inner 5% opacity layer -->
-          <div class="absolute inset-0 pointer-events-none z-0 rounded-xl opacity-[0.05] ${overlayClass}" />
+        <div class="relative rounded-xl border shadow-[0_8px_32px_rgba(0,0,0,0.5)] transition-all duration-300 ${borderClass} ${bgClass} ${className}">
           <!-- Main slot interior context -->
           <div class="relative z-10 w-full h-full">
             ${children}
@@ -998,8 +983,8 @@ protocol based on scope:
           for (const s of sections) {
             const el = document.getElementById(s);
             if (el) {
-              const rect = el.getBoundingClientRect();
-              if (rect.top <= window.innerHeight * 0.40) {
+              const htmlRect = el.getBoundingClientRect();
+              if (htmlRect.top <= window.innerHeight * 0.40) {
                 current = s;
               }
             }
@@ -1010,7 +995,7 @@ protocol based on scope:
         return () => window.removeEventListener("scroll", handleSpy);
       }, []);
 
-      // Initialize / Restore Audio Console Context
+      // Initialize / Restore Audio Context
       useEffect(() => {
         const savedPosition = localStorage.getItem('mesoelfy_player_position');
         const savedAutoplay = localStorage.getItem('mesoelfy_player_autoplay');
@@ -1374,9 +1359,9 @@ protocol based on scope:
                 </h1>
               </div>
 
-              <!-- Glowing Glass Boxes with Permanent Prismatic Mode Configured -->
+              <!-- Sleek High-Performance Solid Panels -->
               <div class="mt-8 flex flex-col md:flex-row items-center justify-center gap-4 w-full relative z-10 select-none">
-                <!-- Terminal Log Glass Box with Typewriter Integration -->
+                <!-- Terminal Log Panel with Typewriter Integration -->
                 <${GlassContainer} 
                   className="inline-flex items-center px-5 py-3 min-h-[46px]"
                 >
@@ -1390,7 +1375,7 @@ protocol based on scope:
                   </span>
                 </${GlassContainer}>
 
-                <!-- Pageview Tracker Glass Box -->
+                <!-- Pageview Tracker Panel -->
                 <${GlassContainer} 
                   className="inline-flex items-center px-5 py-3 min-h-[46px]"
                 >
@@ -1418,7 +1403,7 @@ protocol based on scope:
                       <div 
                         key=${url} 
                         onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
-                        class="masonry-item transform hover:scale-[1.03] hover:z-20 transition-all duration-300"
+                        class="masonry-item"
                       >
                         <${GlassContainer} 
                           className="overflow-hidden prismatic-border-hover"

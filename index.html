@@ -149,11 +149,11 @@
     @media (min-width: 1280px) { .masonry-cols { column-count: 4; } }
     
     .masonry-item {
-      display: inline-block;
-      vertical-align: top;
+      display: block;
       width: 100%;
-      margin-bottom: 1rem;
-      break-inside: avoid-column;
+      margin-bottom: 0;
+      padding-bottom: 1rem;
+      break-inside: avoid;
       -webkit-column-break-inside: avoid;
       page-break-inside: avoid;
     }
@@ -1228,7 +1228,7 @@
                           <img 
                             src=${url} 
                             alt=${getMediaTitle(url)} 
-                            class="w-full h-auto object-cover opacity-80 hover:opacity-100 transition-opacity"
+                            class="w-full h-auto block opacity-80 hover:opacity-100 transition-opacity"
                             loading="lazy"
                           />
                         </${GlassContainer}>
