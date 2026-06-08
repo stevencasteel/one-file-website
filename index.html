@@ -144,7 +144,7 @@
     }
     @media (min-width: 640px) { .masonry-cols { column-count: 3; } }
     @media (min-width: 1024px) { .masonry-cols { column-count: 4; } }
-    @media (min-width: 1280px) { .masonry-cols { column-count: 5; } }
+    @media (min-width: 1280px) { .masonry-cols { column-count: 4; } }
     
     .masonry-item {
       display: inline-block;
@@ -471,8 +471,7 @@
             onPointerDown=${handleTrackClick}
             class="absolute top-[54px] md:top-2 bottom-2 left-0 right-0 pointer-events-auto touch-none"
           >
-            <!-- Scroll Track Line (Centered Visualizer Track) -->
-            <div class="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[9px] md:w-6 bg-white/5 rounded-full" />
+
             
             <!-- Draggable Scrollbar Thumb -->
             <div 
@@ -1027,7 +1026,7 @@
                 <!-- Misc Media Section -->
                 <div class="space-y-6">
                   <h3 class="text-xl font-display font-bold uppercase tracking-wider text-fog">// Misc Media</h3>
-                  <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-4">
+                  <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-5 gap-4">
                     ${SHUFFLED_MEDIA.map((url) => html`
                       <div 
                         key=${url} 
