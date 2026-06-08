@@ -2,7 +2,7 @@
 │          STEVEN CASTEEL ARCHIVE PROJECT          │
 │        Vite + React (ESM CDN) + Tailwind CSS     │
 └──────────────────────────────────────────────────┘
- [SYSTEM] Generated: 6/8/2026, 10:15:47 AM
+ [SYSTEM] Generated: 6/8/2026, 11:34:48 AM
  [BASELINE]: React 18, HTM, Lucide React, Lenis Scroll, Tailwind CSS
 
 ─── ABRIDGED DIRECTORY STRUCTURE ───────────────────
@@ -15,7 +15,8 @@
 ├── media-data.js
 ├── one-file-website_source_code.txt
 ├── package-lock.json
-└── package.json
+├── package.json
+└── vite.config.js
 
 
 ─── SOURCE FILES ───────────────────────────────────
@@ -23,8 +24,7 @@
 ● ./AI_INSTRUCTIONS.txt
 ────────────────────────────────────────────────────
 ===========================================================================
-  STEVEN CASTEEL // SILK
-  AI Terminal Execution & Development Guidelines
+  AI Terminal Execution & Development Guidelines For LLM Chat Interfaces
 ===========================================================================
 
 1. WORKFLOW RULES (CRITICAL)
@@ -1374,6 +1374,26 @@ export const AUDIO_TRACKS = [
     "vite": "^8.0.16"
   }
 }
+
+
+
+● ./vite.config.js
+────────────────────────────────────────────────────
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  optimizeDeps: {
+    exclude: [
+      'react',
+      'react-dom',
+      'react-dom/client',
+      'htm',
+      'lucide-react',
+      'lenis',
+      'media-data'
+    ]
+  }
+});
 
 
 

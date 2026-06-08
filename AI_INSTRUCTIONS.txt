@@ -1,6 +1,5 @@
 ===========================================================================
-  STEVEN CASTEEL // SILK
-  AI Terminal Execution & Development Guidelines
+  AI Terminal Execution & Development Guidelines For LLM Chat Interfaces
 ===========================================================================
 
 1. WORKFLOW RULES (CRITICAL)
