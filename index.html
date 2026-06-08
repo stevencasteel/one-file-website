@@ -397,12 +397,16 @@
     function GlobalScrollbar({ lenisInstance }) {
       const [scrollY, setScrollY] = useState(0);
       const [maxScrollY, setMaxScrollY] = useState(1);
+      const [scrollOffset, setScrollOffset] = useState(0);
       const [isImgLoaded, setIsImgLoaded] = useState(false);
       const trackRef = useRef(null);
       const thumbRef = useRef(null);
 
       useEffect(() => {
         const handleScroll = () => {
+          const hero = document.getElementById('hero-header');
+          const offset = hero ? (hero.offsetTop + hero.offsetHeight) : 0;
+          setScrollOffset(offset);
           setScrollY(window.scrollY);
           setMaxScrollY(document.documentElement.scrollHeight - window.innerHeight);
         };
@@ -416,6 +420,16 @@
       }, [])
 
       const progress = maxScrollY > 0 ? scrollY / maxScrollY : 0;
+      
+      const trackTopOffset = (window.innerWidth >= 768 ? 0 : 56) + 8;
+      const screenHeroBottom = Math.max(0, scrollOffset - scrollY);
+      const minTrackY = Math.max(0, screenHeroBottom - trackTopOffset);
+      
+      const trackHeight = trackRef.current ? trackRef.current.clientHeight : 1;
+      const thumbHeight = thumbRef.current ? thumbRef.current.clientHeight : 0;
+      const usableHeight = Math.max(1, trackHeight - thumbHeight);
+      
+      const clampedProgress = Math.max(0, Math.min(1, Math.max(progress, minTrackY / usableHeight)));
 
       const handleTrackClick = (e) => {
         if (!trackRef.current || !thumbRef.current) return;
@@ -445,6 +459,7 @@
 
         const startY = e.clientY;
         const startScroll = window.scrollY;
+        const capturedMax = maxScrollY;
 
         const handlePointerMove = (moveEvent) => {
           if (!trackRef.current || !thumbRef.current) return;
@@ -455,9 +470,9 @@
           
           let scrollDelta = 0;
           if (usableHeight > 0) {
-            scrollDelta = (deltaY / usableHeight) * maxScrollY;
+            scrollDelta = (deltaY / usableHeight) * capturedMax;
           }
-          const targetY = Math.max(0, Math.min(maxScrollY, startScroll + scrollDelta));
+          const targetY = Math.max(0, Math.min(capturedMax, startScroll + scrollDelta));
           
           if (lenisInstance) {
             lenisInstance.scrollTo(targetY, { immediate: true });
@@ -494,8 +509,8 @@
               onPointerDown=${handlePointerDown}
               class="absolute left-[3px] right-[3px] md:left-[8px] md:right-[8px] aspect-[492/1299] pointer-events-auto touch-none select-none group transition-opacity duration-300"
               style=${{
-                top: `${progress * 100}%`,
-                transform: `translateY(-${progress * 100}%)`,
+                top: `${clampedProgress * 100}%`,
+                transform: `translateY(-${clampedProgress * 100}%)`,
                 willChange: 'top, transform'
               }}
             >
@@ -598,6 +613,9 @@
           requestAnimationFrame(raf);
         }
         requestAnimationFrame(raf);
+
+
+
         setLenis(lenisInst);
 
         return () => {
