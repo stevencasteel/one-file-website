@@ -34,7 +34,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Recursive:slnt,wght,CASL,MONO@-15..0,300..1000,0..1,0..1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Recursive:slnt,wght,CASL,MONO@-15..0,300..1000,0..1,0..1&display=swap" rel="stylesheet">
   
   <!-- Import Map -->
   <script type="importmap">
@@ -207,6 +207,26 @@
       text-decoration: underline;
       text-decoration-color: #22c55e;
     }
+
+    /* Jitter-Free Cascading Typographic Animation */
+    @keyframes text-cascade-wave {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+    .wavy-breathe-text {
+      display: inline-block;
+      color: #22c55e;
+      text-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+    }
+    .cascade-char {
+      display: inline-block;
+      animation: text-cascade-wave 1.4s ease-in-out infinite;
+      white-space: pre;
+    }
   </style>
 </head>
 <body class="selection:bg-primary selection:text-void relative min-h-screen">
@@ -216,7 +236,7 @@
     <div style="max-width: 520px; width: 100%; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; background-color: #0a0a0a; padding: 2.5rem; text-align: center; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);">
       
       <h2 style="font-size: 20px; font-weight: 800; margin-top: 0; margin-bottom: 1.75rem; color: #ffffff; line-height: 1.3; font-family: 'Bricolage Grotesque', sans-serif;">
-        YOU'RE 10 MINUTES AWAY FROM A PERSONAL LIVE WEBSITE
+        YOU'RE <span class="wavy-breathe-text"><span class="cascade-char" style="animation-delay: 0s;">1</span><span class="cascade-char" style="animation-delay: 0.08s;">0</span><span class="cascade-char" style="animation-delay: 0.16s;"> </span><span class="cascade-char" style="animation-delay: 0.24s;">M</span><span class="cascade-char" style="animation-delay: 0.32s;">I</span><span class="cascade-char" style="animation-delay: 0.4s;">N</span><span class="cascade-char" style="animation-delay: 0.48s;">U</span><span class="cascade-char" style="animation-delay: 0.56s;">T</span><span class="cascade-char" style="animation-delay: 0.64s;">E</span><span class="cascade-char" style="animation-delay: 0.72s;">S</span><span class="cascade-char" style="animation-delay: 0.8s;"> </span><span class="cascade-char" style="animation-delay: 0.88s;">A</span><span class="cascade-char" style="animation-delay: 0.96s;">W</span><span class="cascade-char" style="animation-delay: 1.04s;">A</span><span class="cascade-char" style="animation-delay: 1.12s;">Y</span></span> FROM A PERSONAL LIVE WEBSITE
       </h2>
 
       <!-- Sign Up Steps (Polished Interactive Dashboard) -->
@@ -295,7 +315,7 @@
 
       <!-- Vite / Local Change Explanation Section (Yellow Grammar Accent) -->
       <div style="text-align: left; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1.5rem;">
-        <p style="margin: 0 0 0.5rem 0; font-weight: 700; color: #f59e0b; font-size: 13px;">
+        <p style="margin: 0 0 0.5rem 0; font-weight: 700; color: #f59e0b; font-size: 13px; font-style: italic; font-variation-settings: 'MONO' 0, 'CASL' 0.35, 'slnt' -14, 'CRSV' 1, 'wght' 700;">
           Why does my live site look awesome, but I'm stuck on this screen when I view the HTML file?
         </p>
         <p style="margin: 0; color: #888888; font-size: 12px; line-height: 1.45; text-wrap: pretty;">
