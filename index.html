@@ -139,7 +139,7 @@
       background-size: 32px 32px;
     }
 
-    /* CSS Columns Masonry with WebKit column break avoidance and hardware acceleration layer */
+    /* CSS Columns Masonry with inline-block vertical alignment and nested scale animations to bypass Safari fragmentation bugs */
     .masonry-cols {
       column-count: 2;
       column-gap: 1rem;
@@ -149,19 +149,21 @@
     @media (min-width: 1280px) { .masonry-cols { column-count: 4; } }
     
     .masonry-item {
-      display: block;
+      display: inline-block;
+      vertical-align: top;
       width: 100%;
       margin-bottom: 1rem;
       break-inside: avoid-column;
       -webkit-column-break-inside: avoid;
       page-break-inside: avoid;
-      transform: translate3d(0, 0, 0);
-      will-change: transform;
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .masonry-item:hover {
-      transform: translate3d(0, 0, 0) scale(1.03);
-      z-index: 20;
+    .masonry-item .prismatic-border-hover {
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s, box-shadow 0.35s;
+    }
+    .masonry-item:hover .prismatic-border-hover {
+      transform: scale(1.03);
+      border-color: rgba(255, 100, 255, 0.4) !important;
+      box-shadow: 0 0 15px rgba(255, 100, 255, 0.25);
     }
 
     /* GPU-Accelerated Lightbox Overlay Animations */
@@ -810,7 +812,7 @@
         return () => window.removeEventListener("scroll", handleSpy);
       }, []);
 
-      // Initialize / Restore Audio Console Context
+      // Initialize / Restore Audio Context
       useEffect(() => {
         const savedPosition = localStorage.getItem('mesoelfy_player_position');
         const savedAutoplay = localStorage.getItem('mesoelfy_player_autoplay');
