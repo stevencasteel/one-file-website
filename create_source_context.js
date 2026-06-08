@@ -1,0 +1,204 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import readline from 'readline';
+import { Writable } from 'stream';
+import { exec, execSync, spawn } from 'child_process';
+
+const fsp = fs.promises;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const rootDir = __dirname;
+const outputFile = path.join(rootDir, 'one-file-website_source_code.txt');
+
+function shouldInclude(filePath) {
+  const relPath = path.relative(rootDir, filePath).split(path.sep).join('/');
+  const fileName = path.basename(filePath);
+  
+  // Exclude compiled outputs and self-referencing script files
+  if (
+    fileName === 'one-file-website_source_code.txt' || 
+    fileName === 'create_source_context.js' ||
+    fileName === 'create_source_context.command' ||
+    fileName === 'source_code_manifest.json'
+  ) {
+    return false;
+  }
+
+  const ignoredPaths = ['node_modules', '.git', 'dist', '.vscode'];
+  const segments = relPath.split('/');
+  if (segments.some(segment => ignoredPaths.includes(segment))) return false;
+  
+  const boilerplateConfigs = ['.DS_Store', 'package-lock.json', 'tsconfig.tsbuildinfo'];
+  if (boilerplateConfigs.includes(fileName)) return false;
+
+  const ext = path.extname(relPath);
+  const allowedExts = ['.ts', '.tsx', '.js', '.jsx', '.css', '.html', '.json', '.md', '.txt', '.glsl', '.command', '.yml', '.yaml'];
+  return allowedExts.includes(ext);
+}
+
+function getAllFiles(dir, fileList = []) {
+  const files = fs.readdirSync(dir);
+  for (const file of files) {
+    const filePath = path.join(dir, file);
+    const fileName = path.basename(filePath);
+    if (fs.statSync(filePath).isDirectory()) {
+      const isAllowedDotDir = fileName === '.github';
+      const isIgnoredDotDir = fileName.startsWith('.') && !isAllowedDotDir;
+      if (!isIgnoredDotDir && fileName !== 'node_modules' && fileName !== 'dist') {
+        getAllFiles(filePath, fileList);
+      }
+    } else {
+      if (shouldInclude(filePath)) fileList.push(filePath);
+    }
+  }
+  return fileList;
+}
+
+function generateTree(dir, prefix = '') {
+  let output = '';
+  const files = fs.readdirSync(dir);
+  
+  const items = files
+    .map(file => {
+      const filePath = path.join(dir, file);
+      let isDir = false;
+      try {
+        isDir = fs.statSync(filePath).isDirectory();
+      } catch (e) {}
+      return { name: file, isDir, path: filePath };
+    })
+    .filter(item => {
+      if (item.name.startsWith('.') && item.name !== '.env' && item.name !== '.github') return false;
+      return true;
+    })
+    .sort((a, b) => {
+      if (a.isDir && !b.isDir) return -1;
+      if (!a.isDir && b.isDir) return 1;
+      return a.name.localeCompare(b.name);
+    });
+
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    const isLast = i === items.length - 1;
+    const branch = isLast ? '└── ' : '├── ';
+    
+    const skippedDirs = ['node_modules', 'dist', '.git'];
+    if (item.isDir && skippedDirs.includes(item.name)) {
+      output += `${prefix}${branch}${item.name}/ (contents skipped)\n`;
+      continue;
+    }
+
+    output += `${prefix}${branch}${item.name}${item.isDir ? '/' : ''}\n`;
+
+    if (item.isDir) {
+      const nextPrefix = prefix + (isLast ? '    ' : '│   ');
+      output += generateTree(item.path, nextPrefix);
+    }
+  }
+  return output;
+}
+
+function closeTerminalWindow() {
+  try {
+    execSync(`osascript -e 'tell application "Terminal" to close front window'`);
+  } catch (e) {
+    process.exit(0);
+  }
+}
+
+async function main() {
+  try {
+    const now = new Date().toLocaleString();
+    let content = '┌──────────────────────────────────────────────────┐\n';
+    content += '│          STEVEN CASTEEL ARCHIVE PROJECT          │\n';
+    content += '│        Vite + React (ESM CDN) + Tailwind CSS     │\n';
+    content += '└──────────────────────────────────────────────────┘\n';
+    content += ` [SYSTEM] Generated: ${now}\n`;
+    content += ` [BASELINE]: React 18, HTM, Lucide React, Lenis Scroll, Tailwind CSS\n\n`;
+    
+    content += '─── ABRIDGED DIRECTORY STRUCTURE ───────────────────\n';
+    content += '.\n';
+    content += generateTree(rootDir, '');
+    content += '\n\n─── SOURCE FILES ───────────────────────────────────\n\n';
+
+    const files = getAllFiles(rootDir);
+    
+    for (let i = 0; i < files.length; i++) {
+      const filePath = files[i];
+      const relPath = path.relative(rootDir, filePath).split(path.sep).join('/');
+      
+      process.stdout.write(`  \x1b[36m⠋\x1b[0m Compiling: ${relPath}\r`);
+
+      content += `● ./${relPath}\n`;
+      content += `────────────────────────────────────────────────────\n`;
+      const fileContent = await fsp.readFile(filePath, 'utf8');
+      content += fileContent + '\n\n\n';
+    }
+
+    await fsp.writeFile(outputFile, content, 'utf8');
+    process.stdout.write('\r\x1b[K');
+
+    const stats = await fsp.stat(outputFile);
+    const totalLines = content.split('\n').length;
+    const totalChars = content.length;
+    const fileCount = files.length;
+
+    let sizeStr = '';
+    if (stats.size > 1024 * 1024) {
+      sizeStr = `${(stats.size / (1024 * 1024)).toFixed(2)} MB`;
+    } else {
+      sizeStr = `${(stats.size / 1024).toFixed(1)} KB`;
+    }
+
+    console.clear();
+    console.log('\n\x1b[32m  ┌────────────────────────────────────────────────────────┐\x1b[0m');
+    console.log('\x1b[32m  │                                                        │\x1b[0m');
+    console.log('\x1b[32m  │    \x1b[1;32m✔\x1b[0;37m  SOURCE CONTEXT COMPILED SUCCESSFULLY             \x1b[32m│\x1b[0m');
+    console.log('\x1b[32m  │                                                        │\x1b[0m');
+    console.log(`\x1b[32m  │      Files Bundled: \x1b[1;37m${String(fileCount).padEnd(34)}\x1b[32m │\x1b[0m`);
+    console.log(`\x1b[32m  │      Total Lines:   \x1b[1;37m${String(totalLines.toLocaleString()).padEnd(34)}\x1b[32m │\x1b[0m`);
+    console.log(`\x1b[32m  │      Total Chars:   \x1b[1;37m${String(totalChars.toLocaleString()).padEnd(34)}\x1b[32m │\x1b[0m`);
+    console.log(`\x1b[32m  │      File Size:     \x1b[1;37m${sizeStr.padEnd(34)}\x1b[32m │\x1b[0m`);
+    console.log('\x1b[32m  │                                                        │\x1b[0m');
+    console.log('\x1b[32m  │      Output: \x1b[37mone-file-website_source_code.txt\x1b[32m          │\x1b[0m');
+    console.log('\x1b[32m  │                                                        │\x1b[0m');
+    console.log('\x1b[32m  └────────────────────────────────────────────────────────┘\x1b[0m\n');
+
+    const isNpmLifecycle = !!process.env.npm_lifecycle_event;
+    if (isNpmLifecycle) {
+      process.exit(0);
+    }
+
+    const audioProcess = spawn('afplay', ['/System/Library/Sounds/Pop.aiff'], { detached: true, stdio: 'ignore' });
+    audioProcess.unref();
+    exec('open -g .');
+
+    console.log('  \x1b[90mPress [Enter] or [Escape] to close this window.\x1b[0m\n');
+    const mutedOut = new Writable({ write() {} });
+    const rl = readline.createInterface({ input: process.stdin, output: mutedOut, terminal: true });
+    if (process.stdin.isTTY) process.stdin.setRawMode(true);
+
+    const keypressHandler = (str, key) => {
+      if (
+        (key.ctrl && key.name === 'c') || 
+        key.name === 'return' || 
+        key.name === 'enter' || 
+        key.name === 'escape'
+      ) {
+        process.stdin.removeListener('keypress', keypressHandler);
+        if (process.stdin.isTTY) process.stdin.setRawMode(false);
+        rl.close();
+        closeTerminalWindow();
+        process.exit(0);
+      }
+    };
+    process.stdin.on('keypress', keypressHandler);
+
+  } catch (err) {
+    console.error('Error during context compilation:', err);
+  }
+}
+
+main();

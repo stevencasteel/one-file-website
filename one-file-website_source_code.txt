@@ -1,0 +1,1379 @@
+┌──────────────────────────────────────────────────┐
+│          STEVEN CASTEEL ARCHIVE PROJECT          │
+│        Vite + React (ESM CDN) + Tailwind CSS     │
+└──────────────────────────────────────────────────┘
+ [SYSTEM] Generated: 6/8/2026, 10:15:47 AM
+ [BASELINE]: React 18, HTM, Lucide React, Lenis Scroll, Tailwind CSS
+
+─── ABRIDGED DIRECTORY STRUCTURE ───────────────────
+.
+├── node_modules/ (contents skipped)
+├── AI_INSTRUCTIONS.txt
+├── create_source_context.command
+├── create_source_context.js
+├── index.html
+├── media-data.js
+├── one-file-website_source_code.txt
+├── package-lock.json
+└── package.json
+
+
+─── SOURCE FILES ───────────────────────────────────
+
+● ./AI_INSTRUCTIONS.txt
+────────────────────────────────────────────────────
+===========================================================================
+  STEVEN CASTEEL // SILK
+  AI Terminal Execution & Development Guidelines
+===========================================================================
+
+1. WORKFLOW RULES (CRITICAL)
+----------------------------
+1.1  Terminal Only
+     Do not ask the user to manually create or modify files. Provide full 
+     terminal commands using `cat << 'EOF' > path/to/file` to create or 
+     overwrite files. Organize terminal commands into logical, clean batches.
+
+1.2  No Placeholders
+     Write complete, fully functional, compilation-safe code. Avoid using 
+     comments like "// ... rest of code" or placeholder stubs.
+
+1.3  Step-by-Step Phase-Based Workflow
+     Before making changes, outline the phases of work. Provide the files and 
+     patches sequentially in distinct, logical steps rather than all at once.
+
+1.4  Verification Checklist
+     After providing code, list specific, actionable manual tests or compile 
+     checks for the user to run to verify the change has succeeded.
+
+1.5  Atomic Commits
+     When requested, output Git commit command sequences. Format as:
+       git add . && git commit -m "title" -m "description" && git push
+     Do not present commit commands until explicitly requested. Always use the 
+     period (.) for `git add` to capture all staged modifications.
+
+1.6  Generative Procedural
+     Generate game assets, procedural waveforms, and canvas graphics programmatically.
+
+1.7  WAIT (Communication Checkpoint)
+     Do not output extensive code blocks for a proposed plan until the user 
+     confirms the outline. Articulate the approach clearly first, then wait 
+     for the confirmation signal.
+
+1.8  Local Testing
+     All verification must be supported by running the local Vite server 
+     development commands (`npm run dev`) and verifying build stability 
+     (`npm run build`).
+
+1.9  Line Diagnostics for Debugging
+     When debugging or analyzing an error/crash stack trace where the exact 
+     line contents of a file are uncertain, always run a quick temporary 
+     diagnostic script (or evaluation command) to inspect and output the 
+     relevant lines before designing a patch or overwrite.
+
+
+2. CODE STANDARDS & TERMINAL PROTOCOLS
+--------------------------------------
+2.1  Node Scripts Must Be ESM
+     Since this project operates with "type": "module" in package.json, all 
+     temporary or auxiliary Node.js scripts must use ES Module syntax 
+     (e.g., use "import fs from 'fs';" instead of "const fs = require('fs');").
+
+2.2  Surgical Patch Scripts
+     When modifying large source files, prefer writing temporary Node.js 
+     scripts (utilizing `fs.readFileSync` and `.replace()`) over full file 
+     overwrites to prevent command truncation or buffer loss.
+     CRITICAL: Always append the cleanup command (e.g., "&& rm ./patch.js") 
+     on the exact same execution line to keep the repository untracked space clean.
+     Actively clean up and delete any other transient scripts or patch helpers 
+     immediately after execution to prevent workspace clutter.
+
+2.3  Zsh Compatibility & Escaping
+     The development environment is on macOS running Zsh. Never use raw, unescaped 
+     exclamation marks (!) inside shell string variables, as Zsh parses them 
+     as history expansion operators and will fail execution. 
+
+2.4  Zero Bash Comments
+     Never include hash symbols (#) inside any active terminal or shell code 
+     blocks. Copy-pasting shell commands containing hash lines directly into 
+     macOS interactive Zsh terminals triggers immediate parsing errors or partial 
+     execution. Keep shell blocks strictly functional and describe operations 
+     in the accompanying markdown text instead.
+
+2.5  Strict Structured File Patching
+     When modifying CSS, JSON, or complex TypeScript layouts with nested brackets, 
+     do not use lazy regex matching (e.g. "[\s\S]*?") to replace large blocks, 
+     as it easily misaligns closing braces and corrupts files. Perform full 
+     overwrites for small-to-medium files or strict literal string matching 
+     for surgical updates.
+
+2.6  Unicode and Escapes in Bash
+     When writing inline scripts via terminal heredoc, never use raw unicode 
+     escapes (such as "\u00A0") if they risk being parsed by the terminal shell 
+     as literal invisible characters. Instead, use runtime code conversions 
+     like `String.fromCharCode(160)` to safely inject special characters.
+
+2.7  Quoted Starting Delimiters (Shell Protection)
+     Always wrap the starting heredoc delimiter in single quotes (e.g., 
+     `cat << 'EOF' > file` or `cat << 'ENDOFSCRIPT'`). Unquoted delimiters 
+     allow the shell to perform immediate variable expansion ($variable) and 
+     backtick execution before writing, stripping or corrupting raw JS, TS, 
+     and CSS structures.
+
+2.8  Delimiter Syntax and Formatting
+     The terminating delimiter (e.g., EOF or ENDOFSCRIPT) must sit alone on its 
+     own line with zero leading or trailing whitespace. Any leading spaces or 
+     tabs will prevent the terminal from recognizing the block boundary, 
+     causing terminal lockup or truncation.
+
+2.9  Strict TypeScript Constraints
+     Always comply with strict compiler rules (such as 'noUnusedLocals', 'noUnusedParameters',
+     and '@typescript-eslint/no-explicit-any') by stripping unused variables, constants, or imports,
+     and completely avoiding explicit 'any' type declarations. If a general or dynamically resolved
+     type is required, store references as 'unknown' and perform type assertions, narrow type guards,
+     or implement clean generic abstractions to ensure type-safe interfaces. When modifying or expanding
+     strongly typed configurations, nested structures, or read-only literals (e.g., 'as const'), verify
+     that all symmetrically accessed keys exist across all related record types or union branches to
+     prevent compile-time property errors (TS2339).
+
+
+3. REMOTE INSPECTION & EDITING TECHNIQUES
+-----------------------------------------
+When debugging, analyzing, or modifying files, select the most efficient 
+protocol based on scope:
+
+3.1  Quick Inline Checks (node -e)
+     For single-purpose evaluations (verifying file contents, counting pattern 
+     instances, checking directory listings):
+       node -e "console.log(require('fs').readFileSync('src/App.tsx','utf8').includes('useGameStore'))"
+
+3.2  Multi-Line Analysis Scripts (Heredoc + Self-Delete)
+     For complex log analysis, directory traversal, or file verification:
+       cat << 'ENDOFSCRIPT' > ./analysis.js
+       import fs from 'fs';
+       import path from 'path';
+       // Analysis logic...
+       ENDOFSCRIPT
+       node ./analysis.js && rm ./analysis.js
+
+3.3  File Modification by Full Overwrite
+     For small to medium files, overwrite the target path directly:
+       cat << 'EOF' > src/components/ui/MyNewComponent.tsx
+       // Complete implementation...
+       EOF
+
+3.4  File Modification by Surgical Patch
+     For large files where only specific lines need adjustment:
+       cat << 'ENDOFSCRIPT' > ./patch.js
+       import fs from 'fs';
+       let content = fs.readFileSync('src/components/GameArena.tsx', 'utf8');
+       content = content.replace('old code block', 'new code block');
+       fs.writeFileSync('src/components/GameArena.tsx', content);
+       ENDOFSCRIPT
+       node ./patch.js && rm ./patch.js
+
+3.5  Build Verification
+     Validate all TypeScript compilations and bundler configurations after any 
+     file updates before concluding:
+       npm run build
+
+
+
+● ./index.html
+────────────────────────────────────────────────────
+<!--
+  ========================================================================================
+  DEVELOPMENT & DEPLOYMENT INSTRUCTIONS:
+  
+  * INTENTION: 
+    This project being built for a complete beginner to deploy as their very first personal
+    website through GitHub + Cloudflare Pages. It features a modern, interactive 
+    design with zero build tools, zero local system package installations, and zero bundlers.
+    Everything runs in-browser using standard CDN-hosted ES imports and modern CSS.
+
+  * SEPARATION OF CONCERNS (DURING DEVELOPMENT):
+    For development efficiency and clean file management, the media list registries 
+    (ELF_STUFF, MISC_MEDIA, and AUDIO_TRACKS arrays) reside in an external file: 'media-data.js'. 
+    The main app pulls them in via an import mapping. 
+
+  * FINAL MERGE:
+    When ready, these arrays can easily be copied back into this one-file-website's React script to 
+    collapse the entire website into a completely self-contained one-file-website template.
+  ========================================================================================
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Steven Casteel // Digital Media Archive</title>
+  
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            void: '#050505',
+            ink: '#0a0a0a',
+            panel: '#111114',
+            'panel-raised': '#1e1e24',
+            ash: '#1a1a1a',
+            fog: '#888888',
+            muted: '#737a86',
+            light: '#f2f2f2',
+            primary: '#22c55e',
+            'primary-400': '#4ade80'
+          },
+          fontFamily: {
+            display: ['"Bricolage Grotesque"', 'sans-serif'],
+            body: ['"Recursive"', 'sans-serif'],
+            mono: ['"Recursive"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Recursive:slnt,wght,CASL,MONO@-15..0,300..1000,0..1,0..1&display=swap" rel="stylesheet">
+  
+  <!-- Import Map -->
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.3.1",
+        "react-dom": "https://esm.sh/react-dom@18.3.1",
+        "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+        "htm": "https://esm.sh/htm@3.1.1",
+        "lucide-react": "https://esm.sh/lucide-react@0.344.0",
+        "lenis": "https://esm.sh/lenis@1.1.13",
+        "media-data": "./media-data.js"
+      }
+    }
+  </script>
+  
+  <style>
+    /* Custom Scrollbar Override */
+    ::-webkit-scrollbar {
+      display: none !important;
+    }
+    * {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+
+    body {
+      background-color: #050505;
+      color: #f2f2f2;
+      font-family: "Recursive", sans-serif;
+      font-variation-settings: "MONO" 0, "CASL" 0.35, "slnt" 0, "CRSV" 0.5, "wght" 400;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      cursor: none !important;
+    }
+    a, button, [role="button"], input, select, textarea, img {
+      cursor: none !important;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-variation-settings: "wght" 800;
+    }
+
+    /* Dynamic Variable Font Adjustments */
+    .font-mono {
+      font-family: "Recursive", monospace !important;
+      font-variation-settings: "MONO" 1, "CASL" 0, "slnt" 0, "CRSV" 0, "wght" 400 !important;
+      transition: font-variation-settings 0.35s cubic-bezier(0.25, 0, 0, 1) !important;
+    }
+    .font-mono:hover {
+      font-variation-settings: "MONO" 1, "CASL" 0, "slnt" 0, "CRSV" 0, "wght" 700 !important;
+    }
+
+    nav a, nav button, .interactive-header {
+      font-variation-settings: "MONO" 0, "CASL" 0.35, "slnt" 0, "CRSV" 0.5, "wght" 400;
+      transition: font-variation-settings 0.35s cubic-bezier(0.25, 0, 0, 1);
+    }
+    nav a:hover, nav button:hover {
+      font-variation-settings: "MONO" 0, "CASL" 0.35, "slnt" 0, "CRSV" 0.5, "wght" 750;
+    }
+
+    /* Unified Accent Hover Effect */
+    .green-border-hover {
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    .green-border-hover:hover {
+      border-color: #22c55e !important;
+      box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+    }
+
+    /* Custom Cursor styles */
+    .custom-cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 24px;
+      height: 24px;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      display: none;
+    }
+    @media (pointer: fine) {
+      .custom-cursor {
+        display: block;
+      }
+    }
+    .cursor-element {
+      transition: transform 0.1s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-origin: center;
+    }
+
+    /* Dot Grid Backgrounds */
+    .bg-grid-pattern {
+      background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    .DOT_GRID_BG {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: -4rem;
+      pointer-events: none;
+      z-index: -1;
+      background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+      background-size: 32px 32px;
+      background-position: center -1px;
+      -webkit-mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 64px), transparent 100%);
+      mask-image: linear-gradient(to bottom, black 0%, black calc(100% - 64px), transparent 100%);
+    }
+
+    /* CSS Columns Masonry */
+    .masonry-cols {
+      column-count: 2;
+      column-gap: 1rem;
+    }
+    @media (min-width: 640px) { .masonry-cols { column-count: 3; } }
+    @media (min-width: 1024px) { .masonry-cols { column-count: 4; } }
+    @media (min-width: 1280px) { .masonry-cols { column-count: 5; } }
+    
+    .masonry-item {
+      display: inline-block;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    /* GPU-Accelerated Lightbox Overlay Animations */
+    @keyframes fade-in-scale {
+      from {
+        opacity: 0;
+        transform: scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    .animate-lightbox-entry {
+      animation: fade-in-scale 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body class="selection:bg-primary selection:text-void relative min-h-screen">
+
+  <!-- Custom Cursor Elements (Electric Green) -->
+  <div id="custom-cursor" class="custom-cursor">
+    <div id="cursor-arrow" class="cursor-element" style="display: block;">
+      <svg width="24" height="24" viewBox="0 0 100 100" fill="#22c55e" style="filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.8));">
+        <path d="M22.917,13.375l51.333,51.333l-19.03,-3.781l14.863,23.031l-8.833,8.834l-14.863,-23.032l-4.387,27.198l-19.083,-83.583Z" />
+      </svg>
+    </div>
+    <div id="cursor-ibeam" class="cursor-element" style="display: none;">
+      <svg width="18" height="24" viewBox="0 0 83 83" fill="none" stroke="#22c55e" stroke-width="10" stroke-linecap="round" style="filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.8));">
+        <path d="M43 71h11M43 12h11M25.5 71h11m-11-59h11m3.5 5v50" />
+      </svg>
+    </div>
+  </div>
+
+  <!-- Root React Mounting Node -->
+  <div id="root"></div>
+
+  <!-- Main System Script -->
+  <script type="module" vite-ignore>
+    import React, { useState, useEffect, useRef } from 'react';
+    import ReactDOM from 'react-dom/client';
+    import htm from 'htm';
+    import Lenis from 'lenis';
+    import { 
+      Menu, Music, ChevronRight 
+    } from 'lucide-react';
+    
+    // Import URL arrays and configurations from the external registry data file
+    import { ELF_STUFF, MISC_MEDIA, AUDIO_TRACKS } from 'media-data';
+
+    const html = htm.bind(React.createElement);
+
+    // Helper to generate legible titles from URL string names
+    const getMediaTitle = (url) => {
+      try {
+        const parts = url.split("/");
+        const file = parts[parts.length - 1];
+        const name = file.substring(0, file.lastIndexOf("."));
+        return name
+          .split("_")
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
+      } catch (e) {
+        return "Digital Media Asset";
+      }
+    };
+
+    // ── SHUFFLE HELPER ───────────────────────────────────────────────────────
+    function getShuffledIndices(length) {
+      const arr = Array.from({ length }, (_, i) => i);
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    const shuffleArray = (array) => {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    };
+
+    // Pre-shuffled order loaded on every new load of the page
+    const SHUFFLED_ART = shuffleArray(ELF_STUFF);
+    const SHUFFLED_MEDIA = shuffleArray(MISC_MEDIA);
+
+    // Interactive SFX Handler
+    const playSFX = (type) => {
+      let src = "";
+      if (type === "click") {
+        src = "https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3";
+      } else if (type === "release") {
+        src = "https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3";
+      }
+      if (src) {
+        const audio = new Audio(src);
+        audio.volume = 0.35;
+        audio.play().catch(() => {});
+      }
+    };
+
+    // ── CUSTOM SCROLLBAR COMPONENT ───────────────────────────────────────────
+    function GlobalScrollbar({ lenisInstance }) {
+      const [scrollY, setScrollY] = useState(0);
+      const [maxScrollY, setMaxScrollY] = useState(1);
+      const [isDragging, setIsDragging] = useState(false);
+      const [isImgLoaded, setIsImgLoaded] = useState(false);
+      const trackRef = useRef(null);
+      const thumbRef = useRef(null);
+
+      useEffect(() => {
+        const handleScroll = () => {
+          setScrollY(window.scrollY);
+          setMaxScrollY(document.documentElement.scrollHeight - window.innerHeight);
+        };
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('resize', handleScroll);
+        handleScroll();
+        return () => {
+          window.removeEventListener('scroll', handleScroll);
+          window.removeEventListener('resize', handleScroll);
+        };
+      }, []);
+
+      const progress = maxScrollY > 0 ? scrollY / maxScrollY : 0;
+
+      const handleTrackClick = (e) => {
+        if (!trackRef.current) return;
+        const rect = trackRef.current.getBoundingClientRect();
+        const clickY = e.clientY - rect.top;
+        const ratio = Math.max(0, Math.min(1, clickY / rect.height));
+        const targetY = ratio * maxScrollY;
+        
+        if (lenisInstance) {
+          lenisInstance.scrollTo(targetY);
+        } else {
+          window.scrollTo({ top: targetY, behavior: 'smooth' });
+        }
+      };
+
+      const handlePointerDown = (e) => {
+        e.preventDefault();
+        setIsDragging(true);
+        document.body.style.userSelect = 'none';
+
+        const startY = e.clientY;
+        const startScroll = window.scrollY;
+
+        const handlePointerMove = (moveEvent) => {
+          if (!trackRef.current) return;
+          const deltaY = moveEvent.clientY - startY;
+          const trackHeight = trackRef.current.clientHeight;
+          const scrollDelta = (deltaY / trackHeight) * maxScrollY;
+          const targetY = Math.max(0, Math.min(maxScrollY, startScroll + scrollDelta));
+          
+          if (lenisInstance) {
+            lenisInstance.scrollTo(targetY, { immediate: true });
+          } else {
+            window.scrollTo(0, targetY);
+          }
+        };
+
+        const handlePointerUp = () => {
+          setIsDragging(false);
+          document.body.style.userSelect = '';
+          document.removeEventListener('pointermove', handlePointerMove);
+          document.removeEventListener('pointerup', handlePointerUp);
+        };
+
+        document.addEventListener('pointermove', handlePointerMove);
+        document.addEventListener('pointerup', handlePointerUp);
+      };
+
+      const thumbTop = `${progress * 90}%`;
+
+      return html`
+        <div class="global-scrollbar fixed inset-y-0 right-0 z-[80] w-[18px] md:w-12 pointer-events-none group transition-opacity duration-300">
+          <div 
+            ref=${trackRef}
+            onPointerDown=${handleTrackClick}
+            class="absolute top-[54px] md:top-2 bottom-2 left-0 right-0 pointer-events-auto touch-none"
+          >
+            <!-- Scroll Track Line (Centered Visualizer Track) -->
+            <div class="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[9px] md:w-6 bg-white/5 rounded-full" />
+            
+            <!-- Draggable Scrollbar Thumb -->
+            <div 
+              ref=${thumbRef}
+              onPointerDown=${handlePointerDown}
+              class="absolute left-[3px] right-[3px] md:left-[8px] md:right-[8px] aspect-[492/1299] pointer-events-auto touch-none select-none group transition-opacity duration-300"
+              style=${{ top: thumbTop, willChange: 'top, transform' }}
+            >
+              <div class="relative w-full h-full">
+                <img 
+                  src="https://www.stevencasteel.com/assets/brand/scrollbar.png" 
+                  alt="Scrollbar Thumb"
+                  onLoad=${() => setIsImgLoaded(true)}
+                  class="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] z-10"
+                  style=${{ opacity: isImgLoaded ? 1 : 0 }}
+                  draggable="false"
+                />
+                <!-- Accent Indicators inside scrollbar thumb -->
+                <div class="absolute inset-[2px] rounded-full opacity-0 group-hover:opacity-[0.15] transition-opacity duration-500 z-20 pointer-events-none blur-[4px] bg-primary-400" />
+                <div 
+                  class="absolute opacity-90 z-30 pointer-events-none rounded-[1.5px] bg-primary-400 shadow-[0_0_8px_#22c55e]"
+                  style=${{
+                    left: "8%",
+                    width: "84%",
+                    top: "calc(50% - 1px)",
+                    height: "3px"
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ── MAIN APP COMPONENT ───────────────────────────────────────────────────
+    function App() {
+      // Lightbox / Modal Context
+      const [lightbox, setLightbox] = useState(null);
+      const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+      const [activeSection, setActiveSection] = useState("audio");
+
+      // Lenis Instance
+      const [lenis, setLenis] = useState(null);
+
+      // Audio Player Context
+      const audioElRef = useRef(null);
+      const [shuffledQueue, setShuffledQueue] = useState([]);
+      const [currentTrackIdx, setCurrentTrackIndex] = useState(0);
+      const [isPlaying, setIsPlaying] = useState(false);
+      const [volume, setVolume] = useState(0.75);
+      const [isShuffle, setIsShuffle] = useState(true);
+      const [currentTime, setCurrentTime] = useState(0);
+      const [duration, setDuration] = useState(0);
+
+      // Initialize Lenis Smooth Scroll
+      useEffect(() => {
+        const lenisInst = new Lenis({
+          duration: 1.2,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          smoothWheel: true,
+          touchMultiplier: 1.15
+        });
+
+        function raf(time) {
+          lenisInst.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+        setLenis(lenisInst);
+
+        return () => {
+          lenisInst.destroy();
+        };
+      }, []);
+
+      // Active Section Tracker (Scroll Spy Setup)
+      useEffect(() => {
+        const handleSpy = () => {
+          const sections = [
+            "misc-art", "misc-media"
+          ];
+          let current = "audio";
+          for (const s of sections) {
+            const el = document.getElementById(s);
+            if (el) {
+              const rect = el.getBoundingClientRect();
+              if (rect.top <= window.innerHeight * 0.40) {
+                current = s;
+              }
+            }
+          }
+          setActiveSection(current);
+        };
+        window.addEventListener("scroll", handleSpy);
+        return () => window.removeEventListener("scroll", handleSpy);
+      }, []);
+
+      // Initialize / Restore Audio Console Context
+      useEffect(() => {
+        const savedVolume = localStorage.getItem('mesoelfy_player_volume');
+        const savedShuffle = localStorage.getItem('mesoelfy_player_shuffle');
+        const savedTrackIdx = localStorage.getItem('mesoelfy_player_track_index');
+        const savedPosition = localStorage.getItem('mesoelfy_player_position');
+        const savedAutoplay = localStorage.getItem('mesoelfy_player_autoplay');
+
+        if (savedVolume !== null) setVolume(parseFloat(savedVolume));
+        if (savedShuffle !== null) setIsShuffle(savedShuffle === 'true');
+
+        const useShuffle = savedShuffle !== null ? savedShuffle === 'true' : true;
+        let initialQueue = [];
+        if (useShuffle) {
+          initialQueue = getShuffledIndices(AUDIO_TRACKS.length);
+        } else {
+          initialQueue = Array.from({ length: AUDIO_TRACKS.length }, (_, i) => i);
+        }
+        setShuffledQueue(initialQueue);
+
+        let startTrackIdx = 0;
+        if (savedTrackIdx !== null) {
+          const idx = parseInt(savedTrackIdx, 10);
+          if (idx >= 0 && idx < AUDIO_TRACKS.length) {
+            startTrackIdx = idx;
+          }
+        }
+        
+        const queueIdx = initialQueue.indexOf(startTrackIdx);
+        setCurrentTrackIndex(queueIdx >= 0 ? queueIdx : 0);
+
+        if (savedPosition !== null && audioElRef.current) {
+          audioElRef.current.currentTime = parseFloat(savedPosition);
+        }
+
+        const handleUnlock = () => {
+          if (savedAutoplay === 'true' && audioElRef.current) {
+            audioElRef.current.play()
+              .then(() => setIsPlaying(true))
+              .catch(() => {});
+          }
+          document.removeEventListener('click', handleUnlock);
+        };
+        document.addEventListener('click', handleUnlock);
+
+        return () => document.removeEventListener('click', handleUnlock);
+      }, []);
+
+      const activeTrackIdx = shuffledQueue[currentTrackIdx] !== undefined ? shuffledQueue[currentTrackIdx] : 0;
+      const activeTrack = AUDIO_TRACKS[activeTrackIdx] || AUDIO_TRACKS[0];
+
+      // Track updates
+      useEffect(() => {
+        if (!audioElRef.current) return;
+        localStorage.setItem('mesoelfy_player_track_index', activeTrackIdx.toString());
+        audioElRef.current.load();
+        if (isPlaying) {
+          audioElRef.current.play().catch(() => setIsPlaying(false));
+        }
+      }, [activeTrackIdx]);
+
+      useEffect(() => {
+        if (audioElRef.current) {
+          audioElRef.current.volume = volume;
+          localStorage.setItem('mesoelfy_player_volume', volume.toString());
+        }
+      }, [volume]);
+
+      const togglePlay = () => {
+        if (!audioElRef.current) return;
+        if (isPlaying) {
+          audioElRef.current.pause();
+          setIsPlaying(false);
+          localStorage.setItem('mesoelfy_player_autoplay', 'false');
+        } else {
+          audioElRef.current.play()
+            .then(() => {
+              setIsPlaying(true);
+              localStorage.setItem('mesoelfy_player_autoplay', 'true');
+            })
+            .catch((err) => console.log("Play failed: interaction required", err));
+        }
+      };
+
+      const handleNext = () => {
+        if (shuffledQueue.length === 0) return;
+        setCurrentTrackIndex((prev) => (prev + 1) % shuffledQueue.length);
+      };
+
+      const handlePrev = () => {
+        if (shuffledQueue.length === 0) return;
+        setCurrentTrackIndex((prev) => (prev - 1 + shuffledQueue.length) % shuffledQueue.length);
+      };
+
+      const handleTimeUpdate = () => {
+        if (audioElRef.current) {
+          setCurrentTime(audioElRef.current.currentTime);
+          localStorage.setItem('mesoelfy_player_position', audioElRef.current.currentTime.toString());
+        }
+      };
+
+      const handleLoadedMetadata = () => {
+        if (audioElRef.current) {
+          setDuration(audioElRef.current.duration);
+        }
+      };
+
+      const handleScrubberChange = (e) => {
+        const val = parseFloat(e.target.value);
+        if (audioElRef.current) {
+          audioElRef.current.currentTime = val;
+          setCurrentTime(val);
+        }
+      };
+
+      const toggleShuffleState = () => {
+        const targetState = !isShuffle;
+        setIsShuffle(targetState);
+        localStorage.setItem('mesoelfy_player_shuffle', targetState.toString());
+        
+        let newQueue = [];
+        if (targetState) {
+          newQueue = getShuffledIndices(AUDIO_TRACKS.length);
+          const activeIndexInNew = newQueue.indexOf(activeTrackIdx);
+          if (activeIndexInNew >= 0) {
+            newQueue.splice(activeIndexInNew, 1);
+            newQueue.unshift(activeTrackIdx);
+          }
+        } else {
+          newQueue = Array.from({ length: AUDIO_TRACKS.length }, (_, i) => i);
+        }
+        setShuffledQueue(newQueue);
+        setCurrentTrackIndex(0);
+      };
+
+      const formatTime = (secs) => {
+        if (isNaN(secs)) return "0:00";
+        const m = Math.floor(secs / 60);
+        const s = Math.floor(secs % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+      };
+
+      // Navigation Link Scrolling Coordinator
+      const handleNavigation = (targetId) => {
+        setIsSidebarOpen(false);
+        if (targetId === "audio") {
+          if (lenis) {
+            lenis.scrollTo(0);
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+          return;
+        }
+        const target = document.getElementById(targetId);
+        if (target) {
+          if (lenis) {
+            lenis.scrollTo(target, { offset: -32 });
+          } else {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+      };
+
+      return html`
+        <div class="relative w-full flex flex-col md:flex-row min-h-screen">
+          <audio 
+            ref=${audioElRef} 
+            src="https://www.stevencasteel.com/assets/audio/music/elf_girl/${activeTrack.folder}/${activeTrack.name}"
+            onTimeUpdate=${handleTimeUpdate}
+            onLoadedMetadata=${handleLoadedMetadata}
+            onEnded=${handleNext}
+          />
+
+          <!-- ── MOBILE HEADER ── -->
+          <header class="md:hidden fixed top-0 left-0 w-full h-14 bg-gradient-to-b from-panel to-void z-[60] border-b border-black shadow-lg pr-4 pl-4 flex justify-between items-center cursor-none">
+            <button 
+              onPointerDown=${() => { playSFX("click"); handleNavigation("audio"); }}
+              onPointerUp=${() => playSFX("release")}
+              class="text-fog hover:text-white text-xs font-bold tracking-widest uppercase font-mono cursor-none"
+            >
+              STEVEN CASTEEL // 2026
+            </button>
+            <button 
+              onClick=${() => setIsSidebarOpen(!isSidebarOpen)}
+              class="text-white p-1.5 cursor-none outline-none"
+            >
+              <${Menu} size=${20} />
+            </button>
+          </header>
+
+          <!-- ── NAVIGATION SIDEBAR PANEL ── -->
+          <aside class=${`fixed top-14 md:top-0 left-0 h-[calc(100dvh-56px)] md:h-[100dvh] w-64 bg-ink border-r border-white/5 z-50 flex flex-col cursor-none transition-transform duration-300 md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+            <!-- Logo Button -->
+            <div class="p-4 lg:p-5 bg-gradient-to-b from-panel to-[#0c0d11] border-b border-black shadow-inner hidden md:flex items-center gap-3 shrink-0 relative z-20">
+              <button 
+                onPointerDown=${() => { playSFX("click"); handleNavigation("audio"); }}
+                onPointerUp=${() => playSFX("release")}
+                class="w-full text-center text-xs font-bold tracking-widest uppercase font-mono border border-white/10 rounded-lg py-2.5 hover:border-primary/40 transition duration-300 cursor-none text-primary"
+              >
+                S. CASTEEL // 2026
+              </button>
+            </div>
+
+            <!-- Navigation Tree -->
+            <nav class="flex-1 px-4 py-6 space-y-6 overflow-y-auto custom-scrollbar relative z-10 select-none">
+              <!-- System Console Group -->
+              <div>
+                <div class="px-2 mb-2">
+                  <h3 class="text-[10px] font-mono font-bold text-muted uppercase tracking-widest">/ Control Deck</h3>
+                </div>
+                <ul class="space-y-1">
+                  <li>
+                    <button 
+                      onClick=${() => handleNavigation("audio")}
+                      class=${`flex items-center gap-2.5 px-3 py-2 text-sm rounded-md w-full text-left transition duration-200 cursor-none ${activeSection === 'audio' ? 'text-primary font-bold bg-white/5' : 'text-fog hover:text-white'}`}
+                    >
+                      <${Music} size=${16} />
+                      <span>System Console</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Portfolio Group -->
+              <div>
+                <div class="px-2 mb-2 border-t border-white/5 pt-4">
+                  <h3 class="text-[10px] font-mono font-bold text-muted uppercase tracking-widest">/ Portfolio</h3>
+                </div>
+                <ul class="space-y-1">
+                  <li>
+                    <button 
+                      onClick=${() => handleNavigation("misc-art")}
+                      class=${`flex items-center gap-2.5 px-3 py-1.5 text-xs rounded-md w-full text-left transition duration-200 cursor-none ${activeSection === 'misc-art' ? 'text-white font-bold bg-white/5' : 'text-fog hover:text-white'}`}
+                    >
+                      <${ChevronRight} size=${12} class=${activeSection === 'misc-art' ? 'text-primary' : 'text-muted'} />
+                      <span>Misc Art</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Interests Group -->
+              <div>
+                <div class="px-2 mb-2 border-t border-white/5 pt-4">
+                  <h3 class="text-[10px] font-mono font-bold text-muted uppercase tracking-widest">/ Interests</h3>
+                </div>
+                <ul class="space-y-1">
+                  <li>
+                    <button 
+                      onClick=${() => handleNavigation("misc-media")}
+                      class=${`flex items-center gap-2.5 px-3 py-1.5 text-xs rounded-md w-full text-left transition duration-200 cursor-none ${activeSection === 'misc-media' ? 'text-white font-bold bg-white/5' : 'text-fog hover:text-white'}`}
+                    >
+                      <${ChevronRight} size=${12} class=${activeSection === 'misc-media' ? 'text-primary' : 'text-muted'} />
+                      <span>Misc Media</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+
+            <!-- TALL SIDEBAR MUSIC PLAYER DECK -->
+            <div class="shrink-0 bg-gradient-to-t from-panel to-[#0c0d11] flex flex-col border-t border-black p-4 gap-4 relative z-20">
+              <!-- Title, directory, and progress status -->
+              <div class="space-y-2">
+                <div class="flex items-start gap-2.5 bg-void/50 p-2 rounded-lg border border-white/5">
+                  <div class="w-8 h-8 rounded bg-black border border-white/10 flex items-center justify-center shrink-0">
+                    <${Music} size=${14} class=${isPlaying ? 'animate-pulse text-[#22c55e]' : 'text-muted'} />
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <p class="text-[9px] font-mono text-muted uppercase tracking-wider truncate">
+                      ${activeTrack.folder.replace(/_/g, ' ')}
+                    </p>
+                    <p class="text-xs text-white truncate font-bold font-mono">
+                      ${activeTrack.title.replace(/_/g, ' ')}
+                    </p>
+                  </div>
+                </div>
+                
+                <!-- Scrubber and Time Counters -->
+                <div class="space-y-1">
+                  <input 
+                    type="range" 
+                    min="0" 
+                    max=${duration || 0} 
+                    value=${currentTime} 
+                    onChange=${handleScrubberChange}
+                    class="w-full h-1 rounded-full appearance-none bg-void accent-primary cursor-none focus:outline-none"
+                    style=${{
+                      background: `linear-gradient(to right, #22c55e ${(currentTime / (duration || 1)) * 100}%, #111114 ${(currentTime / (duration || 1)) * 100}%)`
+                    }}
+                  />
+                  <div class="flex justify-between text-[10px] font-mono text-muted select-none">
+                    <span>${formatTime(currentTime)}</span>
+                    <span>${formatTime(duration)}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Controls (Prev, Play, Next, Shuffle) -->
+              <div class="flex items-center justify-between gap-1">
+                <button 
+                  onClick=${handlePrev} 
+                  class="p-2 rounded-lg bg-void/40 border border-white/5 hover:border-[#22c55e]/30 text-fog hover:text-white transition cursor-none"
+                  title="Previous"
+                >
+                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" /></svg>
+                </button>
+
+                <button 
+                  onClick=${togglePlay} 
+                  class="p-2.5 rounded-full bg-void border border-white/10 hover:border-[#22c55e]/40 text-white transition hover:scale-105 cursor-none"
+                  title=${isPlaying ? "Pause" : "Play"}
+                >
+                  ${isPlaying 
+                    ? html`<svg class="w-4 h-4 fill-current text-[#22c55e]" viewBox="0 0 24 24"><path d="M6 19h4V5H6v13zm8-14v13h4V5h-4z"/></svg>`
+                    : html`<svg class="w-4 h-4 fill-current ml-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`
+                  }
+                </button>
+
+                <button 
+                  onClick=${handleNext} 
+                  class="p-2 rounded-lg bg-void/40 border border-white/5 hover:border-[#22c55e]/30 text-fog hover:text-white transition cursor-none"
+                  title="Next"
+                >
+                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6zm9-12v12h2V6z" /></svg>
+                </button>
+
+                <button 
+                  onClick=${toggleShuffleState} 
+                  class=${`p-2 rounded-lg border transition duration-200 cursor-none text-[10px] font-mono ${isShuffle ? 'border-[#22c55e]/30 bg-[#22c55e]/5 text-[#22c55e]' : 'border-white/5 text-muted'}`}
+                  title="Shuffle"
+                >
+                  SHUF
+                </button>
+              </div>
+
+              <!-- Volume Control Slider -->
+              <div class="flex items-center gap-2 bg-void/20 p-1.5 rounded-lg border border-white/5">
+                <svg class="w-3 h-3 text-muted shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+                <input 
+                  type="range" 
+                  min="0" 
+                  max="1" 
+                  step="0.01" 
+                  value=${volume} 
+                  onChange=${(e) => setVolume(parseFloat(e.target.value))}
+                  class="w-full h-1 bg-void rounded-lg appearance-none accent-primary cursor-none"
+                />
+              </div>
+            </div>
+          </aside>
+
+          <!-- ── MAIN CONTENT ZONE ── -->
+          <div class="flex-1 md:pl-64 min-w-0 pb-20 pt-14 md:pt-0">
+            <!-- ── HERO HEADER SECTION ── -->
+            <header class="relative w-full py-[72px] pl-1.5 pr-[18px] md:px-12 bg-grid-pattern border-b border-white/10 flex flex-col items-center justify-center text-center overflow-hidden">
+              <!-- Ambient Green Background Glow behind Typography -->
+              <div 
+                aria-hidden="true"
+                class="absolute inset-0 pointer-events-none select-none overflow-hidden"
+              >
+                <div 
+                  class="absolute inset-0 opacity-40"
+                  style=${{
+                    filter: "blur(80px)",
+                    WebkitFilter: "blur(80px)",
+                    transform: "translate3d(0, 0, 0)",
+                    background: "radial-gradient(circle, rgba(34,197,94,0.18) 0%, transparent 65%)"
+                  }}
+                />
+              </div>
+
+              <!-- Main Heading Text (Proper Typography scaling using modern native container query settings) -->
+              <div class="relative w-full mb-4 flex items-center justify-center select-none" style=${{ containerType: 'inline-size' }}>
+                <h1 
+                  class="font-display uppercase text-center text-[#22c55e]"
+                  style=${{
+                    fontSize: '9.3cqw',
+                    letterSpacing: '0.18em',
+                    fontWeight: '800',
+                    fontVariationSettings: '"wght" 800',
+                    lineHeight: '1',
+                    whiteSpace: 'nowrap',
+                    marginLeft: '0.09em'
+                  }}
+                >
+                  STEVEN CASTEEL
+                </h1>
+              </div>
+
+              <!-- Glowing Glass Boxes for Hero Subtext & Diagnostics (Content-fit width with overflow wrapping protection) -->
+              <div class="mt-8 flex flex-col md:flex-row items-center justify-center gap-4 w-full relative z-10 select-none">
+                <!-- Terminal Log Glass Box -->
+                <div class="relative inline-flex items-center px-5 py-3 rounded-xl border backdrop-blur-md max-w-full overflow-hidden transition-all duration-500 border-primary-400/10 bg-primary-400/[0.005] shadow-[0_8px_32px_rgba(0,0,0,0.5),0_0_24px_rgba(34,197,94,0.12)]">
+                  <div class="absolute inset-0 pointer-events-none z-0 opacity-[0.05] bg-primary-400" />
+                  <span class="relative z-10 flex items-center justify-center gap-2 font-mono text-[10px] min-[380px]:text-xs md:text-sm tracking-wider uppercase text-light flex-wrap md:flex-nowrap">
+                    <span>📟 Digital Media Generalist | Creative Director of AI 🤖</span>
+                  </span>
+                </div>
+
+                <!-- Pageview Tracker Glass Box -->
+                <div class="relative inline-flex items-center px-5 py-3 rounded-xl border backdrop-blur-md max-w-full overflow-hidden transition-all duration-500 border-primary-400/10 bg-primary-400/[0.005] shadow-[0_8px_32px_rgba(0,0,0,0.5),0_0_24px_rgba(34,197,94,0.12)]">
+                  <div class="absolute inset-0 pointer-events-none z-0 opacity-[0.05] bg-primary-400" />
+                  <span class="relative z-10 flex items-center justify-center gap-2 font-mono text-[10px] min-[380px]:text-xs md:text-sm tracking-wider uppercase text-light flex-wrap md:flex-nowrap">
+                    <span class="text-emerald-400 font-bold">PAGEVIEWS:</span>
+                    <span>000,000</span>
+                  </span>
+                </div>
+              </div>
+            </header>
+
+            <main class="w-full py-12 flex flex-col gap-16 relative z-10">
+              
+              <!-- ── PORTFOLIO SECTION ── -->
+              <section id="misc-art" class="space-y-16 scroll-mt-20 pl-1.5 pr-[18px] md:px-12">
+                <div class="border-b border-white/10 pb-4">
+                  <h2 class="text-4xl font-display font-black uppercase text-white tracking-tight">PORTFOLIO</h2>
+                </div>
+
+                <!-- Misc Art Section -->
+                <div class="space-y-6">
+                  <h3 class="text-xl font-display font-bold uppercase tracking-wider text-fog">// Misc Art</h3>
+                  <div class="masonry-cols">
+                    ${SHUFFLED_ART.map((url) => html`
+                      <div 
+                        key=${url} 
+                        onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
+                        class="masonry-item bg-void border rounded-lg overflow-hidden relative group transform hover:scale-[1.03] hover:z-20 green-border-hover"
+                      >
+                        <img 
+                          src=${url} 
+                          alt=${getMediaTitle(url)} 
+                          class="w-full h-auto object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                          loading="lazy"
+                        />
+                      </div>
+                    `)}
+                  </div>
+                </div>
+              </section>
+
+              <!-- ── INTERESTS SECTION ── -->
+              <section id="misc-media" class="space-y-16 scroll-mt-20 pl-1.5 pr-[18px] md:px-12">
+                <div class="border-b border-white/10 pb-4">
+                  <h2 class="text-4xl font-display font-black uppercase text-white tracking-tight">INTERESTS</h2>
+                </div>
+
+                <!-- Misc Media Section -->
+                <div class="space-y-6">
+                  <h3 class="text-xl font-display font-bold uppercase tracking-wider text-fog">// Misc Media</h3>
+                  <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-4">
+                    ${SHUFFLED_MEDIA.map((url) => html`
+                      <div 
+                        key=${url} 
+                        onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
+                        class="aspect-[2/3] bg-void border rounded-lg overflow-hidden relative group transform hover:scale-[1.05] hover:z-20 green-border-hover"
+                      >
+                        <img 
+                          src=${url} 
+                          alt=${getMediaTitle(url)} 
+                          class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                          loading="lazy"
+                        />
+                      </div>
+                    `)}
+                  </div>
+                </div>
+              </section>
+
+            </main>
+          </div>
+
+          <!-- ── GLOBAL CUSTOM SCROLLBAR ── -->
+          <${GlobalScrollbar} lenisInstance=${lenis} />
+
+          <!-- ── LIGHTBOX MODAL PORTAL ── -->
+          ${lightbox && html`
+            <div 
+              onClick=${() => setLightbox(null)}
+              class="fixed inset-0 bg-void/95 backdrop-blur-md z-[100] flex items-center justify-center p-4 transition-opacity duration-300 cursor-none"
+            >
+              <div class="relative max-w-full max-h-full flex items-center justify-center select-none animate-lightbox-entry">
+                <img 
+                  src=${lightbox.src} 
+                  alt=${lightbox.alt} 
+                  class="max-w-[90vw] max-h-[90vh] object-contain rounded-lg border border-white/10 shadow-2xl"
+                />
+                <div class="absolute -top-12 right-0 text-white font-mono text-xs tracking-widest uppercase">
+                  Click anywhere to close
+                </div>
+              </div>
+            </div>
+          `}
+
+        </div>
+      `;
+    }
+
+    // Mount System
+    const rootNode = ReactDOM.createRoot(document.getElementById('root'));
+    rootNode.render(React.createElement(App));
+  </script>
+
+  <!-- vanilla pointer coordinate controller -->
+  <script>
+    const cursor = document.getElementById('custom-cursor');
+    const arrow = document.getElementById('cursor-arrow');
+    const ibeam = document.getElementById('cursor-ibeam');
+    
+    let mouseX = -100;
+    let mouseY = -100;
+    
+    document.addEventListener('pointermove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+    });
+    
+    // spring physical wind-up click states
+    document.addEventListener('pointerdown', () => {
+      arrow.style.transform = 'scale(0.82)';
+      ibeam.style.transform = 'scale(0.82)';
+    });
+    document.addEventListener('pointerup', () => {
+      arrow.style.transform = 'scale(1)';
+      ibeam.style.transform = 'scale(1)';
+    });
+
+    // state observer
+    document.addEventListener('mouseover', (e) => {
+      const target = e.target;
+      if (!target) return;
+      
+      const isText = ['p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'input', 'textarea'].includes(target.tagName.toLowerCase());
+      const isInteractive = target.closest('a') || target.closest('button') || target.closest('[role="button"]') || target.classList.contains('cursor-pointer');
+      
+      if (isText && !isInteractive) {
+        arrow.style.display = 'none';
+        ibeam.style.display = 'block';
+      } else {
+        arrow.style.display = 'block';
+        ibeam.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+
+● ./media-data.js
+────────────────────────────────────────────────────
+// media-data.js
+
+export const ELF_STUFF = [
+  "https://www.stevencasteel.com/assets/portfolio/elf_girls/elf_girl_002.avif",
+  "https://www.stevencasteel.com/assets/portfolio/elf_girls/elf_girl_018.avif",
+  "https://www.stevencasteel.com/assets/portfolio/elf_girls/elf_girl_035.avif",
+  "https://www.stevencasteel.com/assets/portfolio/elf_girls/elf_girl_066.avif",
+  "https://www.stevencasteel.com/assets/portfolio/elf_girls/elf_girl_114.avif",
+  "https://www.stevencasteel.com/assets/portfolio/elf_girls/elf_girl_146.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/anime_screenshot/anime_screenshot_005.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/anime_screenshot/anime_screenshot_016.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/anime_screenshot/anime_screenshot_028.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/anime_screenshot/anime_screenshot_035.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/anime_screenshot/anime_screenshot_053.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/anime_screenshot/anime_screenshot_058.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/anime_screenshot/anime_screenshot_076.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/anime_screenshot/anime_screenshot_094.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/anime_screenshot/anime_screenshot_128.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/anime_screenshot/anime_screenshot_166.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/anime_screenshot/anime_screenshot_173.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/anime_screenshot/anime_screenshot_175.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/elfy_exploration/elfy_exploration_003.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/elfy_exploration/elfy_exploration_059.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/elfy_exploration/elfy_exploration_087.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/elfy_exploration/elfy_exploration_116.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/elfy_exploration/elfy_exploration_119.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/elfy_exploration/elfy_exploration_146.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/elfy_exploration/elfy_exploration_159.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/elfy_exploration/elfy_exploration_200.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/elfy_exploration/elfy_exploration_219.avif",
+  "https://www.stevencasteel.com/assets/portfolio/esper_elfy/elfy_exploration/elfy_exploration_222.avif"
+];
+
+export const MISC_MEDIA = [
+  "https://www.stevencasteel.com/assets/interests/books/captain_underpants.avif",
+  "https://www.stevencasteel.com/assets/interests/books/charlie_and_the_chocolate_factory.avif",
+  "https://www.stevencasteel.com/assets/interests/books/charlottes_web.avif",
+  "https://www.stevencasteel.com/assets/interests/books/dragon_ball_vol_1.avif",
+  "https://www.stevencasteel.com/assets/interests/books/dune.avif",
+  "https://www.stevencasteel.com/assets/interests/books/his_dark_materials_trilogy.avif",
+  "https://www.stevencasteel.com/assets/interests/books/mistborn_1_the_final_empire.avif",
+  "https://www.stevencasteel.com/assets/interests/books/snow_crash.avif",
+  "https://www.stevencasteel.com/assets/interests/books/steal_like_an_artist.avif",
+  "https://www.stevencasteel.com/assets/interests/books/the_berenstain_bears_and_the_messy_room.avif",
+  "https://www.stevencasteel.com/assets/interests/books/the_complete_calvin_and_hobbes.avif",
+  "https://www.stevencasteel.com/assets/interests/books/the_giver.avif",
+  "https://www.stevencasteel.com/assets/interests/books/the_hitchhikers_guide_to_the_galaxy.avif",
+  "https://www.stevencasteel.com/assets/interests/books/the_hobbit.avif",
+  "https://www.stevencasteel.com/assets/interests/movies/american_beauty.avif",
+  "https://www.stevencasteel.com/assets/interests/movies/austin_powers_1.avif",
+  "https://www.stevencasteel.com/assets/interests/movies/big_trouble_in_little_china.avif",
+  "https://www.stevencasteel.com/assets/interests/movies/contact.avif",
+  "https://www.stevencasteel.com/assets/interests/movies/dbz_the_history_of_trunks.avif",
+  "https://www.stevencasteel.com/assets/interests/movies/dogma.avif",
+  "https://www.stevencasteel.com/assets/interests/movies/falling_down.avif",
+  "https://www.stevencasteel.com/assets/interests/movies/highlander.avif",
+  "https://www.stevencasteel.com/assets/interests/movies/killer_klowns_from_outer_space.avif",
+  "https://www.stevencasteel.com/assets/interests/movies/little_shop_of_horrors.avif",
+  "https://www.stevencasteel.com/assets/interests/movies/robocop.avif",
+  "https://www.stevencasteel.com/assets/interests/movies/star_wars_episode_vi_return_of_the_jedi.avif",
+  "https://www.stevencasteel.com/assets/interests/movies/the_brave_little_toaster.avif",
+  "https://www.stevencasteel.com/assets/interests/movies/the_fly.avif",
+  "https://www.stevencasteel.com/assets/interests/movies/the_karate_kid_1984.avif",
+  "https://www.stevencasteel.com/assets/interests/movies/the_princess_bride.avif",
+  "https://www.stevencasteel.com/assets/interests/movies/they_live.avif",
+  "https://www.stevencasteel.com/assets/interests/movies/uhf.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/adventure_time.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/atlanta.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/avatar_the_last_airbender.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/batman_1966.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/doctor_who_10.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/fargo.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/firefly.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/flight_of_the_conchords.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/freaks_and_geeks.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/futurama.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/invader_zim.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/jonny_quest.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/malcolm_in_the_middle.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/mob_psycho_100.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/pokemon.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/primal.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/reboot.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/smallville.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/speed_racer.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/star_trek.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/star_wars_clone_wars.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/stargate_sg_1.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/super_friends.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/terminator_the_sarah_connor_chronicles.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/the_twilight_zone.avif",
+  "https://www.stevencasteel.com/assets/interests/tv/the_venture_bros.avif"
+];
+
+export const AUDIO_TRACKS = [
+  { name: "001_01_Duath_Maethor.mp3", folder: "elf_girl_001", title: "001_01 Duath Maethor" },
+  { name: "001_02_Falas_Idh.mp3", folder: "elf_girl_001", title: "001_02 Falas Idh" },
+  { name: "001_04_Golodhram_Sereg.mp3", folder: "elf_girl_001", title: "001_04 Golodhram Sereg" },
+  { name: "001_05_Pith_Niben.mp3", folder: "elf_girl_001", title: "001_05 Pith Niben" },
+  { name: "001_12_Nath_Aglar.mp3", folder: "elf_girl_001", title: "001_12 Nath Aglar" },
+  { name: "002_01_Miltaurath.mp3", folder: "elf_girl_002", title: "002_01 Miltaurath" },
+  { name: "002_04_Harn_Galu.mp3", folder: "elf_girl_002", title: "002_04 Harn Galu" },
+  { name: "002_10_Narn_Gwath.mp3", folder: "elf_girl_002", title: "002_10 Narn Gwath" },
+  { name: "003_01_Edlothiad.mp3", folder: "elf_girl_003", title: "003_01 Edlothiad" },
+  { name: "003_02_Lach_Gur.mp3", folder: "elf_girl_003", title: "003_02 Lach Gur" },
+  { name: "003_29_Linnod_Tal_Blendor.mp3", folder: "elf_girl_003", title: "003_29 Linnod Tal Blendor" },
+  { name: "004_01_Tyalieli_Vende.mp3", folder: "elf_girl_004", title: "004_01 Tyalieli Vende" },
+  { name: "004_02_Tolo_na_Naur.mp3", folder: "elf_girl_004", title: "004_02 Tolo na Naur" },
+  { name: "004_05_Edraith_o_Rhach.mp3", folder: "elf_girl_004", title: "004_05 Edraith o Rhach" },
+  { name: "004_07_Lairelosse_Nith.mp3", folder: "elf_girl_004", title: "004_07 Lairelosse Nith" },
+  { name: "004_08_Sanga_Ulundo.mp3", folder: "elf_girl_004", title: "004_08 Sanga Ulundo" },
+  { name: "004_09_Sereg_Glir.mp3", folder: "elf_girl_004", title: "004_09 Sereg Glir" },
+  { name: "004_11_Thol_Glae.mp3", folder: "elf_girl_004", title: "004_11 Thol Glae" },
+  { name: "004_12_Vasa_Oiolaire.mp3", folder: "elf_girl_004", title: "004_12 Vasa Oiolaire" },
+  { name: "004_13_Tul_Pent.mp3", folder: "elf_girl_004", title: "004_13 Tul Pent" },
+  { name: "004_18_Gonod_Menel.mp3", folder: "elf_girl_004", title: "004_18 Gonod Menel" },
+  { name: "004_20_Palantir_Mornie.mp3", folder: "elf_girl_004", title: "004_20 Palantir Mornie" },
+  { name: "005_01_A_Apsene_Te.mp3", folder: "elf_girl_005", title: "005_01 A Apsene Te" },
+  { name: "005_02_Liquis_Ear.mp3", folder: "elf_girl_005", title: "005_02 Liquis Ear" },
+  { name: "005_03_Morn_Amloth.mp3", folder: "elf_girl_005", title: "005_03 Morn Amloth" },
+  { name: "005_05_Hrave_Olori.mp3", folder: "elf_girl_005", title: "005_05 Hrave Olori" },
+  { name: "005_14_Dram_Lim.mp3", folder: "elf_girl_005", title: "005_14 Dram Lim" },
+  { name: "005_15_Tulca_Fea.mp3", folder: "elf_girl_005", title: "005_15 Tulca Fea" },
+  { name: "005_18_A_Mape_Maryat.mp3", folder: "elf_girl_005", title: "005_18 A Mape Maryat" },
+  { name: "006_01_Glaur_Fuin.mp3", folder: "elf_girl_006", title: "006_01 Glaur Fuin" },
+  { name: "006_03_Glawar_Uruloke.mp3", folder: "elf_girl_006", title: "006_03 Glawar Uruloke" },
+  { name: "006_06_Nessima_Tinwe.mp3", folder: "elf_girl_006", title: "006_06 Nessima Tinwe" },
+  { name: "006_08_Voronda_Estel.mp3", folder: "elf_girl_006", title: "006_08 Voronda Estel" },
+  { name: "006_11_Estel_Mornie.mp3", folder: "elf_girl_006", title: "006_11 Estel Mornie" },
+  { name: "006_12_Ondo_Cale.mp3", folder: "elf_girl_006", title: "006_12 Ondo Cale" },
+  { name: "006_13_Lisse_Lenda.mp3", folder: "elf_girl_006", title: "006_13 Lisse Lenda" },
+  { name: "006_18_Elen_Sila.mp3", folder: "elf_girl_006", title: "006_18 Elen Sila" },
+  { name: "006_21_Laire_Mordo.mp3", folder: "elf_girl_006", title: "006_21 Laire Mordo" },
+  { name: "007_01_Angwedh_Thinnas.mp3", folder: "elf_girl_007", title: "007_01 Angwedh Thinnas" },
+  { name: "007_03_Bregedur.mp3", folder: "elf_girl_007", title: "007_03 Bregedur" },
+  { name: "007_06_Raucima_Linde.mp3", folder: "elf_girl_007", title: "007_06 Raucima Linde" },
+  { name: "007_07_Tuima_More.mp3", folder: "elf_girl_007", title: "007_07 Tuima More" },
+  { name: "007_08_Lamatyave_Hlapula.mp3", folder: "elf_girl_007", title: "007_08 Lamatyave Hlapula" },
+  { name: "007_10_Quiesse_Calina.mp3", folder: "elf_girl_007", title: "007_10 Quiesse Calina" },
+  { name: "007_14_Ea_Lomelinde.mp3", folder: "elf_girl_007", title: "007_14 Ea Lomelinde" },
+  { name: "007_15_Taur_Gond.mp3", folder: "elf_girl_007", title: "007_15 Taur Gond" },
+  { name: "007_17_Sure_Mirima.mp3", folder: "elf_girl_007", title: "007_17 Sure Mirima" },
+  { name: "008_01_Galu_na_Vea.mp3", folder: "elf_girl_008", title: "008_01 Galu na Vea" },
+  { name: "008_02_Mael_Amarth.mp3", folder: "elf_girl_008", title: "008_02 Mael Amarth" },
+  { name: "008_03_Celu_Meluina.mp3", folder: "elf_girl_008", title: "008_03 Celu Meluina" },
+  { name: "008_08_Alcar_mi_More.mp3", folder: "elf_girl_008", title: "008_08 Alcar mi More" },
+  { name: "008_09_Miw_Wende.mp3", folder: "elf_girl_008", title: "008_09 Miw Wende" },
+  { name: "008_15_Glawar_Idh.mp3", folder: "elf_girl_008", title: "008_15 Glawar Idh" },
+  { name: "008_18_Anirog_Aes.mp3", folder: "elf_girl_008", title: "008_18 Anirog Aes" },
+  { name: "008_22_Na_Ya_Na.mp3", folder: "elf_girl_008", title: "008_22 Na Ya Na" }
+];
+
+
+● ./package.json
+────────────────────────────────────────────────────
+{
+  "name": "one-file-website",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 1111"
+  },
+  "devDependencies": {
+    "vite": "^8.0.16"
+  }
+}
+
+
+
