@@ -46,7 +46,8 @@
         "htm": "https://esm.sh/htm@3.1.1",
         "lucide-react": "https://esm.sh/lucide-react@0.344.0",
         "lenis": "https://esm.sh/lenis@1.1.13",
-        "media-data": "./media-data.js"
+        "media-data": "./media-data.js",
+        "animejs": "https://esm.sh/animejs@3.2.2"
       }
     }
   </script>
@@ -97,14 +98,14 @@
       font-variation-settings: "MONO" 0, "CASL" 0.35, "slnt" 0, "CRSV" 0.5, "wght" 750;
     }
 
-    /* Unified Accent Hover Effect */
-    .green-border-hover {
+    /* Unified Prismatic Hover Effect */
+    .prismatic-border-hover {
       transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      border-color: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.08);
     }
-    .green-border-hover:hover {
-      border-color: #22c55e !important;
-      box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+    .prismatic-border-hover:hover {
+      border-color: rgba(255, 100, 255, 0.4) !important;
+      box-shadow: 0 0 15px rgba(255, 100, 255, 0.25);
     }
 
     /* Custom Cursor styles */
@@ -209,6 +210,38 @@
       display: inline-block;
       animation: text-cascade-wave 1.4s ease-in-out infinite;
       white-space: pre;
+    }
+
+    /* System Cursor/Typewriter animations */
+    @keyframes phosphor-flicker {
+      0%, 100% { opacity: 0.97; }
+      50% { opacity: 1.0; }
+    }
+    .animate-phosphor {
+      animation: phosphor-flicker 0.25s infinite;
+    }
+
+    /* Prismatic mode animations & gradients */
+    @keyframes gradient-xy {
+      0%, 100% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+    .animate-gradient-xy {
+      animation: gradient-xy 15s ease infinite;
+    }
+    .bg-prismatic-gradient {
+      background-image: linear-gradient(
+        135deg,
+        #ff007f 0%,
+        #7f00ff 25%,
+        #00f0ff 50%,
+        #00ff7f 75%,
+        #ff007f 100%
+      );
     }
   </style>
 </head>
@@ -336,6 +369,7 @@
     import ReactDOM from 'react-dom/client';
     import htm from 'htm';
     import Lenis from 'lenis';
+    import anime from 'animejs';
     import { 
       Menu, Music, ChevronRight 
     } from 'lucide-react';
@@ -392,6 +426,133 @@
         audio.play().catch(() => {});
       }
     };
+
+    // ── SCRAMBLE TEXT COMPONENT (Anime.js Animation Engine Integration) ──────
+    function ScrambleText({ text, delay = 0, onComplete, enabled = true }) {
+      const [displayText, setDisplayText] = useState("");
+      const DEFAULT_CHARS = "-_~=+*!@#%&<>";
+      const settleDuration = 100;
+
+      useEffect(() => {
+        if (!enabled) {
+          // Keep a fully scrambled layout structure prior to step trigger
+          const scrambledPlaceholder = Array.from({ length: text.length }, () => 
+            DEFAULT_CHARS[Math.floor(Math.random() * DEFAULT_CHARS.length)]
+          ).join("");
+          setDisplayText(scrambledPlaceholder);
+          return;
+        }
+
+        const stepRevealTime = 90; // ~90ms step frequency rate per character
+        const totalRevealTime = text.length * stepRevealTime;
+        const totalDuration = totalRevealTime + settleDuration;
+        const animObj = { time: 0 };
+
+        let timeoutId = setTimeout(() => {
+          anime({
+            targets: animObj,
+            time: totalDuration,
+            duration: totalDuration,
+            easing: 'linear',
+            update: () => {
+              const elapsed = animObj.time;
+              let result = "";
+              for (let i = 0; i < text.length; i++) {
+                const revealTriggerTime = i * stepRevealTime;
+                if (elapsed < revealTriggerTime) {
+                  // Not triggered yet -> scramble
+                  result += DEFAULT_CHARS[Math.floor(Math.random() * DEFAULT_CHARS.length)];
+                } else if (elapsed < revealTriggerTime + settleDuration) {
+                  // Settle sequence -> scramble transition
+                  result += DEFAULT_CHARS[Math.floor(Math.random() * DEFAULT_CHARS.length)];
+                } else {
+                  // Settled -> lock character in
+                  result += text[i];
+                }
+              }
+              setDisplayText(result);
+            },
+            complete: () => {
+              setDisplayText(text);
+              if (onComplete) onComplete();
+            }
+          });
+        }, delay);
+
+        return () => {
+          clearTimeout(timeoutId);
+        };
+      }, [text, delay, enabled]);
+
+      return html`<span class="select-none inline-block">${displayText}</span>`;
+    }
+
+    // ── TYPED LOG COMPONENT (Glass Box Typewriter with White Square) ─────────
+    function TypedLog({ text, speed = 40, delay = 0, enabled = false, onComplete }) {
+      const [displayed, setDisplayed] = useState("");
+      const cursorRef = useRef(null);
+
+      useEffect(() => {
+        if (!enabled) return;
+
+        let timeoutId = setTimeout(() => {
+          if (cursorRef.current) {
+            cursorRef.current.style.opacity = "1";
+          }
+
+          let currentIndex = 0;
+          let currentStr = "";
+          const intervalId = setInterval(() => {
+            if (currentIndex < text.length) {
+              currentStr += text[currentIndex];
+              setDisplayed(currentStr);
+              currentIndex++;
+            } else {
+              clearInterval(intervalId);
+              if (cursorRef.current) {
+                cursorRef.current.style.display = "none";
+              }
+              if (onComplete) onComplete();
+            }
+          }, speed);
+
+          return () => clearInterval(intervalId);
+        }, delay);
+
+        return () => clearTimeout(timeoutId);
+      }, [text, speed, delay, enabled]);
+
+      return html`
+        <span style=${{ textShadow: '0 0 4px currentColor' }}>
+          ${displayed}
+          <span 
+            ref=${cursorRef}
+            class="w-2 h-[1.1em] bg-current inline-block ml-1 align-middle -translate-y-[2px] relative z-10 animate-phosphor shadow-[0_0_8px_currentColor]"
+            style=${{ opacity: 0, transition: 'opacity 0.2s ease' }}
+          />
+        </span>
+      `;
+    }
+
+    // ── GLASS CONTAINER COMPONENT (Prismatic Mode Permanent Active Default) ─
+    function GlassContainer({ children, className = "" }) {
+      // Configured permanently to follow Prismatic Mode specifications
+      const borderClass = "border-white/10";
+      const bgClass = "bg-white/[0.015]";
+      const glowClass = "shadow-[0_0_24px_rgba(255,100,255,0.12)]";
+      const overlayClass = "bg-prismatic-gradient bg-[length:400%_400%] animate-gradient-xy";
+
+      return html`
+        <div class="relative rounded-xl border backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.5)] transition-all duration-500 ${borderClass} ${bgClass} ${glowClass} ${className}">
+          <!-- Dynamic Background Overlay inner 5% opacity layer -->
+          <div class="absolute inset-0 pointer-events-none z-0 rounded-xl opacity-[0.05] ${overlayClass}" />
+          <!-- Main slot interior context -->
+          <div class="relative z-10 w-full h-full">
+            ${children}
+          </div>
+        </div>
+      `;
+    }
 
     // ── CUSTOM SCROLLBAR COMPONENT ───────────────────────────────────────────
     function GlobalScrollbar({ lenisInstance }) {
@@ -584,6 +745,9 @@
       const [isSidebarOpen, setIsSidebarOpen] = useState(false);
       const [activeSection, setActiveSection] = useState("audio");
 
+      // Sequential Timeline Sequence Step: "line1" -> "line2" -> "typing"
+      const [seqStep, setSeqStep] = useState("line1");
+
       // Lenis Instance
       const [lenis, setLenis] = useState(null);
 
@@ -633,8 +797,6 @@
           requestAnimationFrame(raf);
         }
         requestAnimationFrame(raf);
-
-
 
         setLenis(lenisInst);
 
@@ -1005,42 +1167,55 @@
                 />
               </div>
 
-              <!-- Main Heading Text (Proper Typography scaling using modern native container query settings) -->
-              <div class="relative w-full mb-4 flex items-center justify-center select-none" style=${{ containerType: 'inline-size' }}>
+              <!-- Sequential Scramble Title Layout with Fluid Clamp Typography (Single-Line Integration) -->
+              <div class="relative w-full mb-4 flex flex-row items-center justify-center select-none leading-none">
                 <h1 
-                  class="font-display uppercase text-center text-[#22c55e]"
-                  style=${{
-                    fontSize: '9.3cqw',
-                    letterSpacing: '0.18em',
-                    fontWeight: '800',
-                    fontVariationSettings: '"wght" 800',
-                    lineHeight: '1',
-                    whiteSpace: 'nowrap',
-                    marginLeft: '0.09em'
-                  }}
+                  class="text-[clamp(2.75rem,14vw,4.75rem)] md:text-[10vw] leading-[0.9] md:leading-[0.85] font-display font-bold tracking-normal md:tracking-tighter uppercase text-white flex flex-row items-center justify-center gap-[0.25em] whitespace-nowrap"
                 >
-                  YOUR NAME
+                  <div class="inline-block">
+                    <${ScrambleText} 
+                      text="YOUR" 
+                      delay=${200} 
+                      enabled=${true} 
+                      onComplete=${() => setSeqStep("line2")} 
+                    />
+                  </div>
+                  <div class="inline-block text-primary transition-all duration-300">
+                    <${ScrambleText} 
+                      text="NAME" 
+                      delay=${0} 
+                      enabled=${seqStep !== "line1"} 
+                      onComplete=${() => setSeqStep("typing")} 
+                    />
+                  </div>
                 </h1>
               </div>
 
-              <!-- Glowing Glass Boxes for Hero Subtext & Diagnostics (Content-fit width with overflow wrapping protection) -->
+              <!-- Glowing Glass Boxes with Permanent Prismatic Mode Configured -->
               <div class="mt-8 flex flex-col md:flex-row items-center justify-center gap-4 w-full relative z-10 select-none">
-                <!-- Terminal Log Glass Box -->
-                <div class="relative inline-flex items-center px-5 py-3 min-h-[46px] rounded-xl border backdrop-blur-md max-w-full overflow-hidden border-primary-400/10 bg-panel/50 shadow-[0_8px_32px_rgba(0,0,0,0.5),0_0_24px_rgba(34,197,94,0.12)]">
-                  <div class="absolute inset-0 pointer-events-none z-0 opacity-[0.05] bg-primary-400" />
-                  <span class="relative z-10 flex items-center justify-center gap-2 font-mono text-[10px] min-[380px]:text-xs md:text-sm leading-normal tracking-wider uppercase text-light flex-wrap md:flex-nowrap">
-                    <span>📟 Digital Media Generalist | Creative Director of AI 🤖</span>
+                <!-- Terminal Log Glass Box with Typewriter Integration -->
+                <${GlassContainer} 
+                  className="inline-flex items-center px-5 py-3 min-h-[46px]"
+                >
+                  <span class="flex items-center justify-center gap-2 font-mono text-[10px] min-[380px]:text-xs md:text-sm leading-normal tracking-wider uppercase text-light flex-wrap md:flex-nowrap">
+                    <${TypedLog} 
+                      text="📟 Digital Media Generalist | Creative Director of AI 🤖" 
+                      speed=${40} 
+                      delay=${0} 
+                      enabled=${seqStep === "typing"} 
+                    />
                   </span>
-                </div>
+                </${GlassContainer}>
 
                 <!-- Pageview Tracker Glass Box -->
-                <div class="relative inline-flex items-center px-5 py-3 min-h-[46px] rounded-xl border backdrop-blur-md max-w-full overflow-hidden border-primary-400/10 bg-panel/50 shadow-[0_8px_32px_rgba(0,0,0,0.5),0_0_24px_rgba(34,197,94,0.12)]">
-                  <div class="absolute inset-0 pointer-events-none z-0 opacity-[0.05] bg-primary-400" />
-                  <span class="relative z-10 flex items-center justify-center gap-2 font-mono text-[10px] min-[380px]:text-xs md:text-sm leading-normal tracking-wider uppercase text-light flex-wrap md:flex-nowrap">
+                <${GlassContainer} 
+                  className="inline-flex items-center px-5 py-3 min-h-[46px]"
+                >
+                  <span class="flex items-center justify-center gap-2 font-mono text-[10px] min-[380px]:text-xs md:text-sm leading-normal tracking-wider uppercase text-light flex-wrap md:flex-nowrap">
                     <span class="text-emerald-400 font-bold">PAGEVIEWS:</span>
                     <span>000,000</span>
                   </span>
-                </div>
+                </${GlassContainer}>
               </div>
             </header>
 
@@ -1060,14 +1235,18 @@
                       <div 
                         key=${url} 
                         onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
-                        class="masonry-item bg-void border rounded-lg overflow-hidden relative group transform hover:scale-[1.03] hover:z-20 green-border-hover"
+                        class="masonry-item transform hover:scale-[1.03] hover:z-20 transition-all duration-300"
                       >
-                        <img 
-                          src=${url} 
-                          alt=${getMediaTitle(url)} 
-                          class="w-full h-auto object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-                          loading="lazy"
-                        />
+                        <${GlassContainer} 
+                          className="overflow-hidden prismatic-border-hover"
+                        >
+                          <img 
+                            src=${url} 
+                            alt=${getMediaTitle(url)} 
+                            class="w-full h-auto object-cover opacity-80 hover:opacity-100 transition-opacity"
+                            loading="lazy"
+                          />
+                        </${GlassContainer}>
                       </div>
                     `)}
                   </div>
@@ -1088,14 +1267,18 @@
                       <div 
                         key=${url} 
                         onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
-                        class="aspect-[2/3] bg-void border rounded-lg overflow-hidden relative group transform hover:scale-[1.05] hover:z-20 green-border-hover"
+                        class="aspect-[2/3] transform hover:scale-[1.05] hover:z-20 transition-all duration-300"
                       >
-                        <img 
-                          src=${url} 
-                          alt=${getMediaTitle(url)} 
-                          class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-                          loading="lazy"
-                        />
+                        <${GlassContainer} 
+                          className="w-full h-full overflow-hidden prismatic-border-hover"
+                        >
+                          <img 
+                            src=${url} 
+                            alt=${getMediaTitle(url)} 
+                            class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
+                            loading="lazy"
+                          />
+                        </${GlassContainer}>
                       </div>
                     `)}
                   </div>
