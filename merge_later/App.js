@@ -342,6 +342,7 @@ function App() {
     duration,
     volume: mixerMusic, // Music volume mapped
     isShuffle,
+    isPrismaticEnabled,
     handleScrubberChange,
     handlePrev,
     togglePlay,

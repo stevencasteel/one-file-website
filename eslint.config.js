@@ -33,7 +33,8 @@ export default [
         DataView: 'readonly',
         localStorage: 'readonly',
         console: 'readonly',
-        URL: 'readonly'
+        URL: 'readonly',
+        IntersectionObserver: 'readonly'
       },
       parserOptions: {
         ecmaFeatures: {

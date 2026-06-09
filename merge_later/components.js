@@ -8,6 +8,8 @@ export function ScrambleText({ text, delay = 0, onComplete, enabled = true }) {
   const [displayText, setDisplayText] = useState("");
   const DEFAULT_CHARS = "-_~=+*!@#%&<>";
   const settleDuration = 100;
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);
 
   useEffect(() => {
     if (!enabled) {
@@ -46,7 +48,7 @@ export function ScrambleText({ text, delay = 0, onComplete, enabled = true }) {
         },
         complete: () => {
           setDisplayText(text);
-          if (onComplete) onComplete();
+          if (onCompleteRef.current) onCompleteRef.current();
         }
       });
     }, delay);
@@ -62,6 +64,8 @@ export function ScrambleText({ text, delay = 0, onComplete, enabled = true }) {
 export function TypedLog({ text, speed = 40, delay = 0, enabled = false, onComplete }) {
   const [displayed, setDisplayed] = useState("");
   const cursorRef = useRef(null);
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);
 
   useEffect(() => {
     if (!enabled) return;
@@ -83,7 +87,7 @@ export function TypedLog({ text, speed = 40, delay = 0, enabled = false, onCompl
           if (cursorRef.current) {
             cursorRef.current.style.visibility = "hidden";
           }
-          if (onComplete) onComplete();
+          if (onCompleteRef.current) onCompleteRef.current();
         }
       }, speed);
 
