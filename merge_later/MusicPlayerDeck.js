@@ -7,7 +7,6 @@ import { ScrollingText } from './components.js';
 
 const html = htm.bind(React.createElement);
 
-// ── CONSOLE BUTTON COMPONENT ─────────────────────────────────────────────
 function ConsoleButton({
   children,
   onClick,
@@ -30,11 +29,14 @@ function ConsoleButton({
           ${children}
         </span>
       </button>
+      ${active && isPrismatic && html`
+        <div class="console-btn-prismatic-border" />
+        <div class="console-btn-prismatic-blur" />
+      `}
     </div>
   `;
 }
 
-// ── MAIN MUSIC PLAYER DECK COMPONENT ─────────────────────────────────────
 export function MusicPlayerDeck({
   activeTrack,
   trackMetadata,
@@ -53,58 +55,17 @@ export function MusicPlayerDeck({
   onOpenConsole
 }) {
   const [showVolumePopover, setShowVolumePopover] = useState(false);
-  const volBtnRef = useRef(null);
-  const miniCanvasRef = useRef(null);
-  const animationRef = useRef(null);
   const gearTimeoutsRef = useRef([]);
 
   useEffect(() => {
-    const canvas = miniCanvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const analyser = audioEngine.analyser;
-    const barCount = 14;
-    const smoothedValues = new Array(barCount).fill(0);
-
-    const drawMicroVisualizer = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const dataArray = new Uint8Array(analyser ? analyser.frequencyBinCount : 32);
-
-      if (analyser) {
-        analyser.getByteFrequencyData(dataArray);
-      }
-
-      const barWidth = (canvas.width / barCount) - 1.5;
-      let x = 0;
-
-      for (let i = 0; i < barCount; i++) {
-        let rawValue = 0;
-        if (isPlaying && analyser) {
-          const idx = Math.floor(i * (dataArray.length / barCount) * 0.7);
-          rawValue = dataArray[idx] || 0;
-        } else if (isPlaying) {
-          rawValue = 10 + Math.sin(Date.now() * 0.005 + i * 0.6) * 12 + Math.random() * 5;
-        }
-
-        smoothedValues[i] += (rawValue - smoothedValues[i]) * 0.2;
-        const mappedHeight = (smoothedValues[i] / 255) * canvas.height * 0.85;
-
-        ctx.fillStyle = isPlaying ? 'rgb(34, 197, 94)' : 'rgba(34, 197, 94, 0.4)';
-        ctx.fillRect(x, canvas.height - mappedHeight, barWidth, mappedHeight);
-
-        x += barWidth + 1.5;
-      }
-
-      animationRef.current = requestAnimationFrame(drawMicroVisualizer);
+    const popover = document.getElementById('volume-slider-popover');
+    if (!popover) return;
+    const handleToggle = (e) => {
+      setShowVolumePopover(e.newState === 'open');
     };
-
-    drawMicroVisualizer();
-    return () => {
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-    };
-  }, [isPlaying]);
+    popover.addEventListener('beforetoggle', handleToggle);
+    return () => popover.removeEventListener('beforetoggle', handleToggle);
+  }, []);
 
   const handleMuteToggle = () => {
     if (volume > 0) {
@@ -152,7 +113,6 @@ export function MusicPlayerDeck({
 
   const miniPlayerBgRef = 'url(' + String.fromCharCode(35) + 'mini-player-bg)';
   const innerShadowRef = 'url(' + String.fromCharCode(35) + 'lcd-inner-shadow)';
-  const settingsGearBgRef = 'url(' + String.fromCharCode(35) + 'gear-bg-settings)';
 
   const UNIFIED_LCD_PATH = "M604.605,554 L3116.675,554 c65.83,0 120,54.17 120,120 c0,222.67 184.5,405.91 408.72,405.91 c65.83,0 120,54.17 120,120 L3765.395,1348.18 c0,66.27 -53.73,120 -120,120 L604.605,1468.18 c-66.27,0 -120,-53.73 -120,-120 L484.605,674 c0,-66.27 53.73,-120 120,-120 Z";
   const exactLcdMask = `url("data:image/svg+xml,%3Csvg viewBox='296 383 3658 2595' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='${UNIFIED_LCD_PATH}' fill='white'/%3E%3C/svg%3E")`;
@@ -163,12 +123,10 @@ export function MusicPlayerDeck({
   const isUiActive = isPlaying;
 
   return html`
-    <div class="shrink-0 p-4 bg-gradient-to-t from-panel to-rgb(12, 13, 17) border-t border-black flex flex-col gap-3 relative z-20">
+    <div class="pl-3 pr-3.5 pb-3 pt-4 shrink-0 w-full bg-gradient-to-t from-panel to-rgb(12, 13, 17) border-t border-black flex flex-col gap-3 relative z-20">
       
-      <!-- Layout Chassis Container -->
       <div class="relative w-full aspect-[3658/2595] select-none isolate">
         
-        <!-- Player Chassis Vector Mask Layer -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="296 383 3658 2595" preserveAspectRatio="none" width="100%" height="100%" class="absolute inset-0 pointer-events-none select-none z-10">
           <defs>
             <filter id="lcd-inner-shadow">
@@ -199,7 +157,6 @@ export function MusicPlayerDeck({
           />
         </svg>
 
-        <!-- Settings Cog/Gear Trigger Button with 1:1 Hit Area Shield Layer -->
         <div 
           class="absolute z-5 pointer-events-none"
           style=${{
@@ -217,20 +174,13 @@ export function MusicPlayerDeck({
             class="w-full h-full cursor-none outline-none rounded-full relative flex items-center justify-center group pointer-events-auto"
             title="Open Console Mixer"
           >
-            <!-- 1:1 Transparent Overlay preventing Teeth Hover Flicker -->
             <div class="absolute inset-0 rounded-full bg-white/[0.001] z-10" />
             <div class="w-full h-full transition-transform duration-300 group-hover:rotate-90 group-active:scale-95 pointer-events-none">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1280" width="100%" height="100%">
-                <defs>
-                  <radialGradient id="gear-bg-settings" cx="50%" cy="50%" r="50%">
-                    <stop offset="20%" stop-color="rgb(77, 77, 85)" />
-                    <stop offset="100%" stop-color="rgb(42, 42, 48)" />
-                  </radialGradient>
-                </defs>
                 <path
                   d="M 1220.0 640.0 A 580 580 0 0 0 1191.6 819.2 L 960.8 843.6 A 380 380 0 0 0 932.8 882.2 L 980.9 1109.2 A 580 580 0 0 0 819.2 1191.6 A 580 580 0 0 0 640.0 1220.0 L 545.5 1008.1 A 380 380 0 0 0 500.1 993.3 L 299.1 1109.2 A 580 580 0 0 0 170.8 980.9 A 580 580 0 0 0 88.4 819.2 L 260.7 663.9 A 380 380 0 0 0 260.7 616.1 L 88.4 460.8 A 580 580 0 0 0 170.8 299.1 A 580 580 0 0 0 299.1 170.8 L 500.1 286.7 A 380 380 0 0 0 545.5 271.9 L 640.0 60.0 A 580 580 0 0 0 819.2 88.4 A 580 580 0 0 0 980.9 170.8 L 932.8 397.8 A 380 380 0 0 0 960.8 436.4 L 1191.6 460.8 A 580 580 0 0 0 1220.0 640.0 Z"
                   fill-rule="evenodd"
-                  fill=${settingsGearBgRef}
+                  fill="url(#gear-bg-settings)"
                   stroke="rgba(255,255,255,0.08)"
                   stroke-width="3"
                   vector-effect="non-scaling-stroke"
@@ -240,7 +190,6 @@ export function MusicPlayerDeck({
           </button>
         </div>
 
-        <!-- LCD Screen Mask (Top Center) with Parity CSS Mask -->
         <div 
           class="absolute overflow-hidden z-20"
           style=${{
@@ -255,12 +204,12 @@ export function MusicPlayerDeck({
             backgroundColor: 'rgb(3, 4, 2)'
           }}
         >
-          <div class="absolute inset-0 lcd-scanlines pointer-events-none z-25 select-none opacity-20 animate-lcd-flicker" />
-          <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.045] to-transparent pointer-events-none z-40" />
+          <div class="absolute inset-0 lcd-scanlines pointer-events-none z-20 select-none opacity-40 animate-lcd-flicker" />
+          <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.045] to-transparent pointer-events-none z-45" />
+          <div class="absolute inset-0 lcd-vignette pointer-events-none z-25" />
 
           <div class="absolute inset-0 flex items-stretch p-[2%] gap-[4%] select-none font-mono text-primary leading-none">
             
-            <!-- Dynamic Album Art Frame -->
             <div class="relative aspect-square h-full shrink-0 overflow-hidden rounded-[8px] bg-black shadow-[0_2px_0_rgba(0,0,0,1),inset_0_1px_1px_rgba(255,255,255,0.2)] z-30">
               ${trackMetadata && trackMetadata.coverUrl ? html`
                 <img src=${trackMetadata.coverUrl} class="absolute inset-0 w-full h-full object-cover z-10 opacity-90" alt="" />
@@ -272,38 +221,27 @@ export function MusicPlayerDeck({
               <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none z-20" />
             </div>
 
-            <div class="relative flex-1 min-w-0 flex flex-col justify-center text-left pr-2">
-              <div class="min-w-0">
-                <!-- Dynamic Scrolling Album Title -->
-                <div class="relative w-full overflow-hidden h-[12px] flex items-center">
-                  <${ScrollingText} isUiActive=${isUiActive} className="relative leading-none text-[8px] opacity-40 tracking-widest uppercase text-primary">
-                    <span>${cleanAlbum}</span>
-                  </${ScrollingText}>
-                </div>
-                <!-- Dynamic Scrolling Track Title -->
-                <div class="relative w-full overflow-hidden h-[16px] mt-0.5 flex items-center">
-                  <${ScrollingText} isUiActive=${isUiActive} className="relative leading-none text-[11px] font-bold tracking-wider uppercase text-primary animate-phosphor drop-shadow-[0_0_2px_rgba(34,197,94,1)]">
-                    <span>${cleanTitle}</span>
-                  </${ScrollingText}>
-                </div>
+            <div class="relative flex-1 min-w-0 flex flex-col h-full pointer-events-none pr-2">
+              <div class="relative h-[45%] w-full flex items-center overflow-hidden">
+                <${ScrollingText} isUiActive=${isUiActive} className="text-[8px] font-bold tracking-widest text-primary/60 uppercase truncate">
+                  <span>${cleanAlbum}</span>
+                </${ScrollingText}>
               </div>
 
-              <!-- Micro Visualizer Graph -->
-              <div class="flex items-end gap-[1.5px] h-4 w-full mt-1.5 overflow-hidden">
-                <div class="flex-1 h-full min-w-0">
-                  <canvas 
-                    ref=${miniCanvasRef} 
-                    width="120" 
-                    height="16" 
-                    class="w-full h-full opacity-80"
-                  />
-                </div>
+              <div class="relative h-[55%] w-full flex items-center overflow-hidden group/titlelink">
+                <${ScrollingText} isUiActive=${isUiActive} className="relative text-[11px] font-bold tracking-wider uppercase">
+                  <span class="text-primary drop-shadow-[0_0_2px_rgba(34,197,94,0.6)]">
+                    ${cleanTitle}
+                  </span>
+                  <span class="absolute left-0 top-0 pointer-events-none text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-indigo-400 bg-[length:200%_auto] animate-gradient-xy" aria-hidden="true">
+                    ${cleanTitle}
+                  </span>
+                </${ScrollingText}>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Embedded Scrubber (Timeline Slot aligned at 49%) -->
         <div 
           class="absolute flex items-center pointer-events-auto z-30"
           style=${{
@@ -313,34 +251,31 @@ export function MusicPlayerDeck({
             height: '14%'
           }}
         >
-          <!-- 1:1 Parity Scrubber with Inset Progress Height Limits -->
           <div class="flex items-center gap-2 w-full">
             <div class="relative flex items-center group/scrub flex-1 h-5">
               <div class="absolute inset-0 rounded-md surface-hardware-track pointer-events-none" />
-              <!-- Recessed 3px inset to nest the core nicely -->
               <div class="absolute inset-[3px] rounded-sm overflow-hidden pointer-events-none">
                 <div class="h-full bg-primary" style=${{ width: `${progressPercent}%` }} />
               </div>
               <div class="absolute inset-0 rounded-md shadow-[inset_0_1px_3px_rgba(0,0,0,0.3),inset_0_-1px_1px_rgba(255,255,255,0.12)] pointer-events-none" />
               
+              <div class="peer-focus-ring-prismatic" />
               <input 
                 type="range" 
                 min="0" 
                 max=${duration || 0} 
                 value=${currentTime} 
                 onChange=${handleScrubberChange}
-                class="absolute inset-0 w-full h-full opacity-0 cursor-none z-30"
+                class="peer absolute inset-0 w-full h-full opacity-0 cursor-none z-30"
               />
             </div>
             
-            <!-- Compact Timecode Box -->
-            <div class="flex items-center justify-center font-mono text-[9px] text-muted border border-transparent surface-hardware-track rounded-md shrink-0 px-1.5 min-w-[72px] h-5 bg-[#0c0d11]">
+            <div class="flex items-center justify-center font-mono text-[9.5px] text-muted border border-transparent surface-hardware-track rounded-md shrink-0 px-1.5 min-w-[72px] h-5 bg-[#0c0d11]">
               <span>${formatTime(currentTime)} / ${formatTime(duration)}</span>
             </div>
           </div>
         </div>
 
-        <!-- Controls Row with Proportional Aspect-Square Sizing -->
         <div
           class="absolute flex items-center justify-between z-30 pointer-events-auto"
           style=${{
@@ -354,6 +289,7 @@ export function MusicPlayerDeck({
             label="Shuffle"
             onClick=${toggleShuffleState}
             active=${isShuffle}
+            isPrismatic=${true}
             className="w-[15%] aspect-square"
           >
             <${Shuffle} size=${12} />
@@ -371,6 +307,7 @@ export function MusicPlayerDeck({
             label=${isPlaying ? "Pause" : "Play"}
             onClick=${togglePlay}
             active=${isPlaying}
+            isPrismatic=${true}
             className="w-[21%] aspect-square shadow-lg"
           >
             ${isPlaying 
@@ -387,10 +324,11 @@ export function MusicPlayerDeck({
             <${SkipForward} size=${12} fill="currentColor" />
           </${ConsoleButton}>
 
-          <div class="relative w-[15%] h-full flex items-center justify-center aspect-square">
+          <div class="relative w-[15%] h-full flex items-center justify-center aspect-square" style=${{ anchorName: "--volume-btn" }}>
             <${ConsoleButton}
               label="Volume"
-              onClick=${() => setShowVolumePopover(!showVolumePopover)}
+              onClick=${() => {}}
+              popoverTarget="volume-slider-popover"
               active=${showVolumePopover}
               className="w-full h-full"
             >
@@ -400,20 +338,25 @@ export function MusicPlayerDeck({
               }
             </${ConsoleButton}>
 
-            <!-- Hardware styled rotated Volume Popup slider well -->
-            ${showVolumePopover && html`
+            <div 
+              popover="auto"
+              id="volume-slider-popover"
+              style=${{ positionAnchor: "--volume-btn" }}
+              class="bg-transparent border-none overflow-visible p-0 cursor-none"
+            >
               <div 
-                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-[100] flex flex-col items-center bg-[#1a1a1f] border border-white/10 p-2 rounded-lg shadow-2xl w-12 h-[170px] animate-lightbox-entry cursor-none"
+                class="flex flex-col items-center bg-[#1a1a1f] border border-white/10 p-2 rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.05)] w-12 h-40 cursor-none relative"
                 onClick=${(e) => e.stopPropagation()}
               >
                 <div class="absolute bottom-0 left-0 right-0 h-5 bg-transparent" />
-                <div class="relative w-[144px] h-8 shrink-0 flex items-center group/vol -rotate-90 origin-center mt-[68px]">
+                <div class="relative w-[110px] h-6 shrink-0 flex items-center group/vol -rotate-90 origin-center mt-[48px]">
                   <div class="absolute inset-0 rounded-md surface-hardware-track pointer-events-none" />
                   <div class="absolute inset-[3px] rounded-sm overflow-hidden pointer-events-none">
                     <div class="h-full bg-primary" style=${{ width: `${volume * 100}%` }} />
                   </div>
                   <div class="absolute inset-0 shadow-[inset_0_1px_3px_rgba(0,0,0,0.3),inset_0_-1px_1px_rgba(255,255,255,0.12)] rounded-md pointer-events-none" />
                   
+                  <div class="peer-focus-ring-prismatic" />
                   <input 
                     type="range" 
                     min="0" 
@@ -424,18 +367,18 @@ export function MusicPlayerDeck({
                       const val = parseFloat(e.target.value);
                       setVolume(val);
                     }}
-                    class="absolute inset-0 w-full h-full opacity-0 cursor-none z-30" 
+                    class="peer absolute inset-0 w-full h-full opacity-0 cursor-none z-30" 
                   />
                 </div>
                 
                 <button 
                   onClick=${handleMuteToggle}
-                  class="text-[9px] font-mono text-muted hover:text-white mt-16 uppercase cursor-none shrink-0"
+                  class="text-[9px] font-mono text-muted hover:text-white mt-12 uppercase cursor-none shrink-0"
                 >
                   ${volume === 0 ? "UNM" : "MUTE"}
                 </button>
               </div>
-            `}
+            </div>
           </div>
 
         </div>

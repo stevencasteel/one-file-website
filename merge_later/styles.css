@@ -1,4 +1,3 @@
-/* Custom Scrollbar Override */
 ::-webkit-scrollbar {
   display: none !important;
 }
@@ -25,7 +24,6 @@ h1, h2, h3, h4, h5, h6 {
   font-variation-settings: "wght" 800;
 }
 
-/* Dynamic Variable Font Adjustments */
 .font-mono {
   font-family: "Recursive", monospace !important;
   font-variation-settings: "MONO" 1, "CASL" 0, "slnt" 0, "CRSV" 0, "wght" 400 !important;
@@ -43,7 +41,6 @@ nav a:hover, nav button:hover {
   font-variation-settings: "MONO" 0, "CASL" 0.35, "slnt" 0, "CRSV" 0.5, "wght" 750;
 }
 
-/* Custom Cursor styles with translation improvements */
 .custom-cursor {
   position: fixed;
   top: 0;
@@ -66,7 +63,6 @@ nav a:hover, nav button:hover {
   transform-origin: center;
 }
 
-/* Dot Grid Backgrounds */
 .bg-grid-pattern {
   background-image:
     linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
@@ -74,7 +70,6 @@ nav a:hover, nav button:hover {
   background-size: 32px 32px;
 }
 
-/* Clean, stable grid card hover effects */
 .prismatic-border-hover {
   transition: border-color 0.35s ease, box-shadow 0.35s ease;
   border-color: rgba(255, 255, 255, 0.08);
@@ -84,7 +79,6 @@ nav a:hover, nav button:hover {
   box-shadow: 0 0 15px rgba(255, 100, 255, 0.25);
 }
 
-/* GPU-Accelerated Lightbox Overlay Animations */
 @keyframes fade-in-scale {
   from {
     opacity: 0;
@@ -99,7 +93,6 @@ nav a:hover, nav button:hover {
   animation: fade-in-scale 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* System Cursor/Typewriter animations */
 @keyframes phosphor-flicker {
   0%, 100% { opacity: 0.97; }
   50% { opacity: 1.0; }
@@ -108,7 +101,6 @@ nav a:hover, nav button:hover {
   animation: phosphor-flicker 0.25s infinite;
 }
 
-/* Retro CRT Scanlines overlay */
 .lcd-scanlines {
   background: repeating-linear-gradient(
     to bottom,
@@ -119,7 +111,6 @@ nav a:hover, nav button:hover {
   );
 }
 
-/* Sunken Well Bezel */
 .surface-hardware-well {
   background-color: #0c0d11;
   box-shadow:
@@ -128,7 +119,6 @@ nav a:hover, nav button:hover {
   border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
-/* Hardware Track */
 .surface-hardware-track {
   background-color: #0c0d11;
   box-shadow:
@@ -137,7 +127,6 @@ nav a:hover, nav button:hover {
     0 1px 1px rgba(255, 255, 255, 0.09);
 }
 
-/* Shaded Hardware Button */
 .surface-hardware-btn {
   background-image: linear-gradient(to bottom, #2a2a30, #111115);
   border-top: 1px solid hsla(0, 0%, 100%, 0.1);
@@ -154,7 +143,6 @@ nav a:hover, nav button:hover {
   background-color: #111115;
 }
 
-/* Prismatic Background Sweep */
 @keyframes prismatic-sweep {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -169,7 +157,6 @@ nav a:hover, nav button:hover {
   animation: prismatic-sweep 5s linear infinite;
 }
 
-/* Marquee scrolling keyframes and classes */
 @keyframes marquee-text {
   0% {
     transform: translateX(0);
@@ -185,7 +172,6 @@ nav a:hover, nav button:hover {
   animation-play-state: paused;
 }
 
-/* Neumorphism Elevated Shadows */
 .shadow-neumorph-elevated-sm {
   box-shadow: -1px -1px 2px hsla(0, 0%, 100%, 0.04), 2px 2px 4px hsla(0, 0%, 0%, 0.4);
 }
@@ -193,7 +179,6 @@ nav a:hover, nav button:hover {
   box-shadow: inset 1px 1px 3px hsla(0, 0%, 0%, 0.4), inset -1px -1px 2px hsla(0, 0%, 100%, 0.03);
 }
 
-/* Continuous physical rotation loops */
 @keyframes spin-clockwise {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -210,4 +195,91 @@ nav a:hover, nav button:hover {
 }
 .gear-paused {
   animation-play-state: paused !important;
+}
+
+.bg-panel-raised {
+  background-color: #16161a;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.lcd-vignette {
+  box-shadow: inset 0 8px 20px rgba(0,0,0,0.85), inset 0 -8px 20px rgba(0,0,0,0.85);
+}
+
+.bg-prismatic-gradient {
+  background: linear-gradient(90deg, #22c55e, #3b82f6, #a855f7, #ef4444, #22c55e);
+  background-size: 200% auto;
+}
+
+.animate-gradient-xy {
+  animation: prismatic-sweep 5s linear infinite;
+}
+
+.console-btn-prismatic-active {
+  position: relative;
+}
+.console-btn-prismatic-border {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #22c55e, #3b82f6, #a855f7, #ef4444, #22c55e);
+  background-size: 200% auto;
+  animation: prismatic-sweep 5s linear infinite;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  padding: 1px;
+  pointer-events: none;
+  z-index: 10;
+}
+.console-btn-prismatic-blur {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #22c55e, #3b82f6, #a855f7, #ef4444, #22c55e);
+  background-size: 200% auto;
+  animation: prismatic-sweep 5s linear infinite;
+  opacity: 0.2;
+  filter: blur(8px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+#volume-slider-popover {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translate(-50%, -12px);
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  overflow: visible;
+}
+@supports (anchor-name: --volume-btn) {
+  #volume-slider-popover {
+    bottom: calc(anchor(top) + 12px);
+    left: anchor(center);
+    transform: translateX(-50%);
+  }
+}
+
+.peer-focus-ring-prismatic {
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  background: linear-gradient(90deg, #22c55e, #3b82f6, #a855f7, #ef4444, #22c55e);
+  background-size: 200% auto;
+  animation: prismatic-sweep 5s linear infinite;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  padding: 2px;
+  z-index: 20;
+}
+input[type="range"]:focus ~ .peer-focus-ring-prismatic {
+  opacity: 1;
 }

@@ -25,12 +25,12 @@ Object.entries(grouped).forEach(([folder, tracks]) => {
   });
 });
 
-// ── CONSOLE BUTTON COMPONENT (1:1 SHARE) ─────────────────────────────────
 function ConsoleButton({
   children,
   onClick,
   active,
   label,
+  isPrismatic = false,
   className = "w-8 h-8"
 }) {
   return html`
@@ -45,11 +45,14 @@ function ConsoleButton({
           ${children}
         </span>
       </button>
+      ${active && isPrismatic && html`
+        <div class="console-btn-prismatic-border" />
+        <div class="console-btn-prismatic-blur" />
+      `}
     </div>
   `;
 }
 
-// ── DECOUPLED SPECTRUM VISUALIZER COMPONENT ──────────────────────────────
 function SpectrumVisualizer({ isPlaying }) {
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
@@ -79,9 +82,9 @@ function SpectrumVisualizer({ isPlaying }) {
       let x = 0;
 
       const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
-      gradient.addColorStop(0, "rgb(59, 130, 246)"); // Blue
-      gradient.addColorStop(0.5, "rgb(168, 85, 247)"); // Purple
-      gradient.addColorStop(1, "rgb(239, 68, 68)"); // Red
+      gradient.addColorStop(0, "rgb(59, 130, 246)");
+      gradient.addColorStop(0.5, "rgb(168, 85, 247)");
+      gradient.addColorStop(1, "rgb(239, 68, 68)");
 
       const peaks = peaksRef.current;
       const smoothedValues = smoothedValuesRef.current;
@@ -142,7 +145,6 @@ function SpectrumVisualizer({ isPlaying }) {
   `;
 }
 
-// ── MAIN AUDIO CONSOLE MODAL COMPONENT ───────────────────────────────────
 export function AudioConsoleModal({
   isOpen,
   onClose,
@@ -160,11 +162,10 @@ export function AudioConsoleModal({
   formatTime,
   playTrackByIndex,
 
-  // Global Mixer State Bindings
   mixerMaster,
   setMixerMaster,
-  volume, // musicVolume
-  setVolume, // setMusicVolume
+  volume,
+  setVolume,
   mixerSfx,
   setMixerSfx,
   mixerAmbience,
@@ -178,12 +179,10 @@ export function AudioConsoleModal({
   const [playlistView, setPlaylistView] = useState("tracks");
   const [viewingAlbumId, setViewingAlbumId] = useState(ALBUMS[0]?.id || "");
 
-  // Synced on opening/active track swap
   useEffect(() => {
     if (activeTrack) setViewingAlbumId(activeTrack.folder);
   }, [activeTrack]);
 
-  // Hook-up Lowpass filter when active console open (focus state logic)
   useEffect(() => {
     audioEngine.setLowpass(true);
     return () => {
@@ -214,13 +213,11 @@ export function AudioConsoleModal({
   const cleanTitle = trackMetadata?.title || activeTrack.title.replace(/_/g, ' ');
   const cleanAlbum = trackMetadata?.artist ? `${trackMetadata.artist} // ${activeTrack.folder.replace(/_/g, ' ')}` : activeTrack.folder.replace(/_/g, ' ');
 
-  // 1:1 Overdriven Spectrum Gain Ticks (13 notches)
   const ticks = Array.from({ length: 13 }, (_, i) => i * 8.33);
 
-  // Reusable Studio Mixer Slider Component
   const renderSlider = (label, type, value, setter) => {
     const displayPercent = Math.round(value * 100);
-    const physicalPercent = Math.round((value / 3.0) * 100); // Max fader is 3.0 (300%)
+    const physicalPercent = Math.round((value / 3.0) * 100);
     
     const active = displayPercent > 0 && !isMuted;
     const baseHue = 142;
@@ -230,7 +227,7 @@ export function AudioConsoleModal({
     if (displayPercent <= 100) {
       opacity = 0.3 + (displayPercent / 100) * 0.7;
     } else {
-      hue = Math.max(0, baseHue - (displayPercent - 100) * 1.2); // Overdrive color fader shift
+      hue = Math.max(0, baseHue - (displayPercent - 100) * 1.2);
     }
 
     const sliderColor = active ? `hsla(${hue}, 80%, 50%, ${opacity})` : 'rgb(75, 85, 99)';
@@ -253,7 +250,6 @@ export function AudioConsoleModal({
             <div class="h-full transition-all duration-100 ease-out" style=${{ width: `${physicalPercent}%`, backgroundColor: sliderColor }} />
           </div>
 
-          <!-- Slider notches -->
           <div class="absolute left-0 right-0 -bottom-2 h-1.5 pointer-events-none flex justify-between select-none">
             ${ticks.map((pct, i) => html`
               <div 
@@ -264,17 +260,15 @@ export function AudioConsoleModal({
             `)}
           </div>
 
-          <!-- Knob thumb -->
+          <div class="peer-focus-ring-prismatic" />
+
           <div 
-            class=${`absolute pointer-events-none z-20 flex items-center justify-center transition-all duration-100 ${isMuted ? 'opacity-40' : ''}`} 
+            class=${`thumb absolute pointer-events-none z-20 flex items-center justify-center border border-black shadow-[0_3px_5px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.12)] rounded-[3px] bg-gradient-to-b from-[#323238] via-[#1a1a1f] to-[#0c0c0e] scale-100 group-hover:scale-[1.05] group-active:scale-[0.98] ${isMuted ? 'opacity-40' : ''}`}
             style=${{ left: `calc(${physicalPercent}% - 9px)`, width: '18px', height: '24px' }}
           >
-            <img 
-              src="https://www.stevencasteel.com/assets/svg/slider-thumb.svg" 
-              class="absolute inset-0 w-full h-full object-contain pointer-events-none"
-              draggable="false"
-            />
-            <div class="w-[2px] h-3.5 shadow-[0_0_6px_currentColor] rounded-full z-10 transition-colors" style=${{ backgroundColor: active ? sliderColor : '#4b5563', color: active ? sliderColor : 'transparent' }} />
+            <div class="absolute inset-y-1.5 left-1 w-[1px] bg-white/5 shadow-[0.5px_0_0_rgba(0,0,0,0.4)]" />
+            <div class="absolute inset-y-1.5 right-1 w-[1px] bg-white/5 shadow-[-0.5px_0_0_rgba(0,0,0,0.4)]" />
+            <div class="w-[2px] h-3.5 rounded-full shadow-[0_0_6px_currentColor] transition-colors duration-200" style=${{ backgroundColor: active ? sliderColor : '#4b5563', color: active ? sliderColor : 'transparent' }} />
           </div>
 
           <input 
@@ -289,7 +283,7 @@ export function AudioConsoleModal({
                 audioEngine.playHover();
               }
             }}
-            class="absolute inset-0 w-full h-full opacity-0 cursor-none z-30" 
+            class="peer absolute inset-0 w-full h-full opacity-0 cursor-none z-30" 
           />
         </div>
       </div>
@@ -298,10 +292,9 @@ export function AudioConsoleModal({
 
   return html`
     <div class="fixed inset-0 bg-void/95 backdrop-blur-md z-[110] flex items-center justify-center p-4 cursor-none animate-lightbox-entry">
-      <div class="relative w-full max-w-5xl bg-panel rounded-2xl shadow-neumorph-elevated-md border border-[#3a3a40] overflow-hidden flex flex-col cursor-none">
+      <div class="relative w-full max-w-5xl bg-panel-raised rounded-lg shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-[#3a3a40] overflow-hidden flex flex-col cursor-none">
         
-        <!-- Header Bar -->
-        <div class="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-void">
+        <div class="flex items-center justify-between px-5 md:px-8 py-4 border-b shrink-0 w-full relative z-20 transition-colors duration-300 bg-void/40 border-white/10">
           <div class="flex items-center gap-3 text-primary-400">
             <${Settings2} size=${22} />
             <h2 class="text-md md:text-lg font-display font-bold uppercase tracking-wider mt-0.5 text-white">
@@ -321,14 +314,14 @@ export function AudioConsoleModal({
 
         <div class="p-6 flex flex-col gap-6 overflow-y-auto max-h-[85vh] custom-scrollbar" data-lenis-prevent="true">
           
-          <!-- Top Playing Row -->
           <div class="flex flex-col md:flex-row gap-6 items-center md:items-stretch bg-[#111114] p-5 rounded-xl border border-white/5 shadow-inner">
-            <div class="w-full md:w-48 h-48 rounded-xl overflow-hidden border border-white/10 bg-black flex items-center justify-center relative shrink-0">
+            <div class="relative aspect-square shrink-0 rounded-xl border border-white/10 shadow-2xl overflow-hidden bg-ink w-full max-w-[240px] sm:max-w-[280px] md:max-w-none md:w-auto md:h-48 xl:h-56">
               ${trackMetadata && trackMetadata.coverUrl ? html`
-                <img src=${trackMetadata.coverUrl} class="absolute inset-0 w-full h-full object-cover opacity-90" alt="" />
+                <img src=${trackMetadata.coverUrl} class="absolute inset-0 w-full h-full object-cover opacity-90 animate-lightbox-entry" alt="" />
               ` : html`
-                <span class="text-5xl select-none">💿</span>
-                <div class=${`absolute inset-4 border border-white/5 rounded-full ${isPlaying ? 'animate-spin' : ''}`} style=${{ animationDuration: '8s' }} />
+                <div class="w-full h-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center">
+                  <span class="text-5xl select-none">💿</span>
+                </div>
               `}
               <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none z-20" />
             </div>
@@ -340,15 +333,14 @@ export function AudioConsoleModal({
                     // ACTIVE SOURCE FEED
                   </span>
                   
-                  <div class="h-8 overflow-hidden relative flex items-center mt-1">
-                    <${ScrollingText} isUiActive=${isPlaying} className="relative leading-none text-2xl font-display font-black text-white uppercase">
-                      <span>${cleanTitle}</span>
-                    </${ScrollingText}>
+                  <div class="mt-1 pb-1">
+                    <div class="text-light font-display font-bold text-xl md:text-2xl lg:text-3xl truncate leading-tight pb-1 drop-shadow-md">
+                      ${cleanTitle}
+                    </div>
+                    <div class="text-[11px] md:text-xs font-mono tracking-widest uppercase truncate leading-none pb-1 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-indigo-400 bg-[length:200%_auto] animate-gradient-xy">
+                      ${cleanAlbum}
+                    </div>
                   </div>
-                  
-                  <p class="text-xs font-mono text-muted uppercase tracking-widest truncate mt-0.5 select-none">
-                    ${cleanAlbum}
-                  </p>
                 </div>
                 
                 <button 
@@ -365,39 +357,37 @@ export function AudioConsoleModal({
                 </button>
               </div>
 
-              <!-- 1:1 Timeline scrubber -->
               <div class="flex items-center gap-2.5 w-full">
                 <div class="relative flex items-center group/scrub flex-1 h-6">
                   <div class="absolute inset-0 rounded-md surface-hardware-track pointer-events-none" />
-                  <!-- Recessed 3px inset progress bar -->
                   <div class="absolute inset-[3px] rounded-sm overflow-hidden pointer-events-none">
                     <div class="h-full bg-primary" style=${{ width: `${progressPercent}%` }} />
                   </div>
                   <div class="absolute inset-0 rounded-md shadow-[inset_0_1px_3px_rgba(0,0,0,0.3),inset_0_-1px_1px_rgba(255,255,255,0.12)] pointer-events-none" />
                   
+                  <div class="peer-focus-ring-prismatic" />
                   <input 
                     type="range" 
                     min="0" 
                     max=${duration || 0} 
                     value=${currentTime} 
                     onChange=${handleScrubberChange}
-                    class="absolute inset-0 w-full h-full opacity-0 cursor-none z-30"
+                    class="peer absolute inset-0 w-full h-full opacity-0 cursor-none z-30"
                   />
                 </div>
                 
-                <!-- Timecode Box -->
-                <div class="flex items-center justify-center font-mono text-[11px] text-muted border border-transparent surface-hardware-track rounded-md shrink-0 px-3 min-w-[96px] h-6 bg-[#0c0d11]">
+                <div class="flex items-center justify-center font-mono text-[11px] text-muted border border-transparent surface-hardware-track rounded-md shrink-0 px-3 min-w-[110px] h-6 bg-[#0c0d11]">
                   <span>${formatTime(currentTime)} / ${formatTime(duration)}</span>
                 </div>
               </div>
 
-              <!-- Controls Row utilizing standard Hardware-Shaded ConsoleButtons -->
               <div class="flex items-center gap-4 w-full">
                 <${ConsoleButton}
                   label="Shuffle"
                   onClick=${toggleShuffleState}
                   active=${isShuffle}
-                  className="flex-1 max-w-[80px] h-12"
+                  isPrismatic=${true}
+                  className="flex-1 max-w-[60px] md:max-w-[80px] h-12 md:h-14 lg:h-16"
                 >
                   <${Shuffle} size=${16} />
                 </${ConsoleButton}>
@@ -405,7 +395,7 @@ export function AudioConsoleModal({
                 <${ConsoleButton}
                   label="Previous"
                   onClick=${handlePrev}
-                  className="flex-1 h-12"
+                  className="flex-1 h-12 md:h-14 lg:h-16"
                 >
                   <${SkipBack} size=${18} fill="currentColor" />
                 </${ConsoleButton}>
@@ -414,18 +404,19 @@ export function AudioConsoleModal({
                   label=${isPlaying ? "Pause" : "Play"}
                   onClick=${togglePlay}
                   active=${isPlaying}
-                  className="flex-1 max-w-[180px] h-12 shadow-lg"
+                  isPrismatic=${true}
+                  className="flex-1 max-w-[180px] h-12 md:h-14 lg:h-16 shadow-lg"
                 >
                   ${isPlaying 
-                    ? html`<${Pause} size=${18} fill="currentColor" class="text-void" />`
-                    : html`<${Play} size=${18} fill="currentColor" class="text-void ml-0.5" />`
+                    ? html`<${Pause} size=${18} fill="currentColor" class="text-primary drop-shadow-[0_0_4px_rgba(34,197,94,1)]" />`
+                    : html`<${Play} size=${18} fill="currentColor" class="ml-0.5" />`
                   }
                 </${ConsoleButton}>
 
                 <${ConsoleButton}
                   label="Next"
                   onClick=${handleNext}
-                  className="flex-1 h-12"
+                  className="flex-1 h-12 md:h-14 lg:h-16"
                 >
                   <${SkipForward} size=${18} fill="currentColor" />
                 </${ConsoleButton}>
@@ -433,13 +424,10 @@ export function AudioConsoleModal({
             </div>
           </div>
 
-          <!-- Wide decoupled visualizer with standard clean mount triggers -->
           ${showShader && html`<${SpectrumVisualizer} isPlaying=${isPlaying} />`}
 
-          <!-- Double Column bottom rack -->
           <div class="flex flex-col lg:flex-row gap-6 items-stretch w-full">
             
-            <!-- Left Column: Playlist Card -->
             <div class="w-full lg:flex-1 relative flex flex-col bg-ink rounded-xl border border-white/5 overflow-hidden shadow-inner h-[380px]">
               <div class="flex items-center justify-between px-3 py-3 border-b border-white/10 bg-ink shrink-0 h-[46px] select-none">
                 ${playlistView === "tracks" ? html`
@@ -466,7 +454,6 @@ export function AudioConsoleModal({
                 `}
               </div>
 
-              <!-- Content Area with custom scrollbar -->
               <div class="flex-1 overflow-y-auto custom-scrollbar p-2 pb-4 space-y-1">
                 ${playlistView === "albums" ? ALBUMS.map(album => html`
                   <button 
@@ -527,7 +514,6 @@ export function AudioConsoleModal({
               </div>
             </div>
 
-            <!-- Right Column: Mixer sliders scaled up to 300% -->
             <div class="w-full lg:flex-1 shrink-0 bg-panel rounded-xl border border-white/5 shadow-inner flex flex-col overflow-hidden h-[380px]">
               <div class="flex items-center justify-between px-3 py-3 border-b border-white/10 shrink-0 z-10 bg-ink select-none">
                 <span class="font-display font-bold text-sm text-light tracking-widest uppercase ml-1">
@@ -552,7 +538,6 @@ export function AudioConsoleModal({
                 </div>
               </div>
 
-              <!-- Mixer Faders scaled to 3.0 (300%) -->
               <div class="flex flex-col flex-1 justify-center gap-6 p-5 md:p-6 bg-void/50">
                 ${renderSlider("Master Out", "master", mixerMaster, setMixerMaster)}
                 ${renderSlider("Music Synthesizer", "music", volume, setVolume)}
