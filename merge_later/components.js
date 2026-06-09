@@ -54,7 +54,6 @@ export function ScrambleText({ text, delay = 0, onComplete, enabled = true }) {
     return () => {
       clearTimeout(timeoutId);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text, delay, enabled]);
 
   return html`<span class="select-none inline-block">${displayText}</span>`;
@@ -92,7 +91,6 @@ export function TypedLog({ text, speed = 40, delay = 0, enabled = false, onCompl
     }, delay);
 
     return () => clearTimeout(timeoutId);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text, speed, delay, enabled]);
 
   return html`
@@ -107,12 +105,50 @@ export function TypedLog({ text, speed = 40, delay = 0, enabled = false, onCompl
   `;
 }
 
-export function GlassContainer({ children, className = "" }) {
+export function GlassContainer({ children, className = "", style = {} }) {
+  const [isInView, setIsInView] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      {
+        rootMargin: "200px 0px"
+      }
+    );
+
+    observer.observe(el);
+    return () => {
+      observer.unobserve(el);
+    };
+  }, []);
+
   const borderClass = "border-white/10";
-  const bgClass = "bg-panel";
+
+  const optimizedStyles = {
+    contentVisibility: 'auto',
+    containIntrinsicSize: 'auto 46px',
+    transform: 'translate3d(0, 0, 0)',
+    WebkitTransform: 'translate3d(0, 0, 0)',
+    backfaceVisibility: 'hidden',
+    WebkitBackfaceVisibility: 'hidden',
+    backgroundColor: 'rgba(17, 17, 20, 0.4)',
+    backdropFilter: isInView ? 'blur(12px)' : 'none',
+    WebkitBackdropFilter: isInView ? 'blur(12px)' : 'none',
+    ...style
+  };
 
   return html`
-    <div class="relative rounded-xl border shadow-[0_8px_32px_rgba(0,0,0,0.5)] transition-all duration-300 ${borderClass} ${bgClass} ${className}">
+    <div 
+      ref=${ref}
+      style=${optimizedStyles}
+      class="relative rounded-xl border shadow-[0_8px_32px_rgba(0,0,0,0.5)] transition-all duration-300 ${borderClass} ${className}"
+    >
       <div class="relative z-10 w-full h-full">
         ${children}
       </div>
@@ -120,7 +156,6 @@ export function GlassContainer({ children, className = "" }) {
   `;
 }
 
-// ── HIGH-PERFORMANCE MARQUEE TICKER (1:1 ScrollingText.tsx) ──
 export function ScrollingText({ children, isUiActive = true, className = "" }) {
   const containerRef = useRef(null);
   const textRef = useRef(null);
