@@ -399,7 +399,7 @@ export function AudioConsoleModal({
                   label="Shuffle"
                   onClick=${toggleShuffleState}
                   active=${isShuffle}
-                  isPrismatic=${true}
+                  isPrismatic=${isPrismaticEnabled}
                   className="flex-1 max-w-[60px] md:max-w-[80px] h-12 md:h-14 lg:h-16"
                 >
                   <${Shuffle} size=${16} />
@@ -417,7 +417,7 @@ export function AudioConsoleModal({
                   label=${isPlaying ? "Pause" : "Play"}
                   onClick=${togglePlay}
                   active=${isPlaying}
-                  isPrismatic=${true}
+                  isPrismatic=${isPrismaticEnabled}
                   className="flex-1 max-w-[180px] h-12 md:h-14 lg:h-16 shadow-lg"
                 >
                   ${isPlaying 

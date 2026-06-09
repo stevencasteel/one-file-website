@@ -220,9 +220,9 @@ export function MusicPlayerDeck({
 
         <!-- 2. Gear Button (Behind Chassis, z-20) -->
         <div 
-          className="absolute z-20 pointer-events-none"
+          className="absolute pointer-events-none"
           style=${{
-            top: '-2%', right: '-1.5%', width: '23%', aspectRatio: '1 / 1',
+            zIndex: -2, top: '-2%', right: '-1.5%', width: '23%', aspectRatio: '1 / 1',
             filter: 'drop-shadow(0px 4px 6px rgba(0,0,0,0.8)) drop-shadow(-1px -1px 1px rgba(255,255,255,0.15))'
           }}
         >
@@ -256,9 +256,8 @@ export function MusicPlayerDeck({
         </div>
 
         <!-- 3. SVG Chassis Mask (In Front of Gear, Pointer-Events-Auto to mask out the gear) -->
-        <div className="absolute inset-0 w-full h-full z-25 pointer-events-none">
-          <div 
-            className="absolute inset-0 w-full h-full pointer-events-auto z-0 [&>svg]:w-full [&>svg]:h-full [&>svg]:object-fill"
+        <div className="absolute inset-0 w-full h-full pointer-events-none" style=${{ zIndex: -1 }}>
+          <div className="absolute inset-0 w-full h-full pointer-events-none z-0 [&>svg]:w-full [&>svg]:h-full [&>svg]:object-fill [&>svg]:pointer-events-none [&>svg_path]:pointer-events-auto"
             style=${{ filter: 'drop-shadow(4px 4px 8px rgba(0,0,0,0.7)) drop-shadow(-1px -1px 2px rgba(255,255,255,0.06))' }}
             dangerouslySetInnerHTML=${{ __html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="296 383 3658 2595" preserveAspectRatio="none" width="100%" height="100%">
   <defs>
@@ -378,10 +377,7 @@ export function MusicPlayerDeck({
             <${ConsoleButton}
               id="volume-toggle-btn"
               label="Volume"
-              onClick=${() => {
-                audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4);
-                setShowVolumePopover(!showVolumePopover);
-              }}
+              onClick=${() => { setShowVolumePopover(!showVolumePopover); }}
               active=${showVolumePopover}
               isPrismatic=${isPrismaticEnabled}
               className="w-full h-full"
