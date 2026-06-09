@@ -41,7 +41,7 @@ function ConsoleButton({
 
   return html`
     <div 
-      className=\`relative rounded-lg surface-hardware-well p-[2.5px] shrink-0 ${className}\`
+      className=${`relative rounded-lg surface-hardware-well p-[2.5px] shrink-0 ${className}`}
       style=${style}
     >
       <button
@@ -51,7 +51,7 @@ function ConsoleButton({
         onMouseDown=${handleMouseDown}
         onMouseUp=${handleMouseUp}
         onClick=${(e) => { e.stopPropagation(); onClick(); }}
-        className=\`relative isolate flex items-center justify-center w-full h-full rounded-[5px] transition-[transform,color] duration-150 cursor-none overflow-hidden outline-none surface-hardware-btn ${active ? 'is-active text-primary' : 'text-fog hover:text-white'}\`
+        className=${`relative isolate flex items-center justify-center w-full h-full rounded-[5px] transition-[transform,color] duration-150 cursor-none overflow-hidden outline-none surface-hardware-btn ${active ? 'is-active text-primary' : 'text-fog hover:text-white'}`}
       >
         <span className="relative z-10 flex items-center justify-center w-full h-full">
           ${children}
