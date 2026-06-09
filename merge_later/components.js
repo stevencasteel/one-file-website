@@ -117,3 +117,32 @@ export function GlassContainer({ children, className = "" }) {
     </div>
   `;
 }
+
+// ── HIGH-PERFORMANCE MARQUEE TICKER (1:1 ScrollingText.tsx) ──
+export function ScrollingText({ children, isUiActive = true, className = "" }) {
+  const containerRef = useRef(null);
+  const textRef = useRef(null);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (containerRef.current && textRef.current) {
+        setIsOverflowing(textRef.current.scrollWidth > containerRef.current.clientWidth);
+      }
+    };
+    checkOverflow();
+    window.addEventListener('resize', checkOverflow);
+    return () => window.removeEventListener('resize', checkOverflow);
+  }, [children]);
+
+  return html`
+    <div ref=${containerRef} class="relative w-full overflow-hidden whitespace-nowrap select-none">
+      <div class=${`flex w-max ${isOverflowing && isUiActive ? 'animate-marquee-text' : ''}`} style=${{ gap: isOverflowing ? '1.5rem' : '0' }}>
+        <span ref=${textRef} class=${className}>${children}</span>
+        ${isOverflowing && isUiActive && html`
+          <span class=${className} aria-hidden="true">${children}</span>
+        `}
+      </div>
+    </div>
+  `;
+}

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import htm from 'htm';
-import { Settings2, Pause, Play, SkipForward, SkipBack, Shuffle, X, Library, VolumeX, Volume2 } from 'lucide-react';
+import { Settings2, Pause, Play, SkipForward, SkipBack, Shuffle, X, Library, VolumeX, Volume2, Star, ChevronLeft, Download } from 'lucide-react';
 import { audioEngine } from './AudioEngine.js';
 import { AUDIO_TRACKS } from 'media-data';
 
@@ -28,37 +28,45 @@ export function AudioConsoleModal({
   isOpen,
   onClose,
   activeTrack,
+  trackMetadata,
   isPlaying,
   currentTime,
   duration,
-  volume,
   isShuffle,
   handleScrubberChange,
   handlePrev,
   togglePlay,
   handleNext,
   toggleShuffleState,
-  setVolume,
   formatTime,
-  playTrackByIndex
+  playTrackByIndex,
+
+  // Global Mixer State Bindings (1:1 with useVolumeStore.ts)
+  mixerMaster,
+  setMixerMaster,
+  volume, // musicVolume
+  setVolume, // setMusicVolume
+  mixerSfx,
+  setMixerSfx,
+  mixerAmbience,
+  setMixerAmbience,
+  isMuted,
+  setIsMuted
 }) {
   if (!isOpen) return null;
 
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
-  const [playlistView, setPlaylistView] = useState("albums");
+  const [showShader, setShowShader] = useState(true);
+  const [playlistView, setPlaylistView] = useState("tracks");
   const [viewingAlbumId, setViewingAlbumId] = useState(ALBUMS[0]?.id || "");
 
-  const [mixerMaster, setMixerMaster] = useState(1.0);
-  const [mixerMusic, setMixerMusic] = useState(volume);
-  const [mixerSfx, setMixerSfx] = useState(0.8);
-  const [mixerAmbience, setMixerAmbience] = useState(0.5);
-  const [isMuted, setIsMuted] = useState(false);
-
+  // Synced on opening/active track swap
   useEffect(() => {
-    setMixerMusic(volume);
-  }, [volume]);
+    if (activeTrack) setViewingAlbumId(activeTrack.folder);
+  }, [activeTrack]);
 
+  // Hook-up Lowpass filter when active console open (focus state logic)
   useEffect(() => {
     audioEngine.setLowpass(true);
     return () => {
@@ -66,28 +74,9 @@ export function AudioConsoleModal({
     };
   }, []);
 
+  // FFT Audio Analyzer Spectrum Loop
   useEffect(() => {
-    if (isMuted) {
-      audioEngine.setVolume("master", 0);
-    } else {
-      audioEngine.setVolume("master", mixerMaster);
-    }
-  }, [mixerMaster, isMuted]);
-
-  useEffect(() => {
-    audioEngine.setVolume("music", mixerMusic);
-    setVolume(mixerMusic);
-  }, [mixerMusic]);
-
-  useEffect(() => {
-    audioEngine.setVolume("sfx", mixerSfx);
-  }, [mixerSfx]);
-
-  useEffect(() => {
-    audioEngine.setVolume("ambience", mixerAmbience);
-  }, [mixerAmbience]);
-
-  useEffect(() => {
+    if (!showShader) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -107,26 +96,25 @@ export function AudioConsoleModal({
       }
 
       const barCount = 64;
-      const barWidth = (canvas.width / barCount) - 1.5;
+      const barWidth = (canvas.width / barCount) - 2;
       let x = 0;
 
       const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
-      gradient.addColorStop(0, "rgb(34, 197, 94)");
-      gradient.addColorStop(0.5, "rgb(59, 130, 246)");
-      gradient.addColorStop(1, "rgb(236, 72, 153)");
+      gradient.addColorStop(0, "rgb(59, 130, 246)"); // Blue
+      gradient.addColorStop(0.5, "rgb(168, 85, 247)"); // Purple
+      gradient.addColorStop(1, "rgb(239, 68, 68)"); // Red
 
       for (let i = 0; i < barCount; i++) {
         let rawValue = 0;
         if (isPlaying && analyser) {
-          const dataIndex = Math.min(
-            bufferLength - 1,
-            Math.floor(i * i * (bufferLength / (barCount * barCount * 1.1)) + 1)
+          const dataIndex = Math.floor(
+            i * i * (bufferLength / (barCount * barCount * 1.2)) + 1
           );
           rawValue = dataArray[dataIndex] || 0;
         }
 
         smoothedValues[i] += (rawValue - smoothedValues[i]) * 0.15;
-        const barHeight = (smoothedValues[i] / 255) * canvas.height * 0.9;
+        const barHeight = (smoothedValues[i] / 255) * canvas.height;
 
         if (barHeight > peaks[i]) {
           peaks[i] = barHeight;
@@ -144,7 +132,7 @@ export function AudioConsoleModal({
           ctx.fillRect(x, canvas.height - peaks[i] - 2, barWidth, 2);
         }
 
-        x += barWidth + 1.5;
+        x += barWidth + 2;
       }
 
       animationRef.current = requestAnimationFrame(drawVisualizer);
@@ -154,7 +142,7 @@ export function AudioConsoleModal({
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [isPlaying]);
+  }, [isPlaying, showShader]);
 
   const activeAlbum = ALBUMS.find(a => a.id === viewingAlbumId) || ALBUMS[0];
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -167,18 +155,47 @@ export function AudioConsoleModal({
     }
   };
 
+  const handleResetMixer = () => {
+    audioEngine.playClick();
+    setMixerMaster(1.0);
+    setVolume(0.75);
+    setMixerSfx(1.0);
+    setMixerAmbience(1.0);
+    if (isMuted) setIsMuted(false);
+  };
+
+  const cleanTitle = trackMetadata?.title || activeTrack.title.replace(/_/g, ' ');
+  const cleanAlbum = trackMetadata?.artist ? `${trackMetadata.artist} // ${activeTrack.folder.replace(/_/g, ' ')}` : activeTrack.folder.replace(/_/g, ' ');
+
+  // 1:1 Overdriven Spectrum Gain Ticks (13 notches)
   const ticks = Array.from({ length: 13 }, (_, i) => i * 8.33);
 
+  // Reusable Studio Mixer Slider Component (1:1 with AudioSlider.tsx)
   const renderSlider = (label, type, value, setter) => {
-    const physicalPercent = value * 100;
+    const displayPercent = Math.round(value * 100);
+    const physicalPercent = Math.round((value / 3.0) * 100); // Max fader is 3.0 (300%)
+    
+    const active = displayPercent > 0 && !isMuted;
+    const baseHue = 142;
+    let hue = baseHue;
+    let opacity = 1.0;
+
+    if (displayPercent <= 100) {
+      opacity = 0.3 + (displayPercent / 100) * 0.7;
+    } else {
+      hue = Math.max(0, baseHue - (displayPercent - 100) * 1.2); // Overdrive color fader shift
+    }
+
+    const sliderColor = active ? `hsla(${hue}, 80%, 50%, ${opacity})` : 'rgb(75, 85, 99)';
+
     return html`
-      <div class="flex flex-col gap-2 cursor-none group">
+      <div class="flex flex-col gap-2.5 cursor-none group">
         <div class="flex justify-between text-[11px] font-mono select-none">
           <span class="uppercase tracking-widest font-bold text-muted group-hover:text-white transition duration-200">
             ${label}
           </span>
-          <span class="font-bold text-primary tabular-nums">
-            ${Math.round(value * 100)}%
+          <span class="font-bold tabular-nums transition-colors" style=${{ color: sliderColor }}>
+            ${displayPercent}%
           </span>
         </div>
 
@@ -186,20 +203,23 @@ export function AudioConsoleModal({
           <div class="absolute left-0 right-0 h-2 bg-void rounded border border-black/40 shadow-inner" />
           
           <div class="absolute left-1 right-1 h-1 rounded overflow-hidden pointer-events-none z-10 opacity-75">
-            <div class="h-full bg-primary" style=${{ width: `${physicalPercent}%` }} />
+            <div class="h-full transition-all duration-100 ease-out" style=${{ width: `${physicalPercent}%`, backgroundColor: sliderColor }} />
           </div>
 
-          <div class="absolute left-0 right-0 -bottom-2.5 h-1.5 pointer-events-none flex justify-between select-none">
+          <!-- Slider notches -->
+          <div class="absolute left-0 right-0 -bottom-2 h-1.5 pointer-events-none flex justify-between select-none">
             ${ticks.map((pct, i) => html`
               <div 
                 key=${i} 
-                class=${`w-[1px] bg-white/20 ${i % 4 === 0 ? 'h-2 w-[1.5px] bg-white/40' : 'h-1'}`}
+                class=${`w-[1px] bg-white/20 transition-all ${i % 4 === 0 ? 'h-2 w-[1.5px] bg-white/40' : 'h-1'}`}
+                style=${{ left: `${pct}%` }}
               />
             `)}
           </div>
 
+          <!-- Knob thumb -->
           <div 
-            class="absolute pointer-events-none z-20 flex items-center justify-center transition-all duration-100" 
+            class=${`absolute pointer-events-none z-20 flex items-center justify-center transition-all duration-100 ${isMuted ? 'opacity-40' : ''}`} 
             style=${{ left: `calc(${physicalPercent}% - 9px)`, width: '18px', height: '24px' }}
           >
             <img 
@@ -207,19 +227,19 @@ export function AudioConsoleModal({
               class="absolute inset-0 w-full h-full object-contain pointer-events-none"
               draggable="false"
             />
-            <div class="w-[2px] h-3.5 bg-primary shadow-[0_0_6px_rgba(34,197,94,1)] rounded-full z-10" />
+            <div class="w-[2px] h-3.5 shadow-[0_0_6px_currentColor] rounded-full z-10 transition-colors" style=${{ backgroundColor: active ? sliderColor : '#4b5563', color: active ? sliderColor : 'transparent' }} />
           </div>
 
           <input 
             type="range" 
             min="0" 
-            max="1" 
+            max="3" 
             step="0.01" 
             value=${value} 
             onChange=${(e) => {
               setter(parseFloat(e.target.value));
               if (type === "sfx") {
-                audioEngine.playTick();
+                audioEngine.playHover();
               }
             }}
             class="absolute inset-0 w-full h-full opacity-0 cursor-none z-30" 
@@ -230,220 +250,263 @@ export function AudioConsoleModal({
   };
 
   return html`
-    <div class="fixed inset-0 bg-void/90 backdrop-blur-md z-[110] flex items-center justify-center p-4 cursor-none animate-lightbox-entry">
-      <div class="relative w-full max-w-4xl bg-panel rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-white/10 overflow-hidden flex flex-col cursor-none">
+    <div class="fixed inset-0 bg-void/95 backdrop-blur-md z-[110] flex items-center justify-center p-4 cursor-none animate-lightbox-entry">
+      <div class="relative w-full max-w-5xl bg-panel rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-[#3a3a40] overflow-hidden flex flex-col cursor-none">
         
-        <div class="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-ink">
-          <div class="flex items-center gap-3 text-primary">
+        <!-- Header Bar -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-void">
+          <div class="flex items-center gap-3 text-primary-400">
             <${Settings2} size=${22} />
             <h2 class="text-md md:text-lg font-display font-bold uppercase tracking-wider mt-0.5 text-white">
-              AUDIO CONSOLE MIXER
+              AUDIO CONSOLE
             </h2>
           </div>
           <button 
-            onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
-            onPointerUp=${() => {
-              audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+            onClick=${() => {
+              playSound("modal.leave");
               onClose();
             }}
-            class="flex items-center justify-center w-8 h-8 rounded-md bg-white/5 border border-white/10 hover:border-primary/40 hover:text-primary transition-all duration-300 cursor-none"
+            class="flex items-center justify-center w-8 h-8 rounded-md bg-white/5 border border-white/10 hover:border-primary-400 hover:text-primary-400 hover:bg-primary-400/10 transition-all duration-300 cursor-none outline-none"
           >
             <${X} size=${16} />
           </button>
         </div>
 
-        <div class="p-6 flex flex-col gap-6 overflow-y-auto max-h-[80vh] custom-scrollbar">
+        <div class="p-6 flex flex-col gap-6 overflow-y-auto max-h-[85vh] custom-scrollbar" data-lenis-prevent="true">
           
-          <div class="flex flex-col md:flex-row gap-6 items-stretch bg-ink p-5 rounded-xl border border-white/5">
-            <div class="w-full md:w-44 h-44 rounded-lg overflow-hidden border border-white/10 bg-void flex items-center justify-center relative shrink-0">
-              <span class="text-4xl select-none">💿</span>
-              <div class=${`absolute inset-2 border border-white/5 rounded-full ${isPlaying ? 'animate-spin' : ''}`} style=${{ animationDuration: '8s' }} />
+          <!-- Top Playing Row -->
+          <div class="flex flex-col md:flex-row gap-6 items-center md:items-stretch bg-[#111114] p-5 rounded-xl border border-white/5 shadow-inner">
+            <div class="w-full md:w-48 h-48 rounded-xl overflow-hidden border border-white/10 bg-black flex items-center justify-center relative shrink-0">
+              ${trackMetadata && trackMetadata.coverUrl ? html`
+                <img src=${trackMetadata.coverUrl} class="absolute inset-0 w-full h-full object-cover opacity-90" alt="" />
+              ` : html`
+                <span class="text-5xl select-none">💿</span>
+                <div class=${`absolute inset-4 border border-white/5 rounded-full ${isPlaying ? 'animate-spin' : ''}`} style=${{ animationDuration: '8s' }} />
+              `}
+              <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none z-20" />
             </div>
 
-            <div class="flex-1 flex flex-col justify-between gap-4 min-w-0">
-              <div>
-                <span class="text-[10px] font-mono font-bold tracking-widest text-primary uppercase select-none">
-                  // ACTIVE SOURCE FEED
-                </span>
-                <h3 class="text-2xl font-display font-black text-white uppercase truncate mt-1">
-                  ${activeTrack.title.replace(/_/g, ' ')}
-                </h3>
-                <p class="text-xs font-mono text-muted uppercase tracking-widest truncate mt-0.5 select-none">
-                  FOLDER: ${activeTrack.folder.replace(/_/g, ' ')}
-                </p>
+            <div class="flex-1 w-full flex flex-col justify-between gap-4 md:gap-0">
+              <div class="flex justify-between items-start">
+                <div>
+                  <span class="text-[10px] font-mono font-bold tracking-widest text-primary-400 uppercase select-none">
+                    // ACTIVE SOURCE FEED
+                  </span>
+                  <h3 class="text-2xl font-display font-black text-white uppercase truncate mt-1">
+                    ${cleanTitle}
+                  </h3>
+                  <p class="text-xs font-mono text-muted uppercase tracking-widest truncate mt-0.5 select-none">
+                    ${cleanAlbum}
+                  </p>
+                </div>
+                
+                <button 
+                  onClick=${() => {
+                    playSound(showShader ? "audio.visualizerHide" : "audio.visualizerShow");
+                    setShowShader(!showShader);
+                  }}
+                  class="text-muted hover:text-primary-400 transition"
+                  title="Toggle Visualizer"
+                >
+                  <span class="text-sm font-mono tracking-widest uppercase">
+                    ${showShader ? "[ HIDE VIS ]" : "[ SHOW VIS ]"}
+                  </span>
+                </button>
               </div>
 
-              <div class="space-y-1">
-                <div class="relative w-full h-1.5 bg-void rounded-full overflow-hidden">
-                  <div 
-                    class="h-full bg-primary shadow-[0_0_8px_rgba(34,197,94,1)]"
-                    style=${{ width: `${progressPercent}%` }}
-                  />
+              <!-- 1:1 Timeline scrubber -->
+              <div class="flex items-center gap-2.5 w-full">
+                <div class="relative flex items-center group/scrub flex-1 h-6">
+                  <div class="absolute inset-0 rounded-md surface-hardware-track pointer-events-none" />
+                  <div class="absolute inset-0 rounded-md overflow-hidden pointer-events-none">
+                    <div class="h-full bg-primary" style=${{ width: `${progressPercent}%` }} />
+                  </div>
+                  <div class="absolute inset-0 rounded-md shadow-[inset_0_1px_3px_rgba(0,0,0,0.3),inset_0_-1px_1px_rgba(255,255,255,0.12)] pointer-events-none" />
+                  
                   <input 
                     type="range" 
                     min="0" 
                     max=${duration || 0} 
                     value=${currentTime} 
                     onChange=${handleScrubberChange}
-                    class="absolute inset-0 w-full h-full opacity-0 cursor-none"
+                    class="absolute inset-0 w-full h-full opacity-0 cursor-none z-30"
                   />
                 </div>
-                <div class="flex justify-between text-[10px] font-mono text-muted select-none">
-                  <span>${formatTime(currentTime)}</span>
-                  <span>${formatTime(duration)}</span>
+                
+                <!-- Timecode Box -->
+                <div class="flex items-center justify-center font-mono text-[11px] text-muted border border-transparent surface-hardware-track rounded-md shrink-0 px-3 min-w-[96px] h-6 bg-[#0c0d11]">
+                  <span>${formatTime(currentTime)} / ${formatTime(duration)}</span>
                 </div>
               </div>
 
-              <div class="flex items-center gap-2">
+              <!-- Controls row -->
+              <div class="flex items-center gap-4 w-full">
                 <button 
-                  onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
-                  onPointerUp=${() => {
-                    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
-                    toggleShuffleState();
-                  }}
-                  class=${`flex-1 py-2 rounded-lg border text-xs font-mono font-bold uppercase cursor-none transition ${isShuffle ? 'border-primary/40 bg-primary/5 text-primary' : 'border-white/5 bg-white/5 text-fog hover:text-white'}`}
+                  onClick=${toggleShuffleState}
+                  class=${`py-3 rounded-lg border text-xs font-mono font-bold uppercase cursor-none transition flex-1 max-w-[80px] h-12 flex items-center justify-center ${isShuffle ? 'border-primary/40 bg-primary/5 text-primary' : 'border-white/5 bg-white/5 text-fog hover:text-white'}`}
                 >
-                  Shuffle
+                  <${Shuffle} size=${16} />
                 </button>
                 <button 
-                  onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
-                  onPointerUp=${() => {
-                    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
-                    handlePrev();
-                  }}
-                  class="p-2 px-4 rounded-lg bg-white/5 border border-white/10 hover:border-primary/30 text-fog hover:text-white cursor-none transition"
+                  onClick=${handlePrev}
+                  class="flex-1 py-3 rounded-lg bg-white/5 border border-white/10 hover:border-primary-400 hover:text-white text-fog cursor-none transition h-12 flex items-center justify-center"
                 >
-                  <${SkipBack} size=${16} fill="currentColor" />
+                  <${SkipBack} size=${18} fill="currentColor" />
                 </button>
                 <button 
-                  onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
-                  onPointerUp=${() => {
-                    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
-                    togglePlay();
-                  }}
-                  class="p-2 px-6 rounded-lg bg-primary text-void font-bold cursor-none hover:scale-105 transition flex items-center justify-center shadow-[0_0_12px_rgba(34,197,94,0.4)]"
+                  onClick=${togglePlay}
+                  class="flex-1 max-w-[180px] rounded-lg bg-primary text-void font-bold cursor-none hover:scale-105 transition flex items-center justify-center shadow-[0_0_12px_rgba(34,197,94,0.4)] h-12"
                 >
                   ${isPlaying 
-                    ? html`<${Pause} size=${16} fill="currentColor" />`
-                    : html`<${Play} size=${16} fill="currentColor" class="ml-0.5" />`
+                    ? html`<${Pause} size=${18} fill="currentColor" class="text-void" />`
+                    : html`<${Play} size=${18} fill="currentColor" class="text-void ml-0.5" />`
                   }
                 </button>
                 <button 
-                  onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
-                  onPointerUp=${() => {
-                    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
-                    handleNext();
-                  }}
-                  class="p-2 px-4 rounded-lg bg-white/5 border border-white/10 hover:border-primary/30 text-fog hover:text-white cursor-none transition"
+                  onClick=${handleNext}
+                  class="flex-1 py-3 rounded-lg bg-white/5 border border-white/10 hover:border-primary-400 hover:text-white text-fog cursor-none transition h-12 flex items-center justify-center"
                 >
-                  <${SkipForward} size=${16} fill="currentColor" />
+                  <${SkipForward} size=${18} fill="currentColor" />
                 </button>
               </div>
             </div>
           </div>
 
-          <div class="w-full bg-void rounded-xl border border-white/10 p-2 overflow-hidden h-32 relative shadow-inner">
-            <canvas 
-              ref=${canvasRef} 
-              width="800" 
-              height="120" 
-              class="w-full h-full opacity-90"
-            />
-            <div class="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none select-none" style=${{ backgroundSize: '16px 16px' }} />
-          </div>
+          <!-- Wide collapsible visualizer -->
+          ${showShader && html`
+            <div class="w-full overflow-hidden shrink-0 animate-lightbox-entry">
+              <div class="relative rounded-xl overflow-hidden border border-white/5 shadow-inner bg-void h-32 w-full">
+                <canvas 
+                  ref=${canvasRef} 
+                  width="1000" 
+                  height="128" 
+                  class="w-full h-full opacity-90"
+                />
+                <div class="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none select-none" style=${{ backgroundSize: '16px 16px' }} />
+              </div>
+            </div>
+          `}
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+          <!-- Double Column bottom rack -->
+          <div class="flex flex-col lg:flex-row gap-6 items-stretch w-full">
             
-            <div class="bg-ink rounded-xl border border-white/5 p-4 flex flex-col h-[320px]">
-              <div class="flex items-center justify-between border-b border-white/5 pb-3 mb-3 shrink-0">
+            <!-- Left Column: Playlist Card (1:1 UI design) -->
+            <div class="w-full lg:flex-1 relative flex flex-col bg-ink rounded-xl border border-white/5 overflow-hidden shadow-inner h-[380px]">
+              <div class="flex items-center justify-between px-3 py-3 border-b border-white/10 bg-ink shrink-0 h-[46px] select-none">
                 ${playlistView === "tracks" ? html`
                   <button 
-                    onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
-                    onPointerUp=${() => {
-                      audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+                    onClick=${() => {
+                      playSound("ui.click");
                       setPlaylistView("albums");
                     }}
-                    class="text-[10px] font-mono font-bold uppercase text-primary hover:underline cursor-none"
+                    class="p-1.5 hover:bg-white/10 rounded cursor-none text-fog hover:text-white transition flex items-center gap-1 shrink-0 outline-none"
                   >
-                    ← Back to Library
+                    <${ChevronLeft} size={16} />
+                    <span class="text-[10px] font-mono font-bold uppercase tracking-widest">Albums</span>
                   </button>
                 ` : html`
-                  <span class="text-[10px] font-mono font-bold text-muted uppercase tracking-widest select-none">
-                    Select Directory Folder
+                  <div class="p-1.5 px-3 shrink-0">
+                    <span class="text-[10px] font-mono font-bold text-muted uppercase tracking-widest">Select Library</span>
+                  </div>
+                `}
+
+                ${playlistView === "tracks" && html`
+                  <span class="font-display font-bold text-sm uppercase tracking-widest text-right flex-1 px-2 truncate text-primary-400">
+                    ${activeAlbum.title}
                   </span>
                 `}
-                <span class="text-xs font-display font-bold text-white uppercase select-none">
-                  ${playlistView === "tracks" ? activeAlbum.title : "Library List"}
-                </span>
               </div>
 
-              <div class="flex-1 overflow-y-auto custom-scrollbar space-y-1">
+              <!-- Content Area with custom scrollbar -->
+              <div class="flex-1 overflow-y-auto custom-scrollbar p-2 pb-4 space-y-1">
                 ${playlistView === "albums" ? ALBUMS.map(album => html`
                   <button 
                     key=${album.id}
-                    onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
-                    onPointerUp=${() => {
-                      audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+                    onClick=${() => {
+                      playSound("ui.click");
                       setViewingAlbumId(album.id);
                       setPlaylistView("tracks");
                     }}
-                    class="w-full flex items-center gap-3 p-2.5 rounded-lg border border-transparent hover:border-white/5 hover:bg-white/5 text-left transition cursor-none group"
+                    class=${`w-full text-left px-3 py-3 rounded flex items-center gap-4 transition-all cursor-none group border border-transparent hover:border-white/10 hover:bg-white/5 outline-none`}
                   >
-                    <div class="w-8 h-8 rounded bg-void flex items-center justify-center text-muted group-hover:text-primary transition shrink-0">
-                      <${Library} size=${14} />
+                    <div class="w-10 h-10 rounded bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                      <${Library} size=${16} />
                     </div>
-                    <div class="min-w-0 flex-1 select-none">
-                      <p class="text-xs font-bold text-light truncate group-hover:text-white">
+                    <div class="flex-1 min-w-0">
+                      <div class="text-sm font-bold truncate text-light group-hover:text-white">
                         ${album.title}
-                      </p>
-                      <p class="text-[9px] font-mono text-muted uppercase tracking-wider mt-0.5">
+                      </div>
+                      <div class="text-[10px] font-mono text-muted uppercase tracking-widest">
                         ${album.tracks.length} Channels
-                      </p>
+                      </div>
                     </div>
                   </button>
                 `) : activeAlbum.tracks.map((t, idx) => {
                   const isActive = activeTrack.name === t.name && activeTrack.folder === t.folder;
+                  const globalIdx = AUDIO_TRACKS.findIndex(item => item.name === t.name && item.folder === t.folder);
+                  
                   return html`
-                    <button 
-                      key=${t.name}
-                      onClick=${() => handleTrackSelect(t)}
-                      class=${`w-full p-2.5 rounded-lg border text-left flex items-center justify-between transition cursor-none select-none ${isActive ? 'bg-primary/5 border-primary/20 text-primary' : 'border-transparent hover:border-white/5 text-fog hover:text-white'}`}
-                    >
-                      <span class="text-xs truncate font-bold uppercase font-mono">
-                        ${idx + 1}. ${t.title.replace(/_/g, ' ')}
-                      </span>
-                      ${isActive && html`
-                        <span class="text-[8px] font-mono font-bold bg-primary/20 text-primary px-1.5 py-0.5 rounded tracking-widest uppercase">
-                          ACTIVE
-                        </span>
-                      `}
-                    </button>
+                    <div key=${t.name} class=${`w-full flex items-center justify-between rounded transition-all group ${isActive ? 'bg-primary/10 text-primary font-bold' : 'hover:bg-white/5 text-fog hover:text-white'}`}>
+                      <button 
+                        onClick=${() => handleTrackSelect(t)}
+                        class="flex-1 flex items-center gap-3 px-3 py-2.5 text-left cursor-none truncate outline-none rounded"
+                      >
+                        <span class="font-mono text-[10px] opacity-50 w-5 shrink-0">${idx + 1}</span>
+                        <span class="text-xs truncate uppercase font-bold">${t.title.replace(/_/g, ' ')}</span>
+                        ${isActive && html`
+                          <div class="w-1.5 h-1.5 rounded-full shadow-[0_0_8px_#22c55e] bg-primary animate-pulse shrink-0 ml-2" />
+                        `}
+                      </button>
+                      
+                      <a 
+                        href=${`https://www.stevencasteel.com/assets/audio/music/elf_girl/${t.folder}/${t.name}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        download
+                        class="p-2.5 shrink-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity cursor-none outline-none rounded hover:text-primary-400"
+                        title="Download track"
+                        onClick=${(e) => {
+                          playSound("ui.success");
+                          e.stopPropagation();
+                        }}
+                      >
+                        <${Download} size=${14} />
+                      </a>
+                    </div>
                   `;
                 })}
               </div>
             </div>
 
-            <div class="bg-ink rounded-xl border border-white/5 p-5 flex flex-col justify-between gap-5 h-[320px]">
-              <div class="flex items-center justify-between border-b border-white/5 pb-3 shrink-0 select-none">
-                <span class="text-[10px] font-mono font-bold text-muted uppercase tracking-widest">
-                  Physical Mixer Console
+            <!-- Right Column: Mixer sliders scaled up to 300% -->
+            <div class="w-full lg:flex-1 shrink-0 bg-panel rounded-xl border border-white/5 shadow-inner flex flex-col overflow-hidden h-[380px]">
+              <div class="flex items-center justify-between px-3 py-3 border-b border-white/10 shrink-0 z-10 bg-ink select-none">
+                <span class="font-display font-bold text-sm text-light tracking-widest uppercase ml-1">
+                  Global Mixer
                 </span>
-                <button 
-                  onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
-                  onPointerUp=${() => {
-                    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
-                    setIsMuted(!isMuted);
-                  }}
-                  class=${`flex items-center gap-1.5 p-1 px-2.5 rounded text-[9px] font-mono font-bold uppercase transition border cursor-none ${isMuted ? 'border-red-500 bg-red-500/10 text-red-500 shadow-[0_0_8px_rgba(239,68,68,0.2)]' : 'border-white/10 hover:border-white/20 text-muted hover:text-white'}`}
-                >
-                  ${isMuted ? html`<${VolumeX} size=${11} />` : html`<${Volume2} size=${11} />`}
-                  <span>${isMuted ? "Unmute" : "Mute All"}</span>
-                </button>
+                <div class="flex items-center gap-2">
+                  <button 
+                    onClick=${handleResetMixer}
+                    class="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-md text-[10px] font-mono text-fog transition-colors cursor-none border border-white/10 hover:border-primary-400 hover:text-primary-400 outline-none h-8"
+                  >
+                    RESET
+                  </button>
+                  <button 
+                    onClick=${() => {
+                      playSound("ui.click");
+                      setIsMuted(!isMuted);
+                    }}
+                    class=${`flex items-center p-1 px-2.5 rounded text-[9px] font-mono font-bold uppercase transition border cursor-none h-8 ${isMuted ? 'border-red-500 bg-red-500/10 text-red-500 shadow-[0_0_8px_rgba(239,68,68,0.2)]' : 'border-white/10 hover:border-white/20 text-muted hover:text-white'}`}
+                  >
+                    <span>${isMuted ? "Unmute" : "Mute All"}</span>
+                  </button>
+                </div>
               </div>
 
-              <div class="flex-1 flex flex-col justify-center gap-4">
-                ${renderSlider("Master Level", "master", mixerMaster, setMixerMaster)}
-                ${renderSlider("Music Synthesizer", "music", mixerMusic, setMixerMusic)}
+              <!-- Mixer Faders scaled to 3.0 (300%) -->
+              <div class="flex flex-col flex-1 justify-center gap-6 p-5 md:p-6 bg-void/50">
+                ${renderSlider("Master Out", "master", mixerMaster, setMixerMaster)}
+                ${renderSlider("Music Synthesizer", "music", volume, setVolume)}
                 ${renderSlider("Tactile SFX Engine", "sfx", mixerSfx, setMixerSfx)}
                 ${renderSlider("Ambient Noise Node", "ambience", mixerAmbience, setMixerAmbience)}
               </div>

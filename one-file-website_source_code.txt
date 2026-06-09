@@ -2,7 +2,7 @@
 │          STEVEN CASTEEL ARCHIVE PROJECT          │
 │        Vite + React (ESM CDN) + Tailwind CSS     │
 └──────────────────────────────────────────────────┘
- [SYSTEM] Generated: 6/8/2026, 9:46:25 PM
+ [SYSTEM] Generated: 6/8/2026, 9:55:04 PM
  [BASELINE]: React 18, HTM, Lucide React, Lenis Scroll, Tailwind CSS
 
 ─── ABRIDGED DIRECTORY STRUCTURE ───────────────────
@@ -912,8 +912,9 @@ export function AudioConsoleModal({
             </h2>
           </div>
           <button 
-            onClick=${() => {
-              audioEngine.playClick();
+            onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+            onPointerUp=${() => {
+              audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
               onClose();
             }}
             class="flex items-center justify-center w-8 h-8 rounded-md bg-white/5 border border-white/10 hover:border-primary/40 hover:text-primary transition-all duration-300 cursor-none"
@@ -966,19 +967,31 @@ export function AudioConsoleModal({
 
               <div class="flex items-center gap-2">
                 <button 
-                  onClick=${toggleShuffleState}
+                  onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+                  onPointerUp=${() => {
+                    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+                    toggleShuffleState();
+                  }}
                   class=${`flex-1 py-2 rounded-lg border text-xs font-mono font-bold uppercase cursor-none transition ${isShuffle ? 'border-primary/40 bg-primary/5 text-primary' : 'border-white/5 bg-white/5 text-fog hover:text-white'}`}
                 >
                   Shuffle
                 </button>
                 <button 
-                  onClick=${handlePrev}
+                  onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+                  onPointerUp=${() => {
+                    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+                    handlePrev();
+                  }}
                   class="p-2 px-4 rounded-lg bg-white/5 border border-white/10 hover:border-primary/30 text-fog hover:text-white cursor-none transition"
                 >
                   <${SkipBack} size=${16} fill="currentColor" />
                 </button>
                 <button 
-                  onClick=${togglePlay}
+                  onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+                  onPointerUp=${() => {
+                    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+                    togglePlay();
+                  }}
                   class="p-2 px-6 rounded-lg bg-primary text-void font-bold cursor-none hover:scale-105 transition flex items-center justify-center shadow-[0_0_12px_rgba(34,197,94,0.4)]"
                 >
                   ${isPlaying 
@@ -987,7 +1000,11 @@ export function AudioConsoleModal({
                   }
                 </button>
                 <button 
-                  onClick=${handleNext}
+                  onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+                  onPointerUp=${() => {
+                    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+                    handleNext();
+                  }}
                   class="p-2 px-4 rounded-lg bg-white/5 border border-white/10 hover:border-primary/30 text-fog hover:text-white cursor-none transition"
                 >
                   <${SkipForward} size=${16} fill="currentColor" />
@@ -1012,8 +1029,9 @@ export function AudioConsoleModal({
               <div class="flex items-center justify-between border-b border-white/5 pb-3 mb-3 shrink-0">
                 ${playlistView === "tracks" ? html`
                   <button 
-                    onClick=${() => {
-                      audioEngine.playClick();
+                    onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+                    onPointerUp=${() => {
+                      audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
                       setPlaylistView("albums");
                     }}
                     class="text-[10px] font-mono font-bold uppercase text-primary hover:underline cursor-none"
@@ -1034,8 +1052,9 @@ export function AudioConsoleModal({
                 ${playlistView === "albums" ? ALBUMS.map(album => html`
                   <button 
                     key=${album.id}
-                    onClick=${() => {
-                      audioEngine.playClick();
+                    onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+                    onPointerUp=${() => {
+                      audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
                       setViewingAlbumId(album.id);
                       setPlaylistView("tracks");
                     }}
@@ -1081,8 +1100,9 @@ export function AudioConsoleModal({
                   Physical Mixer Console
                 </span>
                 <button 
-                  onClick=${() => {
-                    audioEngine.playClick();
+                  onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+                  onPointerUp=${() => {
+                    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
                     setIsMuted(!isMuted);
                   }}
                   class=${`flex items-center gap-1.5 p-1 px-2.5 rounded text-[9px] font-mono font-bold uppercase transition border cursor-none ${isMuted ? 'border-red-500 bg-red-500/10 text-red-500 shadow-[0_0_8px_rgba(239,68,68,0.2)]' : 'border-white/10 hover:border-white/20 text-muted hover:text-white'}`}
@@ -1932,32 +1952,11 @@ export function MusicPlayerDeck({
   }, [isPlaying]);
 
   const handleMuteToggle = () => {
-    audioEngine.playClick();
     if (volume > 0) {
       setVolume(0);
     } else {
       setVolume(0.75);
     }
-  };
-
-  const handleTriggerPlay = () => {
-    audioEngine.playClick();
-    togglePlay();
-  };
-
-  const handleTriggerPrev = () => {
-    audioEngine.playTick();
-    handlePrev();
-  };
-
-  const handleTriggerNext = () => {
-    audioEngine.playTick();
-    handleNext();
-  };
-
-  const handleTriggerShuffle = () => {
-    audioEngine.playClick();
-    toggleShuffleState();
   };
 
   const toggleVolumePopover = () => {
@@ -1968,18 +1967,24 @@ export function MusicPlayerDeck({
         left: rect.left + window.scrollX + rect.width / 2
       });
     }
-    audioEngine.playClick();
     setShowVolumePopover(!showVolumePopover);
   };
 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
+  const miniPlayerBgRef = 'url(' + String.fromCharCode(35) + 'mini-player-bg)';
+  const innerShadowRef = 'url(' + String.fromCharCode(35) + 'lcd-inner-shadow)';
+  const settingsGearBgRef = 'url(' + String.fromCharCode(35) + 'gear-bg-settings)';
+  const lcdClipRef = 'url(' + String.fromCharCode(35) + 'lcd-display-clip)';
+
   return html`
     <div class="shrink-0 p-4 bg-gradient-to-t from-panel to-rgb(12, 13, 17) border-t border-black flex flex-col gap-3 relative z-20">
       
-      <div class="relative w-full aspect-[3658/2595] rounded-xl border border-white/5 overflow-hidden bg-rgb(7, 8, 10) shadow-inner select-none isolate">
+      <!-- Layout Chassis Container -->
+      <div class="relative w-full aspect-[3658/2595] select-none isolate">
         
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="296 383 3658 2595" preserveAspectRatio="none" width="100%" height="100%" class="absolute inset-0 pointer-events-none select-none z-0">
+        <!-- Player Chassis Vector Mask Layer -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="296 383 3658 2595" preserveAspectRatio="none" width="100%" height="100%" class="absolute inset-0 pointer-events-none select-none z-10">
           <defs>
             <filter id="lcd-inner-shadow">
               <feOffset dx="0" dy="25"/>
@@ -1999,9 +2004,9 @@ export function MusicPlayerDeck({
           </defs>
           <path 
             d="M451.625,383.598l2852.76,0a120,120 0 0,1 120,120a408.723,405.909 0 0,0 408.723,405.909a120,120 0 0,1 120,120l0,1792.06c0,85.533 -69.827,155.916 -154.684,155.916l-3346.8,0c-84.857,0 -154.684,-70.383 -154.684,-155.916l0,-2282.05c0,-85.533 69.827,-155.917 154.684,-155.917Z" 
-            fill="url(#mini-player-bg)" 
+            fill=${miniPlayerBgRef} 
           />
-          <path d="M604.605,554 L3116.675,554 c65.83,0 120,54.17 120,120 c0,222.67 184.5,405.91 408.72,405.91 c65.83,0 120,54.17 120,120 L3765.395,1348.18 c0,66.27 -53.73,120 -120,120 L604.605,1468.18 c-66.27,0 -120,-53.73 -120,-120 L484.605,674 c0,-66.27 53.73,-120 120,-120 Z" fill="rgb(12, 13, 17)" filter="url(#lcd-inner-shadow)" />
+          <path d="M604.605,554 L3116.675,554 c65.83,0 120,54.17 120,120 c0,222.67 184.5,405.91 408.72,405.91 c65.83,0 120,54.17 120,120 L3765.395,1348.18 c0,66.27 -53.73,120 -120,120 L604.605,1468.18 c-66.27,0 -120,-53.73 -120,-120 L484.605,674 c0,-66.27 53.73,-120 120,-120 Z" fill="rgb(12, 13, 17)" filter=${innerShadowRef} />
           <path d="M604.605,554 L3116.675,554 c65.83,0 120,54.17 120,120 c0,222.67 184.5,405.91 408.72,405.91 c65.83,0 120,54.17 120,120 L3765.395,1348.18 c0,66.27 -53.73,120 -120,120 L604.605,1468.18 c-66.27,0 -120,-53.73 -120,-120 L484.605,674 c0,-66.27 53.73,-120 120,-120 Z" fill="none" stroke="rgba(0,0,0,0.8)" stroke-width="15" />
           <path 
             d="M451.625,383.598l2852.76,0a120,120 0 0,1 120,120a408.723,405.909 0 0,0 408.723,405.909a120,120 0 0,1 120,120l0,1792.06c0,85.533 -69.827,155.916 -154.684,155.916l-3346.8,0c-84.857,0 -154.684,-70.383 -154.684,-155.916l0,-2282.05c0,-85.533 69.827,-155.917 154.684,-155.917Z" 
@@ -2012,62 +2017,9 @@ export function MusicPlayerDeck({
           />
         </svg>
 
+        <!-- Settings Cog/Gear Trigger Button (Layered Behind Chassis) -->
         <div 
-          class=${`absolute pointer-events-none select-none z-10 ${isPlaying ? 'gear-spin-clockwise' : 'gear-paused'}`}
-          style=${{
-            left: '20%',
-            top: '64%',
-            width: '20%',
-            height: '28.2%'
-          }}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1280" width="100%" height="100%">
-            <defs>
-              <radialGradient id="gear-bg-left" cx="50%" cy="50%" r="50%">
-                <stop offset="20%" stop-color="rgb(58, 58, 64)" />
-                <stop offset="100%" stop-color="rgb(36, 36, 42)" />
-              </radialGradient>
-            </defs>
-            <path
-              d="M 1220.0 640.0 A 580 580 0 0 0 1191.6 819.2 L 960.8 843.6 A 380 380 0 0 0 932.8 882.2 L 980.9 1109.2 A 580 580 0 0 0 819.2 1191.6 A 580 580 0 0 0 640.0 1220.0 L 545.5 1008.1 A 380 380 0 0 0 500.1 993.3 L 299.1 1109.2 A 580 580 0 0 0 170.8 980.9 A 580 580 0 0 0 88.4 819.2 L 260.7 663.9 A 380 380 0 0 0 260.7 616.1 L 88.4 460.8 A 580 580 0 0 0 170.8 299.1 A 580 580 0 0 0 299.1 170.8 L 500.1 286.7 A 380 380 0 0 0 545.5 271.9 L 640.0 60.0 A 580 580 0 0 0 819.2 88.4 A 580 580 0 0 0 980.9 170.8 L 932.8 397.8 A 380 380 0 0 0 960.8 436.4 L 1191.6 460.8 A 580 580 0 0 0 1220.0 640.0 Z"
-              fill-rule="evenodd"
-              fill="url(#gear-bg-left)"
-              stroke="rgba(255,255,255,0.05)"
-              stroke-width="2"
-              vector-effect="non-scaling-stroke"
-            />
-          </svg>
-        </div>
-
-        <div 
-          class=${`absolute pointer-events-none select-none z-10 ${isPlaying ? 'gear-spin-counterclockwise' : 'gear-paused'}`}
-          style=${{
-            left: '60%',
-            top: '67%',
-            width: '16%',
-            height: '22.56%'
-          }}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1280" width="100%" height="100%">
-            <defs>
-              <radialGradient id="gear-bg-right" cx="50%" cy="50%" r="50%">
-                <stop offset="20%" stop-color="rgb(48, 48, 53)" />
-                <stop offset="100%" stop-color="rgb(29, 29, 34)" />
-              </radialGradient>
-            </defs>
-            <path
-              d="M 1220.0 640.0 A 580 580 0 0 0 1191.6 819.2 L 960.8 843.6 A 380 380 0 0 0 932.8 882.2 L 980.9 1109.2 A 580 580 0 0 0 819.2 1191.6 A 580 580 0 0 0 640.0 1220.0 L 545.5 1008.1 A 380 380 0 0 0 500.1 993.3 L 299.1 1109.2 A 580 580 0 0 0 170.8 980.9 A 580 580 0 0 0 88.4 819.2 L 260.7 663.9 A 380 380 0 0 0 260.7 616.1 L 88.4 460.8 A 580 580 0 0 0 170.8 299.1 A 580 580 0 0 0 299.1 170.8 L 500.1 286.7 A 380 380 0 0 0 545.5 271.9 L 640.0 60.0 A 580 580 0 0 0 819.2 88.4 A 580 580 0 0 0 980.9 170.8 L 932.8 397.8 A 380 380 0 0 0 960.8 436.4 L 1191.6 460.8 A 580 580 0 0 0 1220.0 640.0 Z"
-              fill-rule="evenodd"
-              fill="url(#gear-bg-right)"
-              stroke="rgba(255,255,255,0.05)"
-              stroke-width="2"
-              vector-effect="non-scaling-stroke"
-            />
-          </svg>
-        </div>
-
-        <div 
-          class="absolute z-30"
+          class="absolute z-5 pointer-events-none"
           style=${{
             top: '-2%',
             right: '-1.5%',
@@ -2092,28 +2044,26 @@ export function MusicPlayerDeck({
                 <path
                   d="M 1220.0 640.0 A 580 580 0 0 0 1191.6 819.2 L 960.8 843.6 A 380 380 0 0 0 932.8 882.2 L 980.9 1109.2 A 580 580 0 0 0 819.2 1191.6 A 580 580 0 0 0 640.0 1220.0 L 545.5 1008.1 A 380 380 0 0 0 500.1 993.3 L 299.1 1109.2 A 580 580 0 0 0 170.8 980.9 A 580 580 0 0 0 88.4 819.2 L 260.7 663.9 A 380 380 0 0 0 260.7 616.1 L 88.4 460.8 A 580 580 0 0 0 170.8 299.1 A 580 580 0 0 0 299.1 170.8 L 500.1 286.7 A 380 380 0 0 0 545.5 271.9 L 640.0 60.0 A 580 580 0 0 0 819.2 88.4 A 580 580 0 0 0 980.9 170.8 L 932.8 397.8 A 380 380 0 0 0 960.8 436.4 L 1191.6 460.8 A 580 580 0 0 0 1220.0 640.0 Z"
                   fill-rule="evenodd"
-                  fill="url(#gear-bg-settings)"
+                  fill=${settingsGearBgRef}
                   stroke="rgba(255,255,255,0.08)"
                   stroke-width="3"
                   vector-effect="non-scaling-stroke"
                 />
               </svg>
             </div>
-            <div class="absolute w-[35%] h-[35%] rounded-full bg-rgb(17, 17, 21) border border-black shadow-inner flex items-center justify-center">
-              <div class="w-[45%] h-[45%] rounded-full bg-primary" />
-            </div>
           </button>
         </div>
 
+        <!-- LCD Screen Mask (Top Center) -->
         <div 
-          class="absolute overflow-hidden z-15 bg-rgb(3, 4, 2)"
+          class="absolute overflow-hidden z-20 bg-rgb(3, 4, 2)"
           style=${{
             left: '5.16%',
             top: '6.59%',
             width: '89.68%',
             height: '35.23%',
-            clipPath: 'url(#lcd-display-clip)',
-            WebkitClipPath: 'url(#lcd-display-clip)'
+            clipPath: lcdClipRef,
+            WebkitClipPath: lcdClipRef
           }}
         >
           <div class="absolute inset-0 lcd-scanlines pointer-events-none z-25 select-none opacity-20" />
@@ -2153,8 +2103,9 @@ export function MusicPlayerDeck({
           </div>
         </div>
 
+        <!-- Embedded Scrubber (Timeline Slot at 49%) -->
         <div 
-          class="absolute flex items-center pointer-events-auto z-40"
+          class="absolute flex items-center pointer-events-auto z-30"
           style=${{
             top: '49%',
             left: '5.16%',
@@ -2190,8 +2141,9 @@ export function MusicPlayerDeck({
           </div>
         </div>
 
-        <div 
-          class="absolute flex items-center justify-between z-40 pointer-events-auto"
+        <!-- Playback Controls Row (Sunken Well Buttons) -->
+        <div
+          class="absolute flex items-center justify-between z-30 pointer-events-auto"
           style=${{
             top: '67%',
             left: '5.16%',
@@ -2199,24 +2151,39 @@ export function MusicPlayerDeck({
             bottom: '7%'
           }}
         >
+          <!-- Shuffle -->
           <button 
-            onClick=${handleTriggerShuffle}
+            onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+            onPointerUp=${() => {
+              audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+              toggleShuffleState();
+            }}
             class=${`relative flex items-center justify-center rounded-[5px] cursor-none border border-black/40 overflow-hidden outline-none surface-hardware-btn text-center select-none font-bold font-mono text-[9px] transition w-[15%] h-full ${isShuffle ? 'is-active text-primary' : 'text-fog hover:text-white'}`}
             title="Shuffle Mode"
           >
             SHUF
           </button>
 
+          <!-- Previous -->
           <button 
-            onClick=${handleTriggerPrev}
+            onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+            onPointerUp=${() => {
+              audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+              handlePrev();
+            }}
             class="relative flex items-center justify-center rounded-[5px] cursor-none border border-black/40 overflow-hidden outline-none surface-hardware-btn w-[17%] h-full text-fog hover:text-white transition"
             title="Previous Track"
           >
             <${SkipBack} size=${12} fill="currentColor" />
           </button>
 
+          <!-- Play / Pause -->
           <button 
-            onClick=${handleTriggerPlay}
+            onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+            onPointerUp=${() => {
+              audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+              togglePlay();
+            }}
             class=${`relative flex items-center justify-center rounded-[5px] cursor-none border border-black/40 overflow-hidden outline-none surface-hardware-btn w-[21%] h-full shadow-lg ${isPlaying ? 'is-active text-primary' : 'text-white'}`}
             title=${isPlaying ? "Pause" : "Play"}
           >
@@ -2226,18 +2193,28 @@ export function MusicPlayerDeck({
             }
           </button>
 
+          <!-- Next -->
           <button 
-            onClick=${handleTriggerNext}
+            onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+            onPointerUp=${() => {
+              audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+              handleNext();
+            }}
             class="relative flex items-center justify-center rounded-[5px] cursor-none border border-black/40 overflow-hidden outline-none surface-hardware-btn w-[17%] h-full text-fog hover:text-white transition"
             title="Next Track"
           >
             <${SkipForward} size=${12} fill="currentColor" />
           </button>
 
+          <!-- Volume -->
           <div class="relative w-[15%] h-full flex items-center">
             <button 
               ref=${volBtnRef}
-              onClick=${toggleVolumePopover}
+              onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+              onPointerUp=${() => {
+                audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+                toggleVolumePopover();
+              }}
               class=${`relative flex items-center justify-center rounded-[5px] cursor-none border border-black/40 overflow-hidden outline-none surface-hardware-btn w-full h-full transition ${showVolumePopover ? 'is-active text-primary' : 'text-fog hover:text-white'}`}
               title="Volume Control"
             >
@@ -2251,6 +2228,7 @@ export function MusicPlayerDeck({
 
       </div>
 
+      <!-- Volume Portal Overlay -->
       ${showVolumePopover && createPortal(html`
         <div 
           class="fixed z-[100] -translate-x-1/2 flex flex-col items-center bg-rgb(26, 26, 31) border border-white/10 p-3 rounded-lg shadow-2xl w-10 animate-lightbox-entry cursor-none"
@@ -2277,7 +2255,11 @@ export function MusicPlayerDeck({
             />
           </div>
           <button 
-            onClick=${handleMuteToggle}
+            onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+            onPointerUp=${() => {
+              audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+              handleMuteToggle();
+            }}
             class="text-[9px] font-mono text-muted hover:text-white mt-2 uppercase cursor-none"
           >
             ${volume === 0 ? "UNM" : "MUTE"}

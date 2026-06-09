@@ -37,6 +37,31 @@ function App() {
   const [seqStep, setSeqStep] = useState("line1");
   const [lenis, setLenis] = useState(null);
 
+  // 1:1 Global Mixer State Variables
+  const [mixerMaster, setMixerMaster] = useState(() => {
+    const saved = localStorage.getItem('mesoelfy_mixer_master');
+    return saved !== null ? parseFloat(saved) : 1.0;
+  });
+  const [mixerMusic, setMixerMusic] = useState(() => {
+    const saved = localStorage.getItem('mesoelfy_mixer_music');
+    return saved !== null ? parseFloat(saved) : 0.75;
+  });
+  const [mixerSfx, setMixerSfx] = useState(() => {
+    const saved = localStorage.getItem('mesoelfy_mixer_sfx');
+    return saved !== null ? parseFloat(saved) : 1.0;
+  });
+  const [mixerAmbience, setMixerAmbience] = useState(() => {
+    const saved = localStorage.getItem('mesoelfy_mixer_ambience');
+    return saved !== null ? parseFloat(saved) : 1.0;
+  });
+  const [isMuted, setIsMuted] = useState(() => {
+    const saved = localStorage.getItem('mesoelfy_mixer_muted');
+    return saved !== null ? saved === 'true' : false;
+  });
+
+  // Track Meta State (Extracted binary payloads)
+  const [trackMetadata, setTrackMetadata] = useState(null);
+
   // Audio Player Context
   const audioElRef = useRef(null);
   const [playerState, setPlayerState] = useState(() => {
@@ -58,10 +83,6 @@ function App() {
     return { queue, currentIdx };
   });
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(() => {
-    const savedVolume = localStorage.getItem('mesoelfy_player_volume');
-    return savedVolume !== null ? parseFloat(savedVolume) : 0.75;
-  });
   const [isShuffle, setIsShuffle] = useState(() => {
     const savedShuffle = localStorage.getItem('mesoelfy_player_shuffle');
     return savedShuffle !== null ? savedShuffle === 'true' : true;
@@ -73,15 +94,33 @@ function App() {
   const ensureAudioInitialized = () => {
     if (!audioEngine.isInitialized && audioElRef.current) {
       audioEngine.init(audioElRef.current);
-      audioEngine.setVolume("master", 1.0);
-      audioEngine.setVolume("music", volume);
-      audioEngine.setVolume("sfx", 0.8);
-      audioEngine.setVolume("ambience", 0.5);
     }
     if (audioEngine.ctx && audioEngine.ctx.state === 'suspended') {
       audioEngine.ctx.resume().catch(() => {});
     }
   };
+
+  // Sync Audio Node Mixers to the context variables
+  useEffect(() => {
+    audioEngine.setVolumes(mixerMaster, mixerSfx, mixerAmbience, isMuted);
+    localStorage.setItem('mesoelfy_mixer_master', mixerMaster.toString());
+    localStorage.setItem('mesoelfy_mixer_sfx', mixerSfx.toString());
+    localStorage.setItem('mesoelfy_mixer_ambience', mixerAmbience.toString());
+    localStorage.setItem('mesoelfy_mixer_muted', isMuted.toString());
+  }, [mixerMaster, mixerSfx, mixerAmbience, isMuted]);
+
+  useEffect(() => {
+    audioEngine.setVolume("music", mixerMusic);
+    localStorage.setItem('mesoelfy_mixer_music', mixerMusic.toString());
+  }, [mixerMusic]);
+
+  // Handle master-driven scaling for the native HTML `<audio>` node volume
+  useEffect(() => {
+    if (audioElRef.current) {
+      const targetVol = audioEngine.getMusicElementVolume(mixerMaster, mixerMusic, isMuted);
+      audioElRef.current.volume = Math.max(0, Math.min(1.0, targetVol));
+    }
+  }, [mixerMaster, mixerMusic, isMuted]);
 
   // Initialize Lenis Smooth Scroll
   useEffect(() => {
@@ -108,9 +147,7 @@ function App() {
   // Active Section Tracker (Scroll Spy Setup)
   useEffect(() => {
     const handleSpy = () => {
-      const sections = [
-        "misc-art", "misc-media"
-      ];
+      const sections = ["misc-art", "misc-media"];
       let current = "audio";
       for (const s of sections) {
         const el = document.getElementById(s);
@@ -152,25 +189,31 @@ function App() {
   const activeTrackIdx = playerState.queue[playerState.currentIdx] !== undefined ? playerState.queue[playerState.currentIdx] : 0;
   const activeTrack = AUDIO_TRACKS[activeTrackIdx] || AUDIO_TRACKS[0];
 
-  // Track updates
+  // Track changes & binary tag extraction trigger
   useEffect(() => {
     if (!audioElRef.current) return;
     localStorage.setItem('mesoelfy_player_track_index', activeTrackIdx.toString());
+    
+    // Reset metadata block while decoding occurs
+    setTrackMetadata(null);
+    const url = `https://www.stevencasteel.com/assets/audio/music/elf_girl/${activeTrack.folder}/${activeTrack.name}`;
+    
+    let isMounted = true;
+    audioEngine.fetchID3Metadata(url).then((meta) => {
+      if (isMounted) {
+        setTrackMetadata(meta);
+      }
+    });
+
     audioElRef.current.load();
     if (isPlaying) {
       audioElRef.current.play().catch(() => setIsPlaying(false));
     }
-  }, [activeTrackIdx]);
 
-  useEffect(() => {
-    if (audioElRef.current) {
-      audioElRef.current.volume = volume;
-      localStorage.setItem('mesoelfy_player_volume', volume.toString());
-      if (audioEngine.isInitialized) {
-        audioEngine.setVolume("music", volume);
-      }
-    }
-  }, [volume]);
+    return () => {
+      isMounted = false;
+    };
+  }, [activeTrackIdx]);
 
   const togglePlay = () => {
     if (!audioElRef.current) return;
@@ -282,17 +325,18 @@ function App() {
 
   const playerProps = {
     activeTrack,
+    trackMetadata,
     isPlaying,
     currentTime,
     duration,
-    volume,
+    volume: mixerMusic, // Music volume mapped
     isShuffle,
     handleScrubberChange,
     handlePrev,
     togglePlay,
     handleNext,
     toggleShuffleState,
-    setVolume,
+    setVolume: setMixerMusic, // Direct mapping of the slider
     formatTime
   };
 
@@ -357,18 +401,29 @@ function App() {
         isOpen=${isConsoleOpen}
         onClose=${() => setIsConsoleOpen(false)}
         activeTrack=${activeTrack}
+        trackMetadata=${trackMetadata}
         isPlaying=${isPlaying}
         currentTime=${currentTime}
         duration=${duration}
-        volume=${volume}
+        volume=${mixerMusic}
         isShuffle=${isShuffle}
         handleScrubberChange=${handleScrubberChange}
         handlePrev=${handlePrev}
         togglePlay=${togglePlay}
         handleNext=${handleNext}
         toggleShuffleState=${toggleShuffleState}
-        setVolume=${setVolume}
+        setVolume=${setMixerMusic}
         formatTime=${formatTime}
+        
+        mixerMaster=${mixerMaster}
+        setMixerMaster=${setMixerMaster}
+        mixerSfx=${mixerSfx}
+        setMixerSfx=${setMixerSfx}
+        mixerAmbience=${mixerAmbience}
+        setMixerAmbience=${setMixerAmbience}
+        isMuted=${isMuted}
+        setIsMuted=${setIsMuted}
+
         playTrackByIndex=${(idx) => {
           setPlayerState(prev => ({ ...prev, currentIdx: idx }));
           setIsPlaying(true);

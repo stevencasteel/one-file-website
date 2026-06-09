@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import htm from 'htm';
-import { Settings2, Volume2, VolumeX, Shuffle, SkipForward, SkipBack, Play, Pause } from 'lucide-react';
+import { Settings2, Volume2, VolumeX, Shuffle, SkipForward, SkipBack, Play, Pause, Music } from 'lucide-react';
 import { audioEngine } from './AudioEngine.js';
+import { ScrollingText } from './components.js';
 
 const html = htm.bind(React.createElement);
 
 export function MusicPlayerDeck({
   activeTrack,
+  trackMetadata,
   isPlaying,
   currentTime,
   duration,
@@ -102,6 +104,9 @@ export function MusicPlayerDeck({
   const settingsGearBgRef = 'url(' + String.fromCharCode(35) + 'gear-bg-settings)';
   const lcdClipRef = 'url(' + String.fromCharCode(35) + 'lcd-display-clip)';
 
+  const cleanTitle = trackMetadata?.title || activeTrack.title.replace(/_/g, ' ');
+  const cleanAlbum = trackMetadata?.artist ? `${trackMetadata.artist} // ${activeTrack.folder.replace(/_/g, ' ')}` : activeTrack.folder.replace(/_/g, ' ');
+
   return html`
     <div class="shrink-0 p-4 bg-gradient-to-t from-panel to-rgb(12, 13, 17) border-t border-black flex flex-col gap-3 relative z-20">
       
@@ -195,22 +200,36 @@ export function MusicPlayerDeck({
           <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.045] to-transparent pointer-events-none z-40" />
 
           <div class="absolute inset-0 flex items-stretch p-[2%] gap-[4%] select-none font-mono text-primary leading-none">
-            <div class="relative aspect-square h-full shrink-0 overflow-hidden rounded-md bg-black shadow-[inset_0_1px_3px_rgba(0,0,0,0.8)] border border-white/5 flex items-center justify-center">
-              <span class="text-xl ${isPlaying ? 'animate-spin' : ''}" style=${{ animationDuration: '6s' }}>💿</span>
+            
+            <!-- Dynamic Album Art Frame -->
+            <div class="relative aspect-square h-full shrink-0 overflow-hidden rounded-[8px] bg-black shadow-[0_2px_0_rgba(0,0,0,1),inset_0_1px_1px_rgba(255,255,255,0.2)] z-30">
+              ${trackMetadata && trackMetadata.coverUrl ? html`
+                <img src=${trackMetadata.coverUrl} class="absolute inset-0 w-full h-full object-cover z-10 opacity-90" alt="" />
+              ` : html`
+                <div class="absolute inset-0 flex items-center justify-center z-10">
+                  <span class="text-xl ${isPlaying ? 'animate-spin' : ''}" style=${{ animationDuration: '6s' }}>💿</span>
+                </div>
+              `}
+              <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none z-20" />
             </div>
 
             <div class="relative flex-1 min-w-0 flex flex-col justify-center text-left pr-2">
               <div class="min-w-0">
-                <p class="text-[8px] opacity-40 tracking-widest truncate uppercase leading-normal">
-                  ${activeTrack.folder.replace(/_/g, ' ')}
-                </p>
-                <div class="relative w-full overflow-hidden h-[14px]">
-                  <p class="absolute inset-y-0 left-0 text-[10px] font-bold tracking-wider truncate uppercase text-primary animate-phosphor drop-shadow-[0_0_2px_rgba(34,197,94,1)] leading-none flex items-center">
-                    ${activeTrack.title.replace(/_/g, ' ')}
+                <!-- Dynamic Scrolling Album Title -->
+                <div class="relative w-full overflow-hidden h-[12px]">
+                  <p class="absolute inset-y-0 left-0 text-[8px] opacity-40 tracking-widest truncate uppercase leading-none flex items-center whitespace-nowrap">
+                    ${cleanAlbum}
+                  </p>
+                </div>
+                <!-- Dynamic Scrolling Track Title -->
+                <div class="relative w-full overflow-hidden h-[16px] mt-0.5">
+                  <p class="absolute inset-y-0 left-0 text-[11px] font-bold tracking-wider truncate uppercase text-primary animate-phosphor drop-shadow-[0_0_2px_rgba(34,197,94,1)] leading-none flex items-center whitespace-nowrap">
+                    ${cleanTitle}
                   </p>
                 </div>
               </div>
 
+              <!-- Micro Visualizer Graph -->
               <div class="flex items-end gap-[1.5px] h-4 w-full mt-1.5 overflow-hidden">
                 <div class="flex-1 h-full min-w-0">
                   <canvas 
@@ -220,15 +239,12 @@ export function MusicPlayerDeck({
                     class="w-full h-full opacity-80"
                   />
                 </div>
-                <div class="text-[8px] font-bold opacity-60 shrink-0 tabular-nums self-end">
-                  ${formatTime(currentTime)} / ${formatTime(duration)}
-                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Embedded Scrubber (Timeline Slot at 49%) -->
+        <!-- Embedded Scrubber (Timeline Slot aligned at 49%) -->
         <div 
           class="absolute flex items-center pointer-events-auto z-30"
           style=${{
@@ -238,31 +254,29 @@ export function MusicPlayerDeck({
             height: '14%'
           }}
         >
-          <div class="relative w-full h-1.5 flex items-center">
-            <div class="absolute inset-x-0 h-1 bg-void rounded-full border border-black/40 shadow-inner" />
-            
-            <div class="absolute left-0 h-1 bg-primary rounded-full" style=${{ width: `${progressPercent}%` }} />
-            
-            <div 
-              class="absolute pointer-events-none w-[10px] h-[14px] flex items-center justify-center -translate-x-1/2"
-              style=${{ left: `${progressPercent}%` }}
-            >
-              <img 
-                src="https://www.stevencasteel.com/assets/svg/slider-thumb.svg" 
-                class="absolute inset-0 w-full h-full object-contain pointer-events-none"
-                draggable="false"
+          <!-- 1:1 Parity Scrubber & timecode design -->
+          <div class="flex items-center gap-2 w-full">
+            <div class="relative flex items-center group/scrub flex-1 h-5">
+              <div class="absolute inset-0 rounded-md surface-hardware-track pointer-events-none" />
+              <div class="absolute inset-0 rounded-md overflow-hidden pointer-events-none">
+                <div class="h-full bg-primary" style=${{ width: `${progressPercent}%` }} />
+              </div>
+              <div class="absolute inset-0 rounded-md shadow-[inset_0_1px_3px_rgba(0,0,0,0.3),inset_0_-1px_1px_rgba(255,255,255,0.12)] pointer-events-none" />
+              
+              <input 
+                type="range" 
+                min="0" 
+                max=${duration || 0} 
+                value=${currentTime} 
+                onChange=${handleScrubberChange}
+                class="absolute inset-0 w-full h-full opacity-0 cursor-none z-30"
               />
-              <div class="w-[1.5px] h-2 bg-primary shadow-[0_0_4px_rgba(34,197,94,1)] rounded-full z-10" />
             </div>
-
-            <input 
-              type="range" 
-              min="0" 
-              max=${duration || 0} 
-              value=${currentTime} 
-              onChange=${handleScrubberChange}
-              class="absolute inset-0 w-full h-full opacity-0 cursor-none z-30"
-            />
+            
+            <!-- Compact Timecode Box -->
+            <div class="flex items-center justify-center font-mono text-[9px] text-muted border border-transparent surface-hardware-track rounded-md shrink-0 px-1.5 min-w-[72px] h-5 bg-[#0c0d11]">
+              <span>${formatTime(currentTime)} / ${formatTime(duration)}</span>
+            </div>
           </div>
         </div>
 
@@ -356,7 +370,7 @@ export function MusicPlayerDeck({
       <!-- Volume Portal Overlay -->
       ${showVolumePopover && createPortal(html`
         <div 
-          class="fixed z-[100] -translate-x-1/2 flex flex-col items-center bg-rgb(26, 26, 31) border border-white/10 p-3 rounded-lg shadow-2xl w-10 animate-lightbox-entry cursor-none"
+          class="fixed z-[100] -translate-x-1/2 flex flex-col items-center bg-[#1a1a1f] border border-white/10 p-3 rounded-lg shadow-2xl w-10 animate-lightbox-entry cursor-none"
           style=${{
             top: `${popoverCoords.top}px`,
             left: `${popoverCoords.left}px`
