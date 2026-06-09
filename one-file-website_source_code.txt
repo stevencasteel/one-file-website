@@ -2,7 +2,7 @@
 │          STEVEN CASTEEL ARCHIVE PROJECT          │
 │        Vite + React (ESM CDN) + Tailwind CSS     │
 └──────────────────────────────────────────────────┘
- [SYSTEM] Generated: 6/8/2026, 5:56:12 PM
+ [SYSTEM] Generated: 6/8/2026, 8:11:17 PM
  [BASELINE]: React 18, HTM, Lucide React, Lenis Scroll, Tailwind CSS
 
 ─── ABRIDGED DIRECTORY STRUCTURE ───────────────────
@@ -198,8 +198,6 @@ protocol based on scope:
             void: '#050505',
             ink: '#0a0a0a',
             panel: '#111114',
-            'panel-raised': '#1e1e24',
-            ash: '#1a1a1a',
             fog: '#888888',
             muted: '#737a86',
             light: '#f2f2f2',
@@ -281,15 +279,7 @@ protocol based on scope:
       font-variation-settings: "MONO" 0, "CASL" 0.35, "slnt" 0, "CRSV" 0.5, "wght" 750;
     }
 
-    /* Unified Prismatic Hover Effect */
-    .prismatic-border-hover {
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      border-color: rgba(255, 255, 255, 0.08);
-    }
-    .prismatic-border-hover:hover {
-      border-color: rgba(255, 100, 255, 0.4) !important;
-      box-shadow: 0 0 15px rgba(255, 100, 255, 0.25);
-    }
+
 
     /* Custom Cursor styles with translation improvements */
     .custom-cursor {
@@ -322,34 +312,17 @@ protocol based on scope:
       background-size: 32px 32px;
     }
 
-    /* CSS Columns Masonry with inline-block vertical alignment and nested scale animations to bypass Safari fragmentation bugs */
-    .masonry-cols {
-      column-count: 2;
-      column-gap: 1rem;
+    /* Clean, stable grid card hover effects */
+    .prismatic-border-hover {
+      transition: border-color 0.35s ease, box-shadow 0.35s ease;
+      border-color: rgba(255, 255, 255, 0.08);
     }
-    @media (min-width: 640px) { .masonry-cols { column-count: 3; } }
-    @media (min-width: 1024px) { .masonry-cols { column-count: 4; } }
-    @media (min-width: 1280px) { .masonry-cols { column-count: 4; } }
-    
-    .masonry-item {
-      display: inline-block;
-      vertical-align: top;
-      width: 100%;
-      margin-bottom: 1rem;
-      break-inside: avoid-column;
-      -webkit-column-break-inside: avoid;
-      page-break-inside: avoid;
-    }
-    .masonry-item .prismatic-border-hover {
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s, box-shadow 0.35s;
-    }
-    .masonry-item:hover .prismatic-border-hover {
-      transform: scale(1.03);
+    .prismatic-border-hover:hover {
       border-color: rgba(255, 100, 255, 0.4) !important;
       box-shadow: 0 0 15px rgba(255, 100, 255, 0.25);
     }
 
-    /* GPU-Accelerated Lightbox Overlay Animations */
+        /* GPU-Accelerated Lightbox Overlay Animations */
     @keyframes fade-in-scale {
       from {
         opacity: 0;
@@ -1140,6 +1113,16 @@ protocol based on scope:
         }
       };
 
+      // Distribute Portfolio images into columns for stable, bug-free masonry layouts in Safari
+      const cols4 = [[], [], [], []];
+      SHUFFLED_ART.forEach((url, i) => cols4[i % 4].push(url));
+
+      const cols3 = [[], [], []];
+      SHUFFLED_ART.forEach((url, i) => cols3[i % 3].push(url));
+
+      const cols2 = [[], []];
+      SHUFFLED_ART.forEach((url, i) => cols2[i % 2].push(url));
+
       return html`
         <div class="relative w-full flex flex-col md:flex-row min-h-screen">
           <audio 
@@ -1398,30 +1381,83 @@ protocol based on scope:
                 <!-- Misc Art Section -->
                 <div class="space-y-6">
                   <h3 class="text-xl font-display font-bold uppercase tracking-wider text-fog">// Misc Art</h3>
-                  <div class="masonry-cols">
-                    ${SHUFFLED_ART.map((url) => html`
-                      <div 
-                        key=${url} 
-                        onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
-                        class="masonry-item"
-                      >
-                        <${GlassContainer} 
-                          className="overflow-hidden prismatic-border-hover"
-                        >
-                          <img 
-                            src=${url} 
-                            alt=${getMediaTitle(url)} 
-                            class="w-full h-auto object-cover opacity-80 hover:opacity-100 transition-opacity"
-                            loading="lazy"
-                          />
-                        </${GlassContainer}>
+                  
+                  <!-- Responsive 4-Column Grid (Large screens) -->
+                  <div class="hidden lg:grid grid-cols-4 gap-4">
+                    ${cols4.map(col => html`
+                      <div class="flex flex-col gap-4">
+                        ${col.map(url => html`
+                          <div 
+                            key=${url} 
+                            onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
+                            class="relative transform hover:scale-[1.03] transition-all duration-300 hover:z-20 cursor-none"
+                          >
+                            <${GlassContainer} className="overflow-hidden prismatic-border-hover">
+                              <img 
+                                src=${url} 
+                                alt=${getMediaTitle(url)} 
+                                class="w-full h-auto block"
+                                loading="lazy"
+                              />
+                            </${GlassContainer}>
+                          </div>
+                        `)}
                       </div>
                     `)}
                   </div>
+
+                  <!-- Responsive 3-Column Grid (Tablet/Medium screens) -->
+                  <div class="hidden sm:grid lg:hidden grid-cols-3 gap-4">
+                    ${cols3.map(col => html`
+                      <div class="flex flex-col gap-4">
+                        ${col.map(url => html`
+                          <div 
+                            key=${url} 
+                            onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
+                            class="relative transform hover:scale-[1.03] transition-all duration-300 hover:z-20 cursor-none"
+                          >
+                            <${GlassContainer} className="overflow-hidden prismatic-border-hover">
+                              <img 
+                                src=${url} 
+                                alt=${getMediaTitle(url)} 
+                                class="w-full h-auto block"
+                                loading="lazy"
+                              />
+                            </${GlassContainer}>
+                          </div>
+                        `)}
+                      </div>
+                    `)}
+                  </div>
+
+                  <!-- Responsive 2-Column Grid (Mobile screens) -->
+                  <div class="grid sm:hidden grid-cols-2 gap-4">
+                    ${cols2.map(col => html`
+                      <div class="flex flex-col gap-4">
+                        ${col.map(url => html`
+                          <div 
+                            key=${url} 
+                            onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
+                            class="relative transform hover:scale-[1.03] transition-all duration-300 hover:z-20 cursor-none"
+                          >
+                            <${GlassContainer} className="overflow-hidden prismatic-border-hover">
+                              <img 
+                                src=${url} 
+                                alt=${getMediaTitle(url)} 
+                                class="w-full h-auto block"
+                                loading="lazy"
+                              />
+                            </${GlassContainer}>
+                          </div>
+                        `)}
+                      </div>
+                    `)}
+                  </div>
+
                 </div>
               </section>
 
-              <!-- ── INTERESTS SECTION ── -->
+                            <!-- ── INTERESTS SECTION ── -->
               <section id="misc-media" class="space-y-16 scroll-mt-20 pl-1.5 pr-[18px] md:px-12">
                 <div class="border-b border-white/10 pb-4">
                   <h2 class="text-4xl font-display font-black uppercase text-white tracking-tight">INTERESTS</h2>
@@ -1443,7 +1479,7 @@ protocol based on scope:
                           <img 
                             src=${url} 
                             alt=${getMediaTitle(url)} 
-                            class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
+                            class="w-full h-full object-cover block"
                             loading="lazy"
                           />
                         </${GlassContainer}>
@@ -1493,13 +1529,8 @@ protocol based on scope:
     const arrow = document.getElementById('cursor-arrow');
     const ibeam = document.getElementById('cursor-ibeam');
     
-    let mouseX = -100;
-    let mouseY = -100;
-    
     document.addEventListener('pointermove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      globalCursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+      globalCursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
     });
     
     // spring physical wind-up click states

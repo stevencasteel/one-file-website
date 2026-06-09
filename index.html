@@ -15,8 +15,6 @@
             void: '#050505',
             ink: '#0a0a0a',
             panel: '#111114',
-            'panel-raised': '#1e1e24',
-            ash: '#1a1a1a',
             fog: '#888888',
             muted: '#737a86',
             light: '#f2f2f2',
@@ -98,15 +96,7 @@
       font-variation-settings: "MONO" 0, "CASL" 0.35, "slnt" 0, "CRSV" 0.5, "wght" 750;
     }
 
-    /* Unified Prismatic Hover Effect */
-    .prismatic-border-hover {
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-      border-color: rgba(255, 255, 255, 0.08);
-    }
-    .prismatic-border-hover:hover {
-      border-color: rgba(255, 100, 255, 0.4) !important;
-      box-shadow: 0 0 15px rgba(255, 100, 255, 0.25);
-    }
+
 
     /* Custom Cursor styles with translation improvements */
     .custom-cursor {
@@ -1356,13 +1346,8 @@
     const arrow = document.getElementById('cursor-arrow');
     const ibeam = document.getElementById('cursor-ibeam');
     
-    let mouseX = -100;
-    let mouseY = -100;
-    
     document.addEventListener('pointermove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      globalCursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+      globalCursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
     });
     
     // spring physical wind-up click states
