@@ -241,8 +241,9 @@ export function AudioConsoleModal({
             </h2>
           </div>
           <button 
-            onClick=${() => {
-              audioEngine.playClick();
+            onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+            onPointerUp=${() => {
+              audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
               onClose();
             }}
             class="flex items-center justify-center w-8 h-8 rounded-md bg-white/5 border border-white/10 hover:border-primary/40 hover:text-primary transition-all duration-300 cursor-none"
@@ -295,19 +296,31 @@ export function AudioConsoleModal({
 
               <div class="flex items-center gap-2">
                 <button 
-                  onClick=${toggleShuffleState}
+                  onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+                  onPointerUp=${() => {
+                    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+                    toggleShuffleState();
+                  }}
                   class=${`flex-1 py-2 rounded-lg border text-xs font-mono font-bold uppercase cursor-none transition ${isShuffle ? 'border-primary/40 bg-primary/5 text-primary' : 'border-white/5 bg-white/5 text-fog hover:text-white'}`}
                 >
                   Shuffle
                 </button>
                 <button 
-                  onClick=${handlePrev}
+                  onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+                  onPointerUp=${() => {
+                    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+                    handlePrev();
+                  }}
                   class="p-2 px-4 rounded-lg bg-white/5 border border-white/10 hover:border-primary/30 text-fog hover:text-white cursor-none transition"
                 >
                   <${SkipBack} size=${16} fill="currentColor" />
                 </button>
                 <button 
-                  onClick=${togglePlay}
+                  onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+                  onPointerUp=${() => {
+                    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+                    togglePlay();
+                  }}
                   class="p-2 px-6 rounded-lg bg-primary text-void font-bold cursor-none hover:scale-105 transition flex items-center justify-center shadow-[0_0_12px_rgba(34,197,94,0.4)]"
                 >
                   ${isPlaying 
@@ -316,7 +329,11 @@ export function AudioConsoleModal({
                   }
                 </button>
                 <button 
-                  onClick=${handleNext}
+                  onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+                  onPointerUp=${() => {
+                    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+                    handleNext();
+                  }}
                   class="p-2 px-4 rounded-lg bg-white/5 border border-white/10 hover:border-primary/30 text-fog hover:text-white cursor-none transition"
                 >
                   <${SkipForward} size=${16} fill="currentColor" />
@@ -341,8 +358,9 @@ export function AudioConsoleModal({
               <div class="flex items-center justify-between border-b border-white/5 pb-3 mb-3 shrink-0">
                 ${playlistView === "tracks" ? html`
                   <button 
-                    onClick=${() => {
-                      audioEngine.playClick();
+                    onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+                    onPointerUp=${() => {
+                      audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
                       setPlaylistView("albums");
                     }}
                     class="text-[10px] font-mono font-bold uppercase text-primary hover:underline cursor-none"
@@ -363,8 +381,9 @@ export function AudioConsoleModal({
                 ${playlistView === "albums" ? ALBUMS.map(album => html`
                   <button 
                     key=${album.id}
-                    onClick=${() => {
-                      audioEngine.playClick();
+                    onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+                    onPointerUp=${() => {
+                      audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
                       setViewingAlbumId(album.id);
                       setPlaylistView("tracks");
                     }}
@@ -410,8 +429,9 @@ export function AudioConsoleModal({
                   Physical Mixer Console
                 </span>
                 <button 
-                  onClick=${() => {
-                    audioEngine.playClick();
+                  onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+                  onPointerUp=${() => {
+                    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
                     setIsMuted(!isMuted);
                   }}
                   class=${`flex items-center gap-1.5 p-1 px-2.5 rounded text-[9px] font-mono font-bold uppercase transition border cursor-none ${isMuted ? 'border-red-500 bg-red-500/10 text-red-500 shadow-[0_0_8px_rgba(239,68,68,0.2)]' : 'border-white/10 hover:border-white/20 text-muted hover:text-white'}`}
