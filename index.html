@@ -473,7 +473,7 @@
             } else {
               clearInterval(intervalId);
               if (cursorRef.current) {
-                cursorRef.current.style.display = "none";
+                cursorRef.current.style.visibility = "hidden";
               }
               if (onComplete) onComplete();
             }
@@ -1138,7 +1138,7 @@
               <!-- Sequential Scramble Title Layout with Fluid Clamp Typography (Single-Line Integration) -->
               <div class="relative w-full mb-4 flex flex-row items-center justify-center select-none leading-none">
                 <h1 
-                  class="text-[clamp(2.75rem,14vw,4.75rem)] md:text-[10vw] leading-[0.9] md:leading-[0.85] font-display font-bold tracking-normal md:tracking-tighter uppercase text-white flex flex-row items-center justify-center gap-[0.25em] whitespace-nowrap"
+                  class="text-[clamp(2.75rem,14vw,4.75rem)] md:text-[10vw] leading-[0.9] md:leading-[0.85] font-display font-bold tracking-[0.09em] md:tracking-[0.165em] uppercase text-white flex flex-row items-center justify-center gap-[0.25em] whitespace-nowrap"
                 >
                   <div class="inline-block">
                     <${ScrambleText} 
