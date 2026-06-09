@@ -40,7 +40,7 @@ export function GlobalScrollbar({ lenisInstance }) {
     };
   }, []);
 
-  const progress = maxScrollY > 0 ? scrollY / maxScrollY : 0;
+  
   
   const trackTopOffset = (window.innerWidth >= 768 ? 0 : 56) + 24;
   

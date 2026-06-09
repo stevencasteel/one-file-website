@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { createPortal } from 'react-dom';
 import htm from 'htm';
-import { Settings2, Volume2, VolumeX, Shuffle, SkipForward, SkipBack, Play, Pause, Music } from 'lucide-react';
+import { Volume2, VolumeX, Shuffle, SkipForward, SkipBack, Play, Pause } from 'lucide-react';
 import { audioEngine } from './AudioEngine.js';
 import { ScrollingText } from './components.js';
 

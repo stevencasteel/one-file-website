@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import htm from 'htm';
-import { Settings2, Pause, Play, SkipForward, SkipBack, Shuffle, X, Library, VolumeX, Volume2, Star, ChevronLeft, Download } from 'lucide-react';
+import { Settings2, Pause, Play, SkipForward, SkipBack, Shuffle, X, Library, ChevronLeft, Download } from 'lucide-react';
 import { audioEngine } from './AudioEngine.js';
 import { AUDIO_TRACKS } from 'media-data';
-import { ScrollingText } from './components.js';
 
 const html = htm.bind(React.createElement);
 
@@ -173,22 +172,26 @@ export function AudioConsoleModal({
   isMuted,
   setIsMuted
 }) {
-  if (!isOpen) return null;
-
   const [showShader, setShowShader] = useState(true);
   const [playlistView, setPlaylistView] = useState("tracks");
   const [viewingAlbumId, setViewingAlbumId] = useState(ALBUMS[0]?.id || "");
 
   useEffect(() => {
-    if (activeTrack) setViewingAlbumId(activeTrack.folder);
-  }, [activeTrack]);
+    if (isOpen && activeTrack) {
+      setViewingAlbumId(activeTrack.folder);
+    }
+  }, [activeTrack, isOpen]);
 
   useEffect(() => {
-    audioEngine.setLowpass(true);
-    return () => {
-      audioEngine.setLowpass(false);
-    };
-  }, []);
+    if (isOpen) {
+      audioEngine.setLowpass(true);
+      return () => {
+        audioEngine.setLowpass(false);
+      };
+    }
+  }, [isOpen]);
+
+  if (!isOpen) return null;
 
   const activeAlbum = ALBUMS.find(a => a.id === viewingAlbumId) || ALBUMS[0];
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -479,7 +482,6 @@ export function AudioConsoleModal({
                   </button>
                 `) : activeAlbum.tracks.map((t, idx) => {
                   const isActive = activeTrack.name === t.name && activeTrack.folder === t.folder;
-                  const globalIdx = AUDIO_TRACKS.findIndex(item => item.name === t.name && item.folder === t.folder);
                   
                   return html`
                     <div key=${t.name} class=${`w-full flex items-center justify-between rounded transition-all group ${isActive ? 'bg-primary/10 text-primary font-bold' : 'hover:bg-white/5 text-fog hover:text-white'}`}>

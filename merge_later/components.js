@@ -54,6 +54,7 @@ export function ScrambleText({ text, delay = 0, onComplete, enabled = true }) {
     return () => {
       clearTimeout(timeoutId);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text, delay, enabled]);
 
   return html`<span class="select-none inline-block">${displayText}</span>`;
@@ -91,6 +92,7 @@ export function TypedLog({ text, speed = 40, delay = 0, enabled = false, onCompl
     }, delay);
 
     return () => clearTimeout(timeoutId);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text, speed, delay, enabled]);
 
   return html`

@@ -186,12 +186,12 @@ class AudioEngine {
 
   stopAmbience() {
     if (this.ambienceNode) {
-      try { this.ambienceNode.stop(); } catch (e) {}
+      try { this.ambienceNode.stop(); } catch (e) { /* ignore */ }
       this.ambienceNode.disconnect();
       this.ambienceNode = null;
     }
     if (this.ambienceLFO) {
-      try { this.ambienceLFO.stop(); } catch (e) {}
+      try { this.ambienceLFO.stop(); } catch (e) { /* ignore */ }
       this.ambienceLFO.disconnect();
       this.ambienceLFO = null;
     }
@@ -241,9 +241,7 @@ class AudioEngine {
         const parts = url.split('/');
         const fileName = parts[parts.length - 1] || "";
         const cleanName = fileName.replace(/\.mp3$/, '').split('_').slice(2).join(' ').replace(/_/g, ' ');
-        const folder = parts[parts.length - 2] || "";
-        const cleanFolder = folder.replace(/_/g, ' ').toUpperCase();
-        const fallback = {
+                const fallback = {
           title: cleanName || "Unknown Track",
           artist: "Steven Casteel",
           coverUrl: null
@@ -348,7 +346,7 @@ class AudioEngine {
       }
     }
     
-    const picType = view.getUint8(idx++);
+    idx++;
     
     if (encoding === 1 || encoding === 2) {
       while (idx < offset + size - 1) {
@@ -448,21 +446,6 @@ class AudioEngine {
     gainNode.connect(this.sfxGain);
     osc.start();
     osc.stop(this.ctx.currentTime + 0.012);
-  }
-
-  playInnerTick() {
-    if (!this.isInitialized || !this.ctx || this.isMuted) return;
-    const osc = this.ctx.createOscillator();
-    const gainNode = this.ctx.createGain();
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(2000, this.ctx.currentTime);
-    gainNode.gain.setValueAtTime(0, this.ctx.currentTime);
-    gainNode.gain.linearRampToValueAtTime(0.015 * this.sfxVol, this.ctx.currentTime + 0.001);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.008);
-    osc.connect(gainNode);
-    gainNode.connect(this.sfxGain);
-    osc.start();
-    osc.stop(this.ctx.currentTime + 0.01);
   }
 
   playInnerTick() {
