@@ -32,9 +32,9 @@ function App() {
   const [lightbox, setLightbox] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isConsoleOpen, setIsConsoleOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("audio");
+  const [activeSection, setActiveSection] = useState('audio');
 
-  const [seqStep, setSeqStep] = useState("line1");
+  const [seqStep, setSeqStep] = useState('line1');
   const [lenis, setLenis] = useState(null);
 
   // 1:1 Global Mixer State Variables
@@ -120,7 +120,7 @@ function App() {
   }, [mixerMaster, mixerSfx, mixerAmbience, isMuted]);
 
   useEffect(() => {
-    audioEngine.setVolume("music", mixerMusic);
+    audioEngine.setVolume('music', mixerMusic);
     localStorage.setItem('mesoelfy_mixer_music', mixerMusic.toString());
   }, [mixerMusic]);
 
@@ -138,7 +138,7 @@ function App() {
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      touchMultiplier: 1.15
+      touchMultiplier: 1.15,
     });
 
     function raf(time) {
@@ -157,21 +157,21 @@ function App() {
   // Active Section Tracker (Scroll Spy Setup)
   useEffect(() => {
     const handleSpy = () => {
-      const sections = ["misc-art", "misc-media"];
-      let current = "audio";
+      const sections = ['misc-art', 'misc-media'];
+      let current = 'audio';
       for (const s of sections) {
         const el = document.getElementById(s);
         if (el) {
           const htmlRect = el.getBoundingClientRect();
-          if (htmlRect.top <= window.innerHeight * 0.40) {
+          if (htmlRect.top <= window.innerHeight * 0.4) {
             current = s;
           }
         }
       }
       setActiveSection(current);
     };
-    window.addEventListener("scroll", handleSpy);
-    return () => window.removeEventListener("scroll", handleSpy);
+    window.addEventListener('scroll', handleSpy);
+    return () => window.removeEventListener('scroll', handleSpy);
   }, []);
 
   useEffect(() => {
@@ -185,7 +185,8 @@ function App() {
     const handleUnlock = () => {
       if (savedAutoplay === 'true' && audioElRef.current) {
         ensureAudioInitialized();
-        audioElRef.current.play()
+        audioElRef.current
+          .play()
           .then(() => setIsPlaying(true))
           .catch(() => {});
       }
@@ -196,18 +197,21 @@ function App() {
     return () => document.removeEventListener('click', handleUnlock);
   }, []);
 
-  const activeTrackIdx = playerState.queue[playerState.currentIdx] !== undefined ? playerState.queue[playerState.currentIdx] : 0;
+  const activeTrackIdx =
+    playerState.queue[playerState.currentIdx] !== undefined
+      ? playerState.queue[playerState.currentIdx]
+      : 0;
   const activeTrack = AUDIO_TRACKS[activeTrackIdx] || AUDIO_TRACKS[0];
 
   // Track changes & binary tag extraction trigger
   useEffect(() => {
     if (!audioElRef.current) return;
     localStorage.setItem('mesoelfy_player_track_index', activeTrackIdx.toString());
-    
+
     // Reset metadata block while decoding occurs
     setTrackMetadata(null);
     const url = `https://www.stevencasteel.com/assets/audio/music/elf_girl/${activeTrack.folder}/${activeTrack.name}`;
-    
+
     let isMounted = true;
     audioEngine.fetchID3Metadata(url).then((meta) => {
       if (isMounted) {
@@ -223,7 +227,7 @@ function App() {
     return () => {
       isMounted = false;
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTrackIdx]);
 
   const togglePlay = () => {
@@ -234,12 +238,13 @@ function App() {
       setIsPlaying(false);
       localStorage.setItem('mesoelfy_player_autoplay', 'false');
     } else {
-      audioElRef.current.play()
+      audioElRef.current
+        .play()
         .then(() => {
           setIsPlaying(true);
           localStorage.setItem('mesoelfy_player_autoplay', 'true');
         })
-        .catch((err) => console.log("Play failed: interaction required", err));
+        .catch((err) => console.log('Play failed: interaction required', err));
     }
   };
 
@@ -248,7 +253,7 @@ function App() {
     ensureAudioInitialized();
     setPlayerState((prev) => ({
       ...prev,
-      currentIdx: (prev.currentIdx + 1) % prev.queue.length
+      currentIdx: (prev.currentIdx + 1) % prev.queue.length,
     }));
   };
 
@@ -257,7 +262,7 @@ function App() {
     ensureAudioInitialized();
     setPlayerState((prev) => ({
       ...prev,
-      currentIdx: (prev.currentIdx - 1 + prev.queue.length) % prev.queue.length
+      currentIdx: (prev.currentIdx - 1 + prev.queue.length) % prev.queue.length,
     }));
   };
 
@@ -288,7 +293,7 @@ function App() {
     ensureAudioInitialized();
     setIsShuffle(targetState);
     localStorage.setItem('mesoelfy_player_shuffle', targetState.toString());
-    
+
     let newQueue = [];
     if (targetState) {
       newQueue = getShuffledIndices(AUDIO_TRACKS.length);
@@ -302,21 +307,23 @@ function App() {
     }
     setPlayerState({
       queue: newQueue,
-      currentIdx: 0
+      currentIdx: 0,
     });
   };
 
   const formatTime = (secs) => {
-    if (isNaN(secs)) return "0:00";
+    if (isNaN(secs)) return '0:00';
     const m = Math.floor(secs / 60);
-    const s = Math.floor(secs % 60).toString().padStart(2, '0');
+    const s = Math.floor(secs % 60)
+      .toString()
+      .padStart(2, '0');
     return `${m}:${s}`;
   };
 
   // Navigation Link Scrolling Coordinator
   const handleNavigation = (targetId) => {
     setIsSidebarOpen(false);
-    if (targetId === "audio") {
+    if (targetId === 'audio') {
       if (lenis) {
         lenis.scrollTo(0);
       } else {
@@ -349,59 +356,65 @@ function App() {
     handleNext,
     toggleShuffleState,
     setVolume: setMixerMusic, // Direct mapping of the slider
-    formatTime
+    formatTime,
   };
 
   return html`
-    <div class="relative w-full flex flex-col md:flex-row min-h-screen" onClick=${ensureAudioInitialized}>
+    <div
+      class="relative w-full flex flex-col md:flex-row min-h-screen"
+      onClick=${ensureAudioInitialized}
+    >
       <${ProtocolWarning} />
-      <audio 
-        ref=${audioElRef} 
+      <audio
+        ref=${audioElRef}
         src="https://www.stevencasteel.com/assets/audio/music/elf_girl/${activeTrack.folder}/${activeTrack.name}"
-        crossOrigin="anonymous"
+        crossorigin="anonymous"
         onTimeUpdate=${handleTimeUpdate}
         onLoadedMetadata=${handleLoadedMetadata}
         onEnded=${handleNext}
       />
 
       <!-- ── NAVIGATION & HEADER SYSTEM ── -->
-      <${Sidebar} 
+      <${Sidebar}
         isSidebarOpen=${isSidebarOpen}
         setIsSidebarOpen=${setIsSidebarOpen}
         activeSection=${activeSection}
         handleNavigation=${handleNavigation}
         playerProps=${playerProps}
-        onOpenConsole=${() => { ensureAudioInitialized(); setIsConsoleOpen(true); }}
+        onOpenConsole=${() => {
+          ensureAudioInitialized();
+          setIsConsoleOpen(true);
+        }}
       />
 
       <!-- ── MAIN CONTENT ZONE ── -->
       <div class="flex-1 md:pl-64 min-w-0 pb-20 pt-14 md:pt-0">
-        <${HeroHeader} 
-          seqStep=${seqStep}
-          setSeqStep=${setSeqStep}
-        />
+        <${HeroHeader} seqStep=${seqStep} setSeqStep=${setSeqStep} />
 
-        <${MainContent} 
-          setLightbox=${setLightbox}
-        />
+        <${MainContent} setLightbox=${setLightbox} />
       </div>
 
       <!-- ── GLOBAL CUSTOM SCROLLBAR ── -->
       <${GlobalScrollbar} lenisInstance=${lenis} />
 
       <!-- ── LIGHTBOX MODAL PORTAL ── -->
-      ${lightbox && html`
-        <div 
+      ${lightbox &&
+      html`
+        <div
           onClick=${() => setLightbox(null)}
           class="fixed inset-0 bg-void/95 backdrop-blur-md z-[100] flex items-center justify-center p-4 transition-opacity duration-300 cursor-none"
         >
-          <div class="relative max-w-full max-h-full flex items-center justify-center select-none animate-lightbox-entry">
-            <img 
-              src=${lightbox.src} 
-              alt=${lightbox.alt} 
+          <div
+            class="relative max-w-full max-h-full flex items-center justify-center select-none animate-lightbox-entry"
+          >
+            <img
+              src=${lightbox.src}
+              alt=${lightbox.alt}
               class="max-w-[90vw] max-h-[90vh] object-contain rounded-lg border border-white/10 shadow-2xl"
             />
-            <div class="absolute -top-12 right-0 text-white font-mono text-xs tracking-widest uppercase">
+            <div
+              class="absolute -top-12 right-0 text-white font-mono text-xs tracking-widest uppercase"
+            >
               Click anywhere to close
             </div>
           </div>
@@ -409,7 +422,7 @@ function App() {
       `}
 
       <!-- ── FULL SCREEN AUDIO CONSOLE MIXER MODAL ── -->
-      <${AudioConsoleModal} 
+      <${AudioConsoleModal}
         isOpen=${isConsoleOpen}
         isPrismaticEnabled=${isPrismaticEnabled}
         setIsPrismaticEnabled=${setIsPrismaticEnabled}
@@ -428,7 +441,6 @@ function App() {
         toggleShuffleState=${toggleShuffleState}
         setVolume=${setMixerMusic}
         formatTime=${formatTime}
-        
         mixerMaster=${mixerMaster}
         setMixerMaster=${setMixerMaster}
         mixerSfx=${mixerSfx}
@@ -437,13 +449,11 @@ function App() {
         setMixerAmbience=${setMixerAmbience}
         isMuted=${isMuted}
         setIsMuted=${setIsMuted}
-
         playTrackByIndex=${(idx) => {
-          setPlayerState(prev => ({ ...prev, currentIdx: idx }));
+          setPlayerState((prev) => ({ ...prev, currentIdx: idx }));
           setIsPlaying(true);
         }}
       />
-
     </div>
   `;
 }

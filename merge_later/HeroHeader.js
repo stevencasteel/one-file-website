@@ -14,10 +14,10 @@ export function HeroHeader({ seqStep, setSeqStep }) {
         <div 
           class="absolute inset-0 opacity-40"
           style=${{
-            filter: "blur(80px)",
-            WebkitFilter: "blur(80px)",
-            transform: "translate3d(0, 0, 0)",
-            background: "radial-gradient(circle, rgba(34,197,94,0.18) 0%, transparent 65%)"
+            filter: 'blur(80px)',
+            WebkitFilter: 'blur(80px)',
+            transform: 'translate3d(0, 0, 0)',
+            background: 'radial-gradient(circle, rgba(34,197,94,0.18) 0%, transparent 65%)',
           }}
         />
       </div>
@@ -31,15 +31,15 @@ export function HeroHeader({ seqStep, setSeqStep }) {
               text="YOUR" 
               delay=${200} 
               enabled=${true} 
-              onComplete=${() => setSeqStep("line2")} 
+              onComplete=${() => setSeqStep('line2')} 
             />
           </div>
-          <div class=${`inline-block transition-all duration-300 ${seqStep === "typing" ? 'text-prismatic-foil' : 'text-primary'}`}>
+          <div class=${`inline-block transition-all duration-300 ${seqStep === 'typing' ? 'text-prismatic-foil' : 'text-primary'}`}>
             <${ScrambleText} 
               text="NAME" 
               delay=${0} 
-              enabled=${seqStep !== "line1"} 
-              onComplete=${() => setSeqStep("typing")} 
+              enabled=${seqStep !== 'line1'} 
+              onComplete=${() => setSeqStep('typing')} 
             />
           </div>
         </h1>
@@ -54,7 +54,7 @@ export function HeroHeader({ seqStep, setSeqStep }) {
               text="📟 Digital Media Generalist | Creative Director of AI 🤖" 
               speed=${40} 
               delay=${0} 
-              enabled=${seqStep === "typing"} 
+              enabled=${seqStep === 'typing'} 
             />
           </span>
         </${GlassContainer}>

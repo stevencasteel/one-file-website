@@ -1,4 +1,3 @@
-
 import { audioEngine } from './AudioEngine.js';
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -26,13 +25,25 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const isCustomHover = target.closest('[data-custom-hover="true"]');
     const isRangeInput = target.tagName.toLowerCase() === 'input' && target.type === 'range';
-    const isInteractive = target.closest('a') || target.closest('button') || target.closest('[role="button"]') || target.classList.contains('cursor-pointer') || isRangeInput;
+    const isInteractive =
+      target.closest('a') ||
+      target.closest('button') ||
+      target.closest('[role="button"]') ||
+      target.classList.contains('cursor-pointer') ||
+      isRangeInput;
     const isWarningScreen = target.closest('#protocol-warning');
 
     // Ignore text cursors in hardware components
-    const isHardwareTrack = target.closest('.surface-hardware-track') || target.closest('.group\\/vol') || target.closest('.group\\/scrub');
-    const isText = (['p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'textarea'].includes(target.tagName.toLowerCase()) || 
-                   (target.tagName.toLowerCase() === 'input' && !isRangeInput)) && !isHardwareTrack;
+    const isHardwareTrack =
+      target.closest('.surface-hardware-track') ||
+      target.closest('.group\\/vol') ||
+      target.closest('.group\\/scrub');
+    const isText =
+      (['p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'textarea'].includes(
+        target.tagName.toLowerCase()
+      ) ||
+        (target.tagName.toLowerCase() === 'input' && !isRangeInput)) &&
+      !isHardwareTrack;
 
     if (isInteractive && !isWarningScreen && !isCustomHover) {
       audioEngine.playHover();

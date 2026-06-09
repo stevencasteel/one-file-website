@@ -5,17 +5,20 @@ import anime from 'animejs';
 const html = htm.bind(React.createElement);
 
 export function ScrambleText({ text, delay = 0, onComplete, enabled = true }) {
-  const [displayText, setDisplayText] = useState("");
-  const DEFAULT_CHARS = "-_~=+*!@#%&<>";
+  const [displayText, setDisplayText] = useState('');
+  const DEFAULT_CHARS = '-_~=+*!@#%&<>';
   const settleDuration = 100;
   const onCompleteRef = useRef(onComplete);
-  useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
   useEffect(() => {
     if (!enabled) {
-      const scrambledPlaceholder = Array.from({ length: text.length }, () => 
-        DEFAULT_CHARS[Math.floor(Math.random() * DEFAULT_CHARS.length)]
-      ).join("");
+      const scrambledPlaceholder = Array.from(
+        { length: text.length },
+        () => DEFAULT_CHARS[Math.floor(Math.random() * DEFAULT_CHARS.length)]
+      ).join('');
       setDisplayText(scrambledPlaceholder);
       return;
     }
@@ -33,7 +36,7 @@ export function ScrambleText({ text, delay = 0, onComplete, enabled = true }) {
         easing: 'linear',
         update: () => {
           const elapsed = animObj.time;
-          let result = "";
+          let result = '';
           for (let i = 0; i < text.length; i++) {
             const revealTriggerTime = i * stepRevealTime;
             if (elapsed < revealTriggerTime) {
@@ -49,7 +52,7 @@ export function ScrambleText({ text, delay = 0, onComplete, enabled = true }) {
         complete: () => {
           setDisplayText(text);
           if (onCompleteRef.current) onCompleteRef.current();
-        }
+        },
       });
     }, delay);
 
@@ -62,21 +65,23 @@ export function ScrambleText({ text, delay = 0, onComplete, enabled = true }) {
 }
 
 export function TypedLog({ text, speed = 40, delay = 0, enabled = false, onComplete }) {
-  const [displayed, setDisplayed] = useState("");
+  const [displayed, setDisplayed] = useState('');
   const cursorRef = useRef(null);
   const onCompleteRef = useRef(onComplete);
-  useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
   useEffect(() => {
     if (!enabled) return;
 
     let timeoutId = setTimeout(() => {
       if (cursorRef.current) {
-        cursorRef.current.style.opacity = "1";
+        cursorRef.current.style.opacity = '1';
       }
 
       let currentIndex = 0;
-      let currentStr = "";
+      let currentStr = '';
       const intervalId = setInterval(() => {
         if (currentIndex < text.length) {
           currentStr += text[currentIndex];
@@ -85,7 +90,7 @@ export function TypedLog({ text, speed = 40, delay = 0, enabled = false, onCompl
         } else {
           clearInterval(intervalId);
           if (cursorRef.current) {
-            cursorRef.current.style.visibility = "hidden";
+            cursorRef.current.style.visibility = 'hidden';
           }
           if (onCompleteRef.current) onCompleteRef.current();
         }
@@ -100,7 +105,7 @@ export function TypedLog({ text, speed = 40, delay = 0, enabled = false, onCompl
   return html`
     <span style=${{ textShadow: '0 0 4px currentColor' }}>
       ${displayed}
-      <span 
+      <span
         ref=${cursorRef}
         class="w-2 h-[1.1em] bg-current inline-block ml-1 align-middle -translate-y-[2px] relative z-10 animate-phosphor shadow-[0_0_8px_currentColor]"
         style=${{ opacity: 0, transition: 'opacity 0.2s ease' }}
@@ -109,7 +114,7 @@ export function TypedLog({ text, speed = 40, delay = 0, enabled = false, onCompl
   `;
 }
 
-export function GlassContainer({ children, className = "", style = {} }) {
+export function GlassContainer({ children, className = '', style = {} }) {
   const [isInView, setIsInView] = useState(false);
   const ref = useRef(null);
 
@@ -122,7 +127,7 @@ export function GlassContainer({ children, className = "", style = {} }) {
         setIsInView(entry.isIntersecting);
       },
       {
-        rootMargin: "200px 0px"
+        rootMargin: '200px 0px',
       }
     );
 
@@ -132,7 +137,7 @@ export function GlassContainer({ children, className = "", style = {} }) {
     };
   }, []);
 
-  const borderClass = "border-white/10";
+  const borderClass = 'border-white/10';
 
   const optimizedStyles = {
     contentVisibility: 'auto',
@@ -144,23 +149,21 @@ export function GlassContainer({ children, className = "", style = {} }) {
     backgroundColor: 'rgba(17, 17, 20, 0.4)',
     backdropFilter: isInView ? 'blur(12px)' : 'none',
     WebkitBackdropFilter: isInView ? 'blur(12px)' : 'none',
-    ...style
+    ...style,
   };
 
   return html`
-    <div 
+    <div
       ref=${ref}
       style=${optimizedStyles}
       class="relative rounded-xl border shadow-[0_8px_32px_rgba(0,0,0,0.5)] transition-all duration-300 ${borderClass} ${className}"
     >
-      <div class="relative z-10 w-full h-full">
-        ${children}
-      </div>
+      <div class="relative z-10 w-full h-full">${children}</div>
     </div>
   `;
 }
 
-export function ScrollingText({ children, isUiActive = true, className = "" }) {
+export function ScrollingText({ children, isUiActive = true, className = '' }) {
   const containerRef = useRef(null);
   const textRef = useRef(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
@@ -178,11 +181,14 @@ export function ScrollingText({ children, isUiActive = true, className = "" }) {
 
   return html`
     <div ref=${containerRef} class="relative w-full overflow-hidden whitespace-nowrap select-none">
-      <div class=${`flex w-max ${isOverflowing && isUiActive ? 'animate-marquee-text' : ''}`} style=${{ gap: isOverflowing ? '1.5rem' : '0' }}>
+      <div
+        class=${`flex w-max ${isOverflowing && isUiActive ? 'animate-marquee-text' : ''}`}
+        style=${{ gap: isOverflowing ? '1.5rem' : '0' }}
+      >
         <span ref=${textRef} class=${className}>${children}</span>
-        ${isOverflowing && isUiActive && html`
-          <span class=${className} aria-hidden="true">${children}</span>
-        `}
+        ${isOverflowing &&
+        isUiActive &&
+        html` <span class=${className} aria-hidden="true">${children}</span> `}
       </div>
     </div>
   `;

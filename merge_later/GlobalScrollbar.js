@@ -14,7 +14,7 @@ export function GlobalScrollbar({ lenisInstance }) {
   useLayoutEffect(() => {
     const handleScroll = () => {
       const hero = document.getElementById('hero-header');
-      const offset = hero ? (hero.offsetTop + hero.offsetHeight) : 380;
+      const offset = hero ? hero.offsetTop + hero.offsetHeight : 380;
       setScrollOffset(offset);
       setScrollY(window.scrollY);
       setMaxScrollY(document.documentElement.scrollHeight - window.innerHeight);
@@ -23,12 +23,12 @@ export function GlobalScrollbar({ lenisInstance }) {
     window.addEventListener('resize', handleScroll);
     window.addEventListener('load', handleScroll);
     handleScroll();
-    
+
     const t1 = setTimeout(handleScroll, 100);
     const t2 = setTimeout(handleScroll, 500);
     const t3 = setTimeout(handleScroll, 1200);
     const t4 = setTimeout(handleScroll, 2500);
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
@@ -40,18 +40,19 @@ export function GlobalScrollbar({ lenisInstance }) {
     };
   }, []);
 
-  
-  
   const trackTopOffset = (window.innerWidth >= 768 ? 0 : 56) + 24;
-  
+
   const trackHeight = trackRef.current ? trackRef.current.clientHeight : 1;
   const thumbHeight = thumbRef.current ? thumbRef.current.clientHeight : 0;
   const usableHeight = Math.max(1, trackHeight - thumbHeight);
-  
+
   const heroBottomPadding = 8;
   const threshold = Math.max(0, scrollOffset + heroBottomPadding - trackTopOffset);
-  const initialProgress = Math.max(0, Math.min(1, (scrollOffset + heroBottomPadding - trackTopOffset) / usableHeight));
-  
+  const initialProgress = Math.max(
+    0,
+    Math.min(1, (scrollOffset + heroBottomPadding - trackTopOffset) / usableHeight)
+  );
+
   let clampedProgress = initialProgress;
   if (scrollY >= threshold) {
     const remainingScroll = maxScrollY - threshold;
@@ -66,14 +67,14 @@ export function GlobalScrollbar({ lenisInstance }) {
     const thumbRect = thumbRef.current.getBoundingClientRect();
     const thumbHeight = thumbRect.height;
     const clickY = e.clientY - rect.top;
-    
+
     const usableHeight = rect.height - thumbHeight;
     let ratio = 0;
     if (usableHeight > 0) {
       ratio = Math.max(0, Math.min(1, (clickY - thumbHeight / 2) / usableHeight));
     }
     const targetY = ratio * maxScrollY;
-    
+
     if (lenisInstance) {
       lenisInstance.scrollTo(targetY);
     } else {
@@ -96,13 +97,13 @@ export function GlobalScrollbar({ lenisInstance }) {
       const trackHeight = trackRef.current.clientHeight;
       const thumbHeight = thumbRef.current.clientHeight;
       const usableHeight = trackHeight - thumbHeight;
-      
+
       let scrollDelta = 0;
       if (usableHeight > 0) {
         scrollDelta = (deltaY / usableHeight) * capturedMax;
       }
       const targetY = Math.max(0, Math.min(capturedMax, startScroll + scrollDelta));
-      
+
       if (lenisInstance) {
         lenisInstance.scrollTo(targetY, { immediate: true });
       } else {
@@ -123,40 +124,44 @@ export function GlobalScrollbar({ lenisInstance }) {
   const trackTop = window.innerWidth >= 768 ? 0 : 56;
 
   return html`
-    <div class="global-scrollbar fixed inset-y-0 right-0 z-[80] w-[18px] md:w-12 pointer-events-none group transition-opacity duration-300">
-      <div 
+    <div
+      class="global-scrollbar fixed inset-y-0 right-0 z-[80] w-[18px] md:w-12 pointer-events-none group transition-opacity duration-300"
+    >
+      <div
         ref=${trackRef}
         onPointerDown=${handleTrackClick}
         class="absolute left-0 right-0 pointer-events-auto touch-none"
         style=${{ top: `${trackTop + 24}px`, bottom: '8px' }}
       >
-        <div 
+        <div
           ref=${thumbRef}
           onPointerDown=${handlePointerDown}
           class="absolute left-[3px] right-[3px] md:left-[8px] md:right-[8px] aspect-[492/1299] pointer-events-auto touch-none select-none group transition-opacity duration-300"
           style=${{
             top: `${clampedProgress * 100}%`,
             transform: `translateY(-${clampedProgress * 100}%)`,
-            willChange: 'top, transform'
+            willChange: 'top, transform',
           }}
         >
           <div class="relative w-full h-full">
-            <img 
-              src="https://www.stevencasteel.com/assets/brand/scrollbar.png" 
+            <img
+              src="https://www.stevencasteel.com/assets/brand/scrollbar.png"
               alt="Scrollbar Thumb"
               onLoad=${() => setIsImgLoaded(true)}
               class="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] z-10"
               style=${{ opacity: isImgLoaded ? 1 : 0 }}
               draggable="false"
             />
-            <div class="absolute inset-[2px] rounded-full opacity-0 group-hover:opacity-[0.15] transition-opacity duration-500 z-20 pointer-events-none blur-[4px] bg-primary-400" />
-            <div 
+            <div
+              class="absolute inset-[2px] rounded-full opacity-0 group-hover:opacity-[0.15] transition-opacity duration-500 z-20 pointer-events-none blur-[4px] bg-primary-400"
+            />
+            <div
               class="absolute opacity-90 z-30 pointer-events-none rounded-[1.5px] bg-primary-400 shadow-[0_0_8px_#22c55e]"
               style=${{
-                left: "8%",
-                width: "84%",
-                top: "calc(50% - 1px)",
-                height: "3px"
+                left: '8%',
+                width: '84%',
+                top: 'calc(50% - 1px)',
+                height: '3px',
               }}
             />
           </div>

@@ -23,7 +23,7 @@ class AudioEngine {
       MASTER: 0.5,
       SFX: 0.8,
       AMBIENCE: 1.0,
-      MUSIC: 0.25
+      MUSIC: 0.25,
     };
 
     // Store Raw Values (1:1 with Store matrices)
@@ -52,7 +52,7 @@ class AudioEngine {
     this.ambienceGain = this.ctx.createGain();
 
     this.musicFilter = this.ctx.createBiquadFilter();
-    this.musicFilter.type = "lowpass";
+    this.musicFilter.type = 'lowpass';
     this.musicFilter.frequency.setValueAtTime(20000, this.ctx.currentTime);
     this.musicFilter.Q.setValueAtTime(0.0001, this.ctx.currentTime);
 
@@ -98,22 +98,25 @@ class AudioEngine {
     this.sfxGain.gain.linearRampToValueAtTime(this.sfxVol * this.SCALING.SFX, now + 0.2);
 
     this.ambienceGain.gain.cancelScheduledValues(now);
-    this.ambienceGain.gain.linearRampToValueAtTime(this.ambienceVol * this.SCALING.AMBIENCE, now + 0.2);
+    this.ambienceGain.gain.linearRampToValueAtTime(
+      this.ambienceVol * this.SCALING.AMBIENCE,
+      now + 0.2
+    );
   }
 
   setVolume(type, value) {
     if (!this.isInitialized || !this.ctx) return;
 
-    if (type === "master") {
+    if (type === 'master') {
       this.masterVol = value;
       this.applyVolumes();
-    } else if (type === "music") {
+    } else if (type === 'music') {
       this.musicVol = value;
       this.musicGain.gain.setValueAtTime(1.0, this.ctx.currentTime);
-    } else if (type === "sfx") {
+    } else if (type === 'sfx') {
       this.sfxVol = value;
       this.applyVolumes();
-    } else if (type === "ambience") {
+    } else if (type === 'ambience') {
       this.ambienceVol = value;
       this.applyVolumes();
     }
@@ -153,15 +156,15 @@ class AudioEngine {
     this.ambienceNode.loop = true;
 
     this.ambienceSynthFilter = this.ctx.createBiquadFilter();
-    this.ambienceSynthFilter.type = "lowpass";
+    this.ambienceSynthFilter.type = 'lowpass';
     this.ambienceSynthFilter.frequency.setValueAtTime(800, this.ctx.currentTime);
 
     this.ambienceMixerFilter = this.ctx.createBiquadFilter();
-    this.ambienceMixerFilter.type = "lowpass";
+    this.ambienceMixerFilter.type = 'lowpass';
     this.ambienceMixerFilter.frequency.setValueAtTime(300, this.ctx.currentTime);
 
     this.ambienceLFO = this.ctx.createOscillator();
-    this.ambienceLFO.type = "sine";
+    this.ambienceLFO.type = 'sine';
     this.ambienceLFO.frequency.setValueAtTime(0.2, this.ctx.currentTime);
 
     this.ambienceLFOGain = this.ctx.createGain();
@@ -186,12 +189,20 @@ class AudioEngine {
 
   stopAmbience() {
     if (this.ambienceNode) {
-      try { this.ambienceNode.stop(); } catch (e) { /* ignore */ }
+      try {
+        this.ambienceNode.stop();
+      } catch (e) {
+        /* ignore */
+      }
       this.ambienceNode.disconnect();
       this.ambienceNode = null;
     }
     if (this.ambienceLFO) {
-      try { this.ambienceLFO.stop(); } catch (e) { /* ignore */ }
+      try {
+        this.ambienceLFO.stop();
+      } catch (e) {
+        /* ignore */
+      }
       this.ambienceLFO.disconnect();
       this.ambienceLFO = null;
     }
@@ -212,9 +223,9 @@ class AudioEngine {
     }
 
     try {
-      const fetchUrl = url.includes("?") ? `${url}&meta=1` : `${url}?meta=1`;
+      const fetchUrl = url.includes('?') ? `${url}&meta=1` : `${url}?meta=1`;
       const INITIAL_BYTES = 524288;
-      
+
       let response;
       try {
         response = await fetch(fetchUrl, {
@@ -236,15 +247,20 @@ class AudioEngine {
         return metadata;
       }
     } catch (err) {
-      console.warn("ID3 parse failed, falling back to parsed URL data:", err);
+      console.warn('ID3 parse failed, falling back to parsed URL data:', err);
       try {
         const parts = url.split('/');
-        const fileName = parts[parts.length - 1] || "";
-        const cleanName = fileName.replace(/\.mp3$/, '').split('_').slice(2).join(' ').replace(/_/g, ' ');
-                const fallback = {
-          title: cleanName || "Unknown Track",
-          artist: "Steven Casteel",
-          coverUrl: null
+        const fileName = parts[parts.length - 1] || '';
+        const cleanName = fileName
+          .replace(/\.mp3$/, '')
+          .split('_')
+          .slice(2)
+          .join(' ')
+          .replace(/_/g, ' ');
+        const fallback = {
+          title: cleanName || 'Unknown Track',
+          artist: 'Steven Casteel',
+          coverUrl: null,
         };
         this.metadataCache[url] = fallback;
         return fallback;
@@ -258,33 +274,50 @@ class AudioEngine {
   parseBufferID3(arrayBuffer) {
     const view = new DataView(arrayBuffer);
     if (arrayBuffer.byteLength < 10) return null;
-    
+
     // Validate tag header (ID3)
     if (view.getUint8(0) !== 0x49 || view.getUint8(1) !== 0x44 || view.getUint8(2) !== 0x33) {
       return null;
     }
-    
+
     const majorVersion = view.getUint8(3);
     const sizeBytes = [view.getUint8(6), view.getUint8(7), view.getUint8(8), view.getUint8(9)];
-    const tagSize = (sizeBytes[0] << 21) | (sizeBytes[1] << 14) | (sizeBytes[2] << 7) | sizeBytes[3];
-    
+    const tagSize =
+      (sizeBytes[0] << 21) | (sizeBytes[1] << 14) | (sizeBytes[2] << 7) | sizeBytes[3];
+
     let offset = 10;
-    const metadata = { title: "", artist: "", coverUrl: "" };
+    const metadata = { title: '', artist: '', coverUrl: '' };
     const maxOffset = Math.min(arrayBuffer.byteLength, tagSize + 10);
-    
+
     while (offset < maxOffset - 10) {
-      let frameId = "";
+      let frameId = '';
       let frameSize = 0;
-      
+
       if (majorVersion === 2) {
-        frameId = String.fromCharCode(view.getUint8(offset), view.getUint8(offset + 1), view.getUint8(offset + 2));
-        frameSize = (view.getUint8(offset + 3) << 16) | (view.getUint8(offset + 4) << 8) | view.getUint8(offset + 5);
+        frameId = String.fromCharCode(
+          view.getUint8(offset),
+          view.getUint8(offset + 1),
+          view.getUint8(offset + 2)
+        );
+        frameSize =
+          (view.getUint8(offset + 3) << 16) |
+          (view.getUint8(offset + 4) << 8) |
+          view.getUint8(offset + 5);
         offset += 6;
       } else if (majorVersion === 3 || majorVersion === 4) {
-        frameId = String.fromCharCode(view.getUint8(offset), view.getUint8(offset + 1), view.getUint8(offset + 2), view.getUint8(offset + 3));
-        
+        frameId = String.fromCharCode(
+          view.getUint8(offset),
+          view.getUint8(offset + 1),
+          view.getUint8(offset + 2),
+          view.getUint8(offset + 3)
+        );
+
         if (majorVersion === 4) {
-          frameSize = (view.getUint8(offset + 4) << 21) | (view.getUint8(offset + 5) << 14) | (view.getUint8(offset + 6) << 7) | view.getUint8(offset + 7);
+          frameSize =
+            (view.getUint8(offset + 4) << 21) |
+            (view.getUint8(offset + 5) << 14) |
+            (view.getUint8(offset + 6) << 7) |
+            view.getUint8(offset + 7);
         } else {
           frameSize = view.getUint32(offset + 4);
         }
@@ -292,27 +325,27 @@ class AudioEngine {
       } else {
         break;
       }
-      
+
       if (frameSize <= 0 || offset + frameSize > arrayBuffer.byteLength) {
         break;
       }
-      
-      if (frameId === "TIT2" || frameId === "TT2") {
+
+      if (frameId === 'TIT2' || frameId === 'TT2') {
         metadata.title = this.decodeTextFrame(view, offset, frameSize);
-      } else if (frameId === "TPE1" || frameId === "TP1") {
+      } else if (frameId === 'TPE1' || frameId === 'TP1') {
         metadata.artist = this.decodeTextFrame(view, offset, frameSize);
-      } else if (frameId === "APIC" || frameId === "PIC") {
+      } else if (frameId === 'APIC' || frameId === 'PIC') {
         metadata.coverUrl = this.decodeApicFrame(arrayBuffer, offset, frameSize, majorVersion);
       }
-      
+
       offset += frameSize;
     }
-    
+
     return metadata;
   }
 
   decodeTextFrame(view, offset, size) {
-    if (size <= 1) return "";
+    if (size <= 1) return '';
     const encoding = view.getUint8(offset);
     return this.decodeString(view.buffer, offset + 1, size - 1, encoding);
   }
@@ -320,24 +353,28 @@ class AudioEngine {
   decodeString(buffer, offset, size, encoding) {
     const uint8 = new Uint8Array(buffer, offset, size);
     if (encoding === 0 || encoding === 3) {
-      const decoder = new TextDecoder(encoding === 3 ? "utf-8" : "iso-8859-1");
-      return decoder.decode(uint8).replace(/\0+$/, "").trim();
+      const decoder = new TextDecoder(encoding === 3 ? 'utf-8' : 'iso-8859-1');
+      return decoder.decode(uint8).replace(/\0+$/, '').trim();
     } else if (encoding === 1 || encoding === 2) {
-      const decoder = new TextDecoder(encoding === 2 ? "utf-16be" : "utf-16");
-      return decoder.decode(uint8).replace(/\0+$/, "").trim();
+      const decoder = new TextDecoder(encoding === 2 ? 'utf-16be' : 'utf-16');
+      return decoder.decode(uint8).replace(/\0+$/, '').trim();
     }
-    return "";
+    return '';
   }
 
   decodeApicFrame(buffer, offset, size, majorVersion) {
     const view = new DataView(buffer);
     let idx = offset;
     const encoding = view.getUint8(idx++);
-    
-    let mimeType = "";
+
+    let mimeType = '';
     if (majorVersion === 2) {
-      const fmt = String.fromCharCode(view.getUint8(idx++), view.getUint8(idx++), view.getUint8(idx++));
-      mimeType = fmt.toUpperCase() === "JPG" ? "image/jpeg" : `image/${fmt.toLowerCase()}`;
+      const fmt = String.fromCharCode(
+        view.getUint8(idx++),
+        view.getUint8(idx++),
+        view.getUint8(idx++)
+      );
+      mimeType = fmt.toUpperCase() === 'JPG' ? 'image/jpeg' : `image/${fmt.toLowerCase()}`;
     } else {
       while (idx < offset + size) {
         const charCode = view.getUint8(idx++);
@@ -345,9 +382,9 @@ class AudioEngine {
         mimeType += String.fromCharCode(charCode);
       }
     }
-    
+
     idx++;
-    
+
     if (encoding === 1 || encoding === 2) {
       while (idx < offset + size - 1) {
         if (view.getUint16(idx) === 0) {
@@ -361,12 +398,12 @@ class AudioEngine {
         if (view.getUint8(idx++) === 0) break;
       }
     }
-    
+
     const picDataOffset = idx;
-    const picDataSize = (offset + size) - picDataOffset;
-    
-    if (picDataSize <= 0) return "";
-    
+    const picDataSize = offset + size - picDataOffset;
+
+    if (picDataSize <= 0) return '';
+
     const picData = new Uint8Array(buffer, picDataOffset, picDataSize);
     const blob = new Blob([picData], { type: mimeType });
     return URL.createObjectURL(blob);
@@ -377,7 +414,7 @@ class AudioEngine {
     if (!this.isInitialized || !this.ctx || this.isMuted) return;
     const osc = this.ctx.createOscillator();
     const gainNode = this.ctx.createGain();
-    osc.type = "square";
+    osc.type = 'square';
     osc.frequency.setValueAtTime(400, this.ctx.currentTime);
     gainNode.gain.setValueAtTime(0, this.ctx.currentTime);
     gainNode.gain.linearRampToValueAtTime(0.08 * this.sfxVol, this.ctx.currentTime + 0.005);
@@ -392,7 +429,7 @@ class AudioEngine {
     if (!this.isInitialized || !this.ctx || this.isMuted) return;
     const osc = this.ctx.createOscillator();
     const gainNode = this.ctx.createGain();
-    osc.type = "sine";
+    osc.type = 'sine';
     osc.frequency.setValueAtTime(800, this.ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(400, this.ctx.currentTime + 0.03);
     gainNode.gain.setValueAtTime(0, this.ctx.currentTime);
@@ -409,7 +446,7 @@ class AudioEngine {
     const now = this.ctx.currentTime;
     const osc1 = this.ctx.createOscillator();
     const gain1 = this.ctx.createGain();
-    osc1.type = "sine";
+    osc1.type = 'sine';
     osc1.frequency.setValueAtTime(1046.5, now);
     gain1.gain.setValueAtTime(0, now);
     gain1.gain.linearRampToValueAtTime(0.08 * this.sfxVol, now + 0.01);
@@ -421,7 +458,7 @@ class AudioEngine {
 
     const osc2 = this.ctx.createOscillator();
     const gain2 = this.ctx.createGain();
-    osc2.type = "sine";
+    osc2.type = 'sine';
     osc2.frequency.setValueAtTime(1318.51, now + 0.08);
     gain2.gain.setValueAtTime(0, now + 0.08);
     gain2.gain.linearRampToValueAtTime(0.12 * this.sfxVol, now + 0.09);
@@ -436,7 +473,7 @@ class AudioEngine {
     if (!this.isInitialized || !this.ctx || this.isMuted) return;
     const osc = this.ctx.createOscillator();
     const gainNode = this.ctx.createGain();
-    osc.type = "triangle";
+    osc.type = 'triangle';
     osc.frequency.setValueAtTime(6000, this.ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(1000, this.ctx.currentTime + 0.01);
     gainNode.gain.setValueAtTime(0, this.ctx.currentTime);
@@ -452,7 +489,7 @@ class AudioEngine {
     if (!this.isInitialized || !this.ctx || this.isMuted) return;
     const osc = this.ctx.createOscillator();
     const gainNode = this.ctx.createGain();
-    osc.type = "sine";
+    osc.type = 'sine';
     osc.frequency.setValueAtTime(2000, this.ctx.currentTime);
     gainNode.gain.setValueAtTime(0, this.ctx.currentTime);
     gainNode.gain.linearRampToValueAtTime(0.015 * this.sfxVol, this.ctx.currentTime + 0.001);
@@ -467,7 +504,7 @@ class AudioEngine {
     if (!this.isInitialized || !this.ctx || this.isMuted) return;
     const osc = this.ctx.createOscillator();
     const gainNode = this.ctx.createGain();
-    osc.type = "sine";
+    osc.type = 'sine';
     osc.frequency.setValueAtTime(150, this.ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(40, this.ctx.currentTime + 0.15);
     gainNode.gain.setValueAtTime(0, this.ctx.currentTime);
@@ -486,7 +523,7 @@ class AudioEngine {
       audio.play().catch(() => {});
       return;
     }
-    if (this.ctx.state === "suspended") {
+    if (this.ctx.state === 'suspended') {
       this.ctx.resume().catch(() => {});
     }
     fetch(url)

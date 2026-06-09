@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import htm from 'htm';
 import { Volume2, VolumeX, Shuffle, SkipForward, SkipBack, Play, Pause, Music } from 'lucide-react';
@@ -9,16 +8,16 @@ const html = htm.bind(React.createElement);
 
 function getFallbackCover(folder) {
   const mapping = {
-    "elf_girl_001": "sc_001",
-    "elf_girl_002": "sc_002",
-    "elf_girl_003": "sc_004",
-    "elf_girl_004": "sc_005",
-    "elf_girl_005": "sc_008",
-    "elf_girl_006": "sc_009",
-    "elf_girl_007": "sc_012",
-    "elf_girl_008": "sc_013"
+    elf_girl_001: 'sc_001',
+    elf_girl_002: 'sc_002',
+    elf_girl_003: 'sc_004',
+    elf_girl_004: 'sc_005',
+    elf_girl_005: 'sc_008',
+    elf_girl_006: 'sc_009',
+    elf_girl_007: 'sc_012',
+    elf_girl_008: 'sc_013',
   };
-  const scName = mapping[folder] || "sc_001";
+  const scName = mapping[folder] || 'sc_001';
   return `https://www.stevencasteel.com/assets/portfolio/seedream3_covers/${scName}.avif`;
 }
 
@@ -27,20 +26,26 @@ function ConsoleButton({
   onClick,
   active,
   label,
-  className = "w-8 h-8",
+  className = 'w-8 h-8',
   isPrismatic = true,
   id,
-  style
+  style,
 }) {
   const handleMouseDown = () => {
-    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4);
+    audioEngine.playSFX(
+      'https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3',
+      0.4
+    );
   };
   const handleMouseUp = () => {
-    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+    audioEngine.playSFX(
+      'https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3',
+      0.4
+    );
   };
 
   return html`
-    <div 
+    <div
       className=${`relative rounded-lg surface-hardware-well p-[2.5px] shrink-0 ${className}`}
       style=${style}
     >
@@ -50,13 +55,18 @@ function ConsoleButton({
         title=${label}
         onMouseDown=${handleMouseDown}
         onMouseUp=${handleMouseUp}
-        onClick=${(e) => { e.stopPropagation(); onClick(); }}
+        onClick=${(e) => {
+          e.stopPropagation();
+          onClick();
+        }}
         className=${`relative isolate flex items-center justify-center w-full h-full rounded-[5px] transition-[transform,color] duration-150 cursor-none overflow-hidden outline-none surface-hardware-btn ${active ? 'is-active text-primary' : 'text-fog hover:text-white'}`}
       >
         <span className="relative z-10 flex items-center justify-center w-full h-full">
           ${children}
         </span>
-        ${active && isPrismatic && html`
+        ${active &&
+        isPrismatic &&
+        html`
           <div className="console-btn-prismatic-border" />
           <div className="console-btn-prismatic-blur" />
         `}
@@ -81,7 +91,7 @@ export function MusicPlayerDeck({
   setVolume,
   formatTime,
   onOpenConsole,
-  isPrismaticEnabled = true
+  isPrismaticEnabled = true,
 }) {
   const [showVolumePopover, setShowVolumePopover] = useState(false);
   const gearTimeoutsRef = useRef([]);
@@ -91,7 +101,11 @@ export function MusicPlayerDeck({
     if (!showVolumePopover) return;
     const handleOutsideClick = (e) => {
       // Ignore clicks on the popover itself and the toggle button
-      if (popoverRef.current && !popoverRef.current.contains(e.target) && !e.target.closest('#volume-toggle-btn')) {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(e.target) &&
+        !e.target.closest('#volume-toggle-btn')
+      ) {
         setShowVolumePopover(false);
       }
     };
@@ -123,7 +137,6 @@ export function MusicPlayerDeck({
     gearTimeoutsRef.current.push(t1);
   };
 
-  
   const handleGearMouseEnter = () => {
     playGearEnterSound();
   };
@@ -134,15 +147,19 @@ export function MusicPlayerDeck({
 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
-  const UNIFIED_LCD_PATH = "M604.605,554 L3116.675,554 c65.83,0 120,54.17 120,120 c0,222.67 184.5,405.91 408.72,405.91 c65.83,0 120,54.17 120,120 L3765.395,1348.18 c0,66.27 -53.73,120 -120,120 L604.605,1468.18 c-66.27,0 -120,-53.73 -120,-120 L484.605,674 c0,-66.27 53.73,-120 120,-120 Z";
-  const CHASSIS_OUTLINE_PATH = "M451.625,383.598l2852.76,0a120,120 0 0,1 120,120a408.723,405.909 0 0,0 408.723,405.909a120,120 0 0,1 120,120l0,1792.06c0,85.533 -69.827,155.916 -154.684,155.916l-3346.8,0c-84.857,0 -154.684,-70.383 -154.684,-155.916l0,-2282.05c0,-85.533 69.827,-155.917 154.684,-155.917Z";
+  const UNIFIED_LCD_PATH =
+    'M604.605,554 L3116.675,554 c65.83,0 120,54.17 120,120 c0,222.67 184.5,405.91 408.72,405.91 c65.83,0 120,54.17 120,120 L3765.395,1348.18 c0,66.27 -53.73,120 -120,120 L604.605,1468.18 c-66.27,0 -120,-53.73 -120,-120 L484.605,674 c0,-66.27 53.73,-120 120,-120 Z';
+  const CHASSIS_OUTLINE_PATH =
+    'M451.625,383.598l2852.76,0a120,120 0 0,1 120,120a408.723,405.909 0 0,0 408.723,405.909a120,120 0 0,1 120,120l0,1792.06c0,85.533 -69.827,155.916 -154.684,155.916l-3346.8,0c-84.857,0 -154.684,-70.383 -154.684,-155.916l0,-2282.05c0,-85.533 69.827,-155.917 154.684,-155.917Z';
   const exactLcdMask = `url("data:image/svg+xml,%3Csvg viewBox='296 383 3658 2595' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='${UNIFIED_LCD_PATH}' fill='white'/%3E%3C/svg%3E")`;
 
   const fallbackCover = getFallbackCover(activeTrack.folder);
   const coverSrc = trackMetadata?.coverUrl || fallbackCover;
 
   const cleanTitle = trackMetadata?.title || activeTrack.title.replace(/_/g, ' ');
-  const cleanAlbum = trackMetadata?.artist ? `${trackMetadata.artist} // ${activeTrack.folder.replace(/_/g, ' ')}` : activeTrack.folder.replace(/_/g, ' ');
+  const cleanAlbum = trackMetadata?.artist
+    ? `${trackMetadata.artist} // ${activeTrack.folder.replace(/_/g, ' ')}`
+    : activeTrack.folder.replace(/_/g, ' ');
 
   const isUiActive = isPlaying;
 
@@ -159,7 +176,7 @@ export function MusicPlayerDeck({
             WebkitMaskSize: '100% 100%',
             maskImage: exactLcdMask,
             maskSize: '100% 100%',
-            backgroundColor: '#030402'
+            backgroundColor: '#030402',
           }}
         >
           <div className="absolute inset-0 lcd-scanlines opacity-40 pointer-events-none z-20 animate-lcd-flicker" />
@@ -168,13 +185,21 @@ export function MusicPlayerDeck({
 
           <div className="absolute flex items-stretch pointer-events-none group/track" style=${{ top: '6.59%', left: '5.16%', right: '5.16%', height: '35.23%', padding: '2%', gap: '4%' }}>
             <div className="relative aspect-square h-full shrink-0 pointer-events-auto overflow-hidden rounded-[8px] bg-black shadow-[0_2px_0_rgba(0,0,0,1),inset_0_1px_1px_rgba(255,255,255,0.2)] z-30">
-              ${coverSrc ? html`
-                <img src=${coverSrc} className="absolute inset-0 w-full h-full object-cover z-10 opacity-90" alt="" />
-              ` : html`
-                <div className="absolute inset-0 flex items-center justify-center z-10">
-                  <${Music} size=${24} className="text-muted/60" />
-                </div>
-              `}
+              ${
+                coverSrc
+                  ? html`
+                      <img
+                        src=${coverSrc}
+                        className="absolute inset-0 w-full h-full object-cover z-10 opacity-90"
+                        alt=""
+                      />
+                    `
+                  : html`
+                      <div className="absolute inset-0 flex items-center justify-center z-10">
+                        <${Music} size=${24} className="text-muted/60" />
+                      </div>
+                    `
+              }
               <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none z-20" />
             </div>
 
@@ -192,7 +217,7 @@ export function MusicPlayerDeck({
                       ${cleanTitle}
                     </span>
                     <span 
-                      className=${`absolute left-0 top-0 transition-opacity duration-300 pointer-events-none ${isUiActive ? "opacity-100" : "opacity-0"} ${isPrismaticEnabled ? "text-transparent bg-clip-text bg-prismatic-gradient bg-[length:200%_100%] animate-gradient-xy group-hover/titlelink:brightness-125 group-hover/titlelink:drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]" : "text-primary-400 drop-shadow-[0_0_8px_hsl(var(--color-primary-400)/0.5)] group-hover/titlelink:text-white group-hover/titlelink:drop-shadow-[0_0_12px_hsl(var(--color-primary-400)/0.8)]"}`}
+                      className=${`absolute left-0 top-0 transition-opacity duration-300 pointer-events-none ${isUiActive ? 'opacity-100' : 'opacity-0'} ${isPrismaticEnabled ? 'text-transparent bg-clip-text bg-prismatic-gradient bg-[length:200%_100%] animate-gradient-xy group-hover/titlelink:brightness-125 group-hover/titlelink:drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]' : 'text-primary-400 drop-shadow-[0_0_8px_hsl(var(--color-primary-400)/0.5)] group-hover/titlelink:text-white group-hover/titlelink:drop-shadow-[0_0_12px_hsl(var(--color-primary-400)/0.8)]'}`}
                       aria-hidden="true"
                     >
                       ${cleanTitle}
@@ -207,7 +232,7 @@ export function MusicPlayerDeck({
                     ${cleanAlbum}
                   </span>
                   <span 
-                    className=${`absolute left-0 top-0 transition-opacity duration-500 pointer-events-none ${isUiActive ? "opacity-100" : "opacity-0"} ${isPrismaticEnabled ? "text-transparent bg-clip-text bg-prismatic-gradient bg-[length:200%_100%] animate-gradient-xy" : "text-primary-400"}`}
+                    className=${`absolute left-0 top-0 transition-opacity duration-500 pointer-events-none ${isUiActive ? 'opacity-100' : 'opacity-0'} ${isPrismaticEnabled ? 'text-transparent bg-clip-text bg-prismatic-gradient bg-[length:200%_100%] animate-gradient-xy' : 'text-primary-400'}`}
                     aria-hidden="true"
                   >
                     ${cleanAlbum}
@@ -222,8 +247,13 @@ export function MusicPlayerDeck({
         <div 
           className="absolute pointer-events-none"
           style=${{
-            zIndex: -2, top: '-2%', right: '-1.5%', width: '23%', aspectRatio: '1 / 1',
-            filter: 'drop-shadow(0px 4px 6px rgba(0,0,0,0.8)) drop-shadow(-1px -1px 1px rgba(255,255,255,0.15))'
+            zIndex: -2,
+            top: '-2%',
+            right: '-1.5%',
+            width: '23%',
+            aspectRatio: '1 / 1',
+            filter:
+              'drop-shadow(0px 4px 6px rgba(0,0,0,0.8)) drop-shadow(-1px -1px 1px rgba(255,255,255,0.15))',
           }}
         >
           <button 
@@ -236,7 +266,8 @@ export function MusicPlayerDeck({
           >
             <div className="absolute inset-0 rounded-full bg-white/[0.001] z-10" />
             <div className="w-full h-full transition-transform duration-300 group-hover:rotate-90 group-active:scale-95 pointer-events-none"
-                 dangerouslySetInnerHTML=${{ __html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1280" width="100%" height="100%">
+                 dangerouslySetInnerHTML=${{
+                   __html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1280" width="100%" height="100%">
   <defs>
     <radialGradient id="gear-bg" cx="50%" cy="50%" r="50%">
       <stop offset="20%" stop-color="#3a3a40" />
@@ -251,7 +282,8 @@ export function MusicPlayerDeck({
     stroke-width="2"
     vector-effect="non-scaling-stroke"
   />
-</svg>` }} />
+</svg>`,
+                 }} />
           </button>
         </div>
 
@@ -259,7 +291,8 @@ export function MusicPlayerDeck({
         <div className="absolute inset-0 w-full h-full pointer-events-none" style=${{ zIndex: -1 }}>
           <div className="absolute inset-0 w-full h-full pointer-events-none z-0 [&>svg]:w-full [&>svg]:h-full [&>svg]:object-fill [&>svg]:pointer-events-none [&>svg_path]:pointer-events-auto"
             style=${{ filter: 'drop-shadow(4px 4px 8px rgba(0,0,0,0.7)) drop-shadow(-1px -1px 2px rgba(255,255,255,0.06))' }}
-            dangerouslySetInnerHTML=${{ __html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="296 383 3658 2595" preserveAspectRatio="none" width="100%" height="100%">
+            dangerouslySetInnerHTML=${{
+              __html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="296 383 3658 2595" preserveAspectRatio="none" width="100%" height="100%">
   <defs>
     <filter id="lcd-inner-shadow">
       <feOffset dx="0" dy="25"/>
@@ -287,7 +320,8 @@ export function MusicPlayerDeck({
     stroke-width="2"
     vector-effect="non-scaling-stroke"
   />
-</svg>` }}
+</svg>`,
+            }}
           />
         </div>
 
@@ -316,17 +350,17 @@ export function MusicPlayerDeck({
           <path 
             d=${CHASSIS_OUTLINE_PATH}
             fill="none"
-            stroke=${isPrismaticEnabled ? "url(#prismatic-stroke)" : "hsl(var(--color-primary-400))"}
+            stroke=${isPrismaticEnabled ? 'url(#prismatic-stroke)' : 'hsl(var(--color-primary-400))'}
             stroke-width="10"
-            className=${`transition-opacity duration-500 ${isUiActive ? "opacity-[0.15]" : "opacity-0"} ${isPrismaticEnabled ? "prismatic-anim" : ""}`}
+            className=${`transition-opacity duration-500 ${isUiActive ? 'opacity-[0.15]' : 'opacity-0'} ${isPrismaticEnabled ? 'prismatic-anim' : ''}`}
           />
           <path 
             d=${CHASSIS_OUTLINE_PATH}
             fill="none"
-            stroke=${isPrismaticEnabled ? "url(#prismatic-stroke)" : "hsl(var(--color-primary-400))"}
+            stroke=${isPrismaticEnabled ? 'url(#prismatic-stroke)' : 'hsl(var(--color-primary-400))'}
             stroke-width="2"
             vector-effect="non-scaling-stroke"
-            className=${`transition-opacity duration-500 ${isUiActive ? "opacity-100" : "opacity-0"} ${isPrismaticEnabled ? "prismatic-anim" : ""}`}
+            className=${`transition-opacity duration-500 ${isUiActive ? 'opacity-100' : 'opacity-0'} ${isPrismaticEnabled ? 'prismatic-anim' : ''}`}
           />
         </svg>
 
@@ -336,7 +370,7 @@ export function MusicPlayerDeck({
             <div className="relative flex items-center group/scrub flex-1 h-5 md:h-6">
               <div className="absolute inset-0 rounded-md surface-hardware-track pointer-events-none" />
               <div className="absolute inset-[3px] rounded-sm overflow-hidden pointer-events-none">
-                <div className=${`h-full w-0 ${isPrismaticEnabled ? "bg-prismatic-gradient bg-[length:200%_100%] prismatic-anim" : "bg-primary-400"}`} style=${{ width: `${progressPercent}%` }} />
+                <div className=${`h-full w-0 ${isPrismaticEnabled ? 'bg-prismatic-gradient bg-[length:200%_100%] prismatic-anim' : 'bg-primary-400'}`} style=${{ width: `${progressPercent}%` }} />
               </div>
               <div className="absolute inset-0 rounded-md shadow-[inset_0_1px_3px_rgba(0,0,0,0.3),inset_0_-1px_1px_rgba(255,255,255,0.12)] pointer-events-none" />
               
@@ -362,10 +396,14 @@ export function MusicPlayerDeck({
             <${SkipBack} className="w-[14px] h-[14px]" fill="currentColor" />
           </${ConsoleButton}>
 
-          <${ConsoleButton} label=${isPlaying ? "Pause" : "Play"} onClick=${togglePlay} active=${isPlaying} isPrismatic=${isPrismaticEnabled} className="w-[21%] aspect-square shadow-lg">
-            ${isPlaying 
-              ? html`<${Pause} className=${`w-[18px] h-[18px] transition-colors duration-300 ${isPrismaticEnabled ? "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]" : "text-primary-400 drop-shadow-[0_0_8px_hsl(var(--color-primary-400)/1)]"}`} fill="currentColor" />`
-              : html`<${Play} className="w-[18px] h-[18px] ml-0.5" fill="currentColor" />`
+          <${ConsoleButton} label=${isPlaying ? 'Pause' : 'Play'} onClick=${togglePlay} active=${isPlaying} isPrismatic=${isPrismaticEnabled} className="w-[21%] aspect-square shadow-lg">
+            ${
+              isPlaying
+                ? html`<${Pause}
+                    className=${`w-[18px] h-[18px] transition-colors duration-300 ${isPrismaticEnabled ? 'text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]' : 'text-primary-400 drop-shadow-[0_0_8px_hsl(var(--color-primary-400)/1)]'}`}
+                    fill="currentColor"
+                  />`
+                : html`<${Play} className="w-[18px] h-[18px] ml-0.5" fill="currentColor" />`
             }
           </${ConsoleButton}>
 
@@ -377,7 +415,9 @@ export function MusicPlayerDeck({
             <${ConsoleButton}
               id="volume-toggle-btn"
               label="Volume"
-              onClick=${() => { setShowVolumePopover(!showVolumePopover); }}
+              onClick=${() => {
+                setShowVolumePopover(!showVolumePopover);
+              }}
               active=${showVolumePopover}
               isPrismatic=${isPrismaticEnabled}
               className="w-full h-full"
@@ -385,30 +425,50 @@ export function MusicPlayerDeck({
               ${volume === 0 ? html`<${VolumeX} className="w-[12px] h-[12px]" />` : html`<${Volume2} className="w-[12px] h-[12px]" />`}
             </${ConsoleButton}>
 
-            ${showVolumePopover && html`
-              <div 
-                ref=${popoverRef}
-                className="absolute bottom-[115%] left-1/2 -translate-x-1/2 z-50 bg-transparent border-none overflow-visible p-0 cursor-none pb-3"
-                onClick=${(e) => e.stopPropagation()}
-              >
-                <div className="w-12 h-[130px] bg-[#1a1a1f] border border-white/10 rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.05)] flex items-center justify-center p-2 relative z-10">
-                  <div className="relative w-[114px] h-8 shrink-0 flex items-center group/vol -rotate-90 origin-center">
-                    <div className="absolute inset-0 rounded-md surface-hardware-track pointer-events-none" />
-                    <div className="absolute inset-[3px] rounded-sm overflow-hidden pointer-events-none">
-                      <div className=${`h-full w-0 rounded-md ${isPrismaticEnabled ? "bg-prismatic-gradient bg-[length:200%_100%] prismatic-anim" : "bg-primary-400"}`} style=${{ width: `${(volume / 1) * 100}%` }} />
+            ${
+              showVolumePopover &&
+              html`
+                <div
+                  ref=${popoverRef}
+                  className="absolute bottom-[115%] left-1/2 -translate-x-1/2 z-50 bg-transparent border-none overflow-visible p-0 cursor-none pb-3"
+                  onClick=${(e) => e.stopPropagation()}
+                >
+                  <div
+                    className="w-12 h-[130px] bg-[#1a1a1f] border border-white/10 rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.05)] flex items-center justify-center p-2 relative z-10"
+                  >
+                    <div
+                      className="relative w-[114px] h-8 shrink-0 flex items-center group/vol -rotate-90 origin-center"
+                    >
+                      <div
+                        className="absolute inset-0 rounded-md surface-hardware-track pointer-events-none"
+                      />
+                      <div
+                        className="absolute inset-[3px] rounded-sm overflow-hidden pointer-events-none"
+                      >
+                        <div
+                          className=${`h-full w-0 rounded-md ${isPrismaticEnabled ? 'bg-prismatic-gradient bg-[length:200%_100%] prismatic-anim' : 'bg-primary-400'}`}
+                          style=${{ width: `${(volume / 1) * 100}%` }}
+                        />
+                      </div>
+                      <div
+                        className="absolute inset-0 shadow-[inset_0_1px_3px_rgba(0,0,0,0.3),inset_0_-1px_1px_rgba(255,255,255,0.12)] rounded-md pointer-events-none"
+                      />
+
+                      <div className="peer-focus-ring-prismatic" />
+                      <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.01"
+                        value=${volume}
+                        onChange=${(e) => setVolume(parseFloat(e.target.value))}
+                        className="peer absolute inset-0 w-full h-full opacity-0 cursor-none z-30"
+                      />
                     </div>
-                    <div className="absolute inset-0 shadow-[inset_0_1px_3px_rgba(0,0,0,0.3),inset_0_-1px_1px_rgba(255,255,255,0.12)] rounded-md pointer-events-none" />
-                    
-                    <div className="peer-focus-ring-prismatic" />
-                    <input 
-                      type="range" min="0" max="1" step="0.01" value=${volume} 
-                      onChange=${(e) => setVolume(parseFloat(e.target.value))}
-                      className="peer absolute inset-0 w-full h-full opacity-0 cursor-none z-30" 
-                    />
                   </div>
                 </div>
-              </div>
-            `}
+              `
+            }
           </div>
 
         </div>

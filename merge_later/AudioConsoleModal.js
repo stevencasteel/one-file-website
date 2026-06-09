@@ -1,6 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import htm from 'htm';
-import { Settings2, Pause, Play, SkipForward, SkipBack, Shuffle, X, Library, ChevronLeft, Download } from 'lucide-react';
+import {
+  Settings2,
+  Pause,
+  Play,
+  SkipForward,
+  SkipBack,
+  Shuffle,
+  X,
+  Library,
+  ChevronLeft,
+  Download,
+} from 'lucide-react';
 import { audioEngine } from './AudioEngine.js';
 import { AUDIO_TRACKS } from 'media-data';
 
@@ -8,7 +19,7 @@ const html = htm.bind(React.createElement);
 
 const ALBUMS = [];
 const grouped = {};
-AUDIO_TRACKS.forEach(t => {
+AUDIO_TRACKS.forEach((t) => {
   if (!grouped[t.folder]) {
     grouped[t.folder] = [];
   }
@@ -19,8 +30,8 @@ Object.entries(grouped).forEach(([folder, tracks]) => {
   ALBUMS.push({
     id: folder,
     title: folder.replace(/_/g, ' ').toUpperCase(),
-    artist: "Steven Casteel",
-    tracks
+    artist: 'Steven Casteel',
+    tracks,
   });
 });
 
@@ -30,13 +41,19 @@ function ConsoleButton({
   active,
   label,
   isPrismatic = false,
-  className = "w-8 h-8"
+  className = 'w-8 h-8',
 }) {
   const handlePointerDown = () => {
-    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4);
+    audioEngine.playSFX(
+      'https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3',
+      0.4
+    );
   };
   const handlePointerUp = () => {
-    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+    audioEngine.playSFX(
+      'https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3',
+      0.4
+    );
   };
 
   return html`
@@ -46,13 +63,18 @@ function ConsoleButton({
         title=${label}
         onPointerDown=${handlePointerDown}
         onPointerUp=${handlePointerUp}
-        onClick=${(e) => { e.stopPropagation(); onClick(); }}
+        onClick=${(e) => {
+          e.stopPropagation();
+          onClick();
+        }}
         className=${`relative isolate flex items-center justify-center w-full h-full rounded-[5px] transition-[transform,color] duration-150 cursor-none overflow-hidden outline-none surface-hardware-btn ${active ? 'is-active text-primary' : 'text-fog hover:text-white'}`}
       >
         <span className="relative z-10 flex items-center justify-center w-full h-full">
           ${children}
         </span>
-        ${active && isPrismatic && html`
+        ${active &&
+        isPrismatic &&
+        html`
           <div className="console-btn-prismatic-border" />
           <div className="console-btn-prismatic-blur" />
         `}
@@ -86,13 +108,13 @@ function SpectrumVisualizer({ isPlaying }) {
         analyser.getByteFrequencyData(dataArray);
       }
 
-      const barWidth = (canvas.width / barCount) - 2;
+      const barWidth = canvas.width / barCount - 2;
       let x = 0;
 
       const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
-      gradient.addColorStop(0, "rgb(59, 130, 246)");
-      gradient.addColorStop(0.5, "rgb(168, 85, 247)");
-      gradient.addColorStop(1, "rgb(239, 68, 68)");
+      gradient.addColorStop(0, 'rgb(59, 130, 246)');
+      gradient.addColorStop(0.5, 'rgb(168, 85, 247)');
+      gradient.addColorStop(1, 'rgb(239, 68, 68)');
 
       const peaks = peaksRef.current;
       const smoothedValues = smoothedValuesRef.current;
@@ -103,13 +125,12 @@ function SpectrumVisualizer({ isPlaying }) {
       for (let i = 0; i < barCount; i++) {
         let rawValue = 0;
         if (isPlaying && analyser) {
-          const dataIndex = Math.floor(
-            i * i * (bufferLength / (barCount * barCount * 1.2)) + 1
-          );
+          const dataIndex = Math.floor(i * i * (bufferLength / (barCount * barCount * 1.2)) + 1);
           rawValue = dataArray[dataIndex] || 0;
         }
 
-        smoothedValues[i] += (rawValue - smoothedValues[i]) * (rawValue > smoothedValues[i] ? 0.8 : decayRate);
+        smoothedValues[i] +=
+          (rawValue - smoothedValues[i]) * (rawValue > smoothedValues[i] ? 0.8 : decayRate);
         const barHeight = (smoothedValues[i] / 255) * canvas.height;
 
         if (barHeight > peaks[i]) {
@@ -124,7 +145,7 @@ function SpectrumVisualizer({ isPlaying }) {
         }
 
         if (peaks[i] > 0.5) {
-          ctx.fillStyle = "rgb(255, 255, 255)";
+          ctx.fillStyle = 'rgb(255, 255, 255)';
           ctx.fillRect(x, canvas.height - peaks[i] - 2, barWidth, 2);
         }
 
@@ -140,14 +161,14 @@ function SpectrumVisualizer({ isPlaying }) {
 
   return html`
     <div className="w-full overflow-hidden shrink-0 animate-lightbox-entry">
-      <div className="relative rounded-xl overflow-hidden border border-white/5 shadow-inner bg-void h-32 w-full">
-        <canvas 
-          ref=${canvasRef} 
-          width="600" 
-          height="128" 
-          className="w-full h-full opacity-90"
+      <div
+        className="relative rounded-xl overflow-hidden border border-white/5 shadow-inner bg-void h-32 w-full"
+      >
+        <canvas ref=${canvasRef} width="600" height="128" className="w-full h-full opacity-90" />
+        <div
+          className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none select-none"
+          style=${{ backgroundSize: '16px 16px' }}
         />
-        <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none select-none" style=${{ backgroundSize: '16px 16px' }} />
       </div>
     </div>
   `;
@@ -180,11 +201,11 @@ export function AudioConsoleModal({
   setMixerAmbience,
   isMuted,
   setIsMuted,
-  isPrismaticEnabled
+  isPrismaticEnabled,
 }) {
   const [showShader, setShowShader] = useState(true);
-  const [playlistView, setPlaylistView] = useState("tracks");
-  const [viewingAlbumId, setViewingAlbumId] = useState(ALBUMS[0]?.id || "");
+  const [playlistView, setPlaylistView] = useState('tracks');
+  const [viewingAlbumId, setViewingAlbumId] = useState(ALBUMS[0]?.id || '');
 
   useEffect(() => {
     if (isOpen && activeTrack) {
@@ -203,12 +224,14 @@ export function AudioConsoleModal({
 
   if (!isOpen) return null;
 
-  const activeAlbum = ALBUMS.find(a => a.id === viewingAlbumId) || ALBUMS[0];
+  const activeAlbum = ALBUMS.find((a) => a.id === viewingAlbumId) || ALBUMS[0];
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   const handleTrackSelect = (track) => {
     audioEngine.playClick();
-    const globalIdx = AUDIO_TRACKS.findIndex(t => t.name === track.name && t.folder === track.folder);
+    const globalIdx = AUDIO_TRACKS.findIndex(
+      (t) => t.name === track.name && t.folder === track.folder
+    );
     if (globalIdx >= 0) {
       playTrackByIndex(globalIdx);
     }
@@ -224,14 +247,16 @@ export function AudioConsoleModal({
   };
 
   const cleanTitle = trackMetadata?.title || activeTrack.title.replace(/_/g, ' ');
-  const cleanAlbum = trackMetadata?.artist ? `${trackMetadata.artist} // ${activeTrack.folder.replace(/_/g, ' ')}` : activeTrack.folder.replace(/_/g, ' ');
+  const cleanAlbum = trackMetadata?.artist
+    ? `${trackMetadata.artist} // ${activeTrack.folder.replace(/_/g, ' ')}`
+    : activeTrack.folder.replace(/_/g, ' ');
 
   const ticks = Array.from({ length: 13 }, (_, i) => i * 8.33);
 
   const renderSlider = (label, type, value, setter) => {
     const displayPercent = Math.round(value * 100);
     const physicalPercent = Math.round((value / 3.0) * 100);
-    
+
     const active = displayPercent > 0 && !isMuted;
     const baseHue = 142;
     let hue = baseHue;
@@ -248,55 +273,81 @@ export function AudioConsoleModal({
     return html`
       <div className="flex flex-col gap-2.5 cursor-none group">
         <div className="flex justify-between text-[11px] font-mono select-none">
-          <span className="uppercase tracking-widest font-bold text-muted group-hover:text-white transition duration-200">
+          <span
+            className="uppercase tracking-widest font-bold text-muted group-hover:text-white transition duration-200"
+          >
             ${label}
           </span>
-          <span className="font-bold tabular-nums transition-colors" style=${{ color: sliderColor }}>
+          <span
+            className="font-bold tabular-nums transition-colors"
+            style=${{ color: sliderColor }}
+          >
             ${displayPercent}%
           </span>
         </div>
 
         <div className="relative h-7 flex items-center w-full select-none">
-          <div className="absolute left-0 right-0 h-2 bg-void rounded shadow-neumorph-recessed-sm border border-black/40" />
-          
-          <div className="absolute left-1 right-1 h-1 rounded overflow-hidden pointer-events-none z-10 opacity-75">
-            <div className="h-full transition-all duration-100 ease-out" style=${{ width: `${physicalPercent}%`, backgroundColor: sliderColor }} />
+          <div
+            className="absolute left-0 right-0 h-2 bg-void rounded shadow-neumorph-recessed-sm border border-black/40"
+          />
+
+          <div
+            className="absolute left-1 right-1 h-1 rounded overflow-hidden pointer-events-none z-10 opacity-75"
+          >
+            <div
+              className="h-full transition-all duration-100 ease-out"
+              style=${{ width: `${physicalPercent}%`, backgroundColor: sliderColor }}
+            />
           </div>
 
-          <div className="absolute left-0 right-0 -bottom-2 h-1.5 pointer-events-none flex justify-between select-none">
-            ${ticks.map((pct, i) => html`
-              <div 
-                key=${i} 
-                className=${`w-[1px] bg-white/20 transition-all ${i % 4 === 0 ? 'h-2 w-[1.5px] bg-white/40' : 'h-1'}`}
-                style=${{ left: `${pct}%` }}
-              />
-            `)}
+          <div
+            className="absolute left-0 right-0 -bottom-2 h-1.5 pointer-events-none flex justify-between select-none"
+          >
+            ${ticks.map(
+              (pct, i) => html`
+                <div
+                  key=${i}
+                  className=${`w-[1px] bg-white/20 transition-all ${i % 4 === 0 ? 'h-2 w-[1.5px] bg-white/40' : 'h-1'}`}
+                  style=${{ left: `${pct}%` }}
+                />
+              `
+            )}
           </div>
 
           <div className="peer-focus-ring-prismatic" />
 
-          <div 
+          <div
             className=${`thumb absolute pointer-events-none z-20 flex items-center justify-center border border-black shadow-[0_3px_5px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.12)] rounded-[3px] bg-gradient-to-b from-[#323238] via-[#1a1a1f] to-[#0c0c0e] scale-100 group-hover:scale-[1.05] group-active:scale-[0.98] ${isMuted ? 'opacity-40' : ''}`}
             style=${{ left: `calc(${physicalPercent}% - 9px)`, width: '18px', height: '24px' }}
           >
-            <div className="absolute inset-y-1.5 left-1 w-[1px] bg-white/5 shadow-[0.5px_0_0_rgba(0,0,0,0.4)]" />
-            <div className="absolute inset-y-1.5 right-1 w-[1px] bg-white/5 shadow-[-0.5px_0_0_rgba(0,0,0,0.4)]" />
-            <div className="w-[2px] h-3.5 rounded-full shadow-[0_0_6px_currentColor] transition-colors duration-200" style=${{ backgroundColor: active ? sliderColor : '#4b5563', color: active ? sliderColor : 'transparent' }} />
+            <div
+              className="absolute inset-y-1.5 left-1 w-[1px] bg-white/5 shadow-[0.5px_0_0_rgba(0,0,0,0.4)]"
+            />
+            <div
+              className="absolute inset-y-1.5 right-1 w-[1px] bg-white/5 shadow-[-0.5px_0_0_rgba(0,0,0,0.4)]"
+            />
+            <div
+              className="w-[2px] h-3.5 rounded-full shadow-[0_0_6px_currentColor] transition-colors duration-200"
+              style=${{
+                backgroundColor: active ? sliderColor : '#4b5563',
+                color: active ? sliderColor : 'transparent',
+              }}
+            />
           </div>
 
-          <input 
-            type="range" 
-            min="0" 
-            max="3" 
-            step="0.01" 
-            value=${value} 
+          <input
+            type="range"
+            min="0"
+            max="3"
+            step="0.01"
+            value=${value}
             onChange=${(e) => {
               setter(parseFloat(e.target.value));
-              if (type === "sfx") {
+              if (type === 'sfx') {
                 audioEngine.playHover();
               }
             }}
-            className="peer absolute inset-0 w-full h-full opacity-0 cursor-none z-30" 
+            className="peer absolute inset-0 w-full h-full opacity-0 cursor-none z-30"
           />
         </div>
       </div>
@@ -316,7 +367,10 @@ export function AudioConsoleModal({
           </div>
           <button 
             onClick=${() => {
-              audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/leave_modal.mp3", 0.4);
+              audioEngine.playSFX(
+                'https://www.stevencasteel.com/assets/audio/sfx/leave_modal.mp3',
+                0.4
+              );
               onClose();
             }}
             className="flex items-center justify-center w-8 h-8 rounded-md bg-white/5 border border-white/10 hover:border-primary-400 hover:text-primary-400 hover:bg-primary-400/10 transition-all duration-300 cursor-none outline-none"
@@ -329,13 +383,23 @@ export function AudioConsoleModal({
           
           <div className="flex flex-col md:flex-row gap-6 items-center md:items-stretch bg-[#111114] p-5 rounded-xl border border-white/5 shadow-inner">
             <div className="relative aspect-square shrink-0 rounded-xl border border-white/10 shadow-2xl overflow-hidden bg-ink w-full max-w-[240px] sm:max-w-[280px] md:max-w-none md:w-auto md:h-48 xl:h-56">
-              ${trackMetadata && trackMetadata.coverUrl ? html`
-                <img src=${trackMetadata.coverUrl} className="absolute inset-0 w-full h-full object-cover opacity-90 animate-lightbox-entry" alt="" />
-              ` : html`
-                <div className="w-full h-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center">
-                  <span className="text-5xl select-none">💿</span>
-                </div>
-              `}
+              ${
+                trackMetadata && trackMetadata.coverUrl
+                  ? html`
+                      <img
+                        src=${trackMetadata.coverUrl}
+                        className="absolute inset-0 w-full h-full object-cover opacity-90 animate-lightbox-entry"
+                        alt=""
+                      />
+                    `
+                  : html`
+                      <div
+                        className="w-full h-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center"
+                      >
+                        <span className="text-5xl select-none">💿</span>
+                      </div>
+                    `
+              }
               <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none z-20" />
             </div>
 
@@ -358,14 +422,16 @@ export function AudioConsoleModal({
                 
                 <button 
                   onClick=${() => {
-                    audioEngine.playSFX(showShader ? "audio.visualizerHide" : "audio.visualizerShow");
+                    audioEngine.playSFX(
+                      showShader ? 'audio.visualizerHide' : 'audio.visualizerShow'
+                    );
                     setShowShader(!showShader);
                   }}
                   className="text-muted hover:text-primary-400 transition cursor-none outline-none ml-2 shrink-0"
                   title="Toggle Visualizer"
                 >
                   <span className="text-sm font-mono tracking-widest uppercase">
-                    ${showShader ? "[ HIDE VIS ]" : "[ SHOW VIS ]"}
+                    ${showShader ? '[ HIDE VIS ]' : '[ SHOW VIS ]'}
                   </span>
                 </button>
               </div>
@@ -414,15 +480,20 @@ export function AudioConsoleModal({
                 </${ConsoleButton}>
 
                 <${ConsoleButton}
-                  label=${isPlaying ? "Pause" : "Play"}
+                  label=${isPlaying ? 'Pause' : 'Play'}
                   onClick=${togglePlay}
                   active=${isPlaying}
                   isPrismatic=${isPrismaticEnabled}
                   className="flex-1 max-w-[180px] h-12 md:h-14 lg:h-16 shadow-lg"
                 >
-                  ${isPlaying 
-                    ? html`<${Pause} size=${18} fill="currentColor" className="text-primary drop-shadow-[0_0_4px_rgba(34,197,94,1)]" />`
-                    : html`<${Play} size=${18} fill="currentColor" className="ml-0.5" />`
+                  ${
+                    isPlaying
+                      ? html`<${Pause}
+                          size=${18}
+                          fill="currentColor"
+                          className="text-primary drop-shadow-[0_0_4px_rgba(34,197,94,1)]"
+                        />`
+                      : html`<${Play} size=${18} fill="currentColor" className="ml-0.5" />`
                   }
                 </${ConsoleButton}>
 
@@ -443,86 +514,127 @@ export function AudioConsoleModal({
             
             <div className="w-full lg:flex-1 relative flex flex-col bg-ink rounded-xl border border-white/5 overflow-hidden shadow-inner h-[380px]">
               <div className="flex items-center justify-between px-3 py-3 border-b border-white/10 bg-ink shrink-0 h-[46px] select-none">
-                ${playlistView === "tracks" ? html`
-                  <button 
-                    onClick=${() => {
-                      audioEngine.playClick();
-                      setPlaylistView("albums");
-                    }}
-                    className="p-1.5 hover:bg-white/10 rounded cursor-none text-fog hover:text-white transition flex items-center gap-1 shrink-0 outline-none"
-                  >
-                    <${ChevronLeft} size={16} />
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest">Albums</span>
-                  </button>
-                ` : html`
-                  <div className="p-1.5 px-3 shrink-0">
-                    <span className="text-[10px] font-mono font-bold text-muted uppercase tracking-widest">Select Library</span>
-                  </div>
-                `}
+                ${
+                  playlistView === 'tracks'
+                    ? html`
+                        <button
+                          onClick=${() => {
+                            audioEngine.playClick();
+                            setPlaylistView('albums');
+                          }}
+                          className="p-1.5 hover:bg-white/10 rounded cursor-none text-fog hover:text-white transition flex items-center gap-1 shrink-0 outline-none"
+                        >
+                          <${ChevronLeft} size="{16}" />
+                          <span
+                            className="text-[10px] font-mono font-bold uppercase tracking-widest"
+                            >Albums</span
+                          >
+                        </button>
+                      `
+                    : html`
+                        <div className="p-1.5 px-3 shrink-0">
+                          <span
+                            className="text-[10px] font-mono font-bold text-muted uppercase tracking-widest"
+                            >Select Library</span
+                          >
+                        </div>
+                      `
+                }
 
-                ${playlistView === "tracks" && html`
-                  <span className="font-display font-bold text-sm uppercase tracking-widest text-right flex-1 px-2 truncate text-primary-400">
-                    ${activeAlbum.title}
-                  </span>
-                `}
+                ${
+                  playlistView === 'tracks' &&
+                  html`
+                    <span
+                      className="font-display font-bold text-sm uppercase tracking-widest text-right flex-1 px-2 truncate text-primary-400"
+                    >
+                      ${activeAlbum.title}
+                    </span>
+                  `
+                }
               </div>
 
               <div className="flex-1 overflow-y-auto custom-scrollbar p-2 pb-4 space-y-1">
-                ${playlistView === "albums" ? ALBUMS.map(album => html`
-                  <button 
-                    key=${album.id}
-                    onClick=${() => {
-                      audioEngine.playClick();
-                      setViewingAlbumId(album.id);
-                      setPlaylistView("tracks");
-                    }}
-                    className=${`w-full text-left px-3 py-3 rounded flex items-center gap-4 transition-all cursor-none group border border-transparent hover:border-white/10 hover:bg-white/5 outline-none`}
-                  >
-                    <div className="w-10 h-10 rounded bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                      <${Library} size=${16} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-bold truncate text-light group-hover:text-white">
-                        ${album.title}
-                      </div>
-                      <div className="text-[10px] font-mono text-muted uppercase tracking-widest">
-                        ${album.tracks.length} Channels
-                      </div>
-                    </div>
-                  </button>
-                `) : activeAlbum.tracks.map((t, idx) => {
-                  const isActive = activeTrack.name === t.name && activeTrack.folder === t.folder;
-                  
-                  return html`
-                    <div key=${t.name} className=${`w-full flex items-center justify-between rounded transition-all group ${isActive ? 'bg-primary/10 text-primary font-bold' : 'hover:bg-white/5 text-fog hover:text-white'}`}>
-                      <button 
-                        onClick=${() => handleTrackSelect(t)}
-                        className="flex-1 flex items-center gap-3 px-3 py-2.5 text-left cursor-none truncate outline-none rounded"
-                      >
-                        <span className="font-mono text-[10px] opacity-50 w-5 shrink-0">${idx + 1}</span>
-                        <span className="text-xs truncate uppercase font-bold">${t.title.replace(/_/g, ' ')}</span>
-                        ${isActive && html`
-                          <div className="w-1.5 h-1.5 rounded-full shadow-[0_0_8px_#22c55e] bg-primary animate-pulse shrink-0 ml-2" />
-                        `}
-                      </button>
-                      
-                      <a 
-                        href=${`https://www.stevencasteel.com/assets/audio/music/elf_girl/${t.folder}/${t.name}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        download
-                        className="p-2.5 shrink-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity cursor-none outline-none rounded hover:text-primary-400"
-                        title="Download track"
-                        onClick=${(e) => {
-                          audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
-                          e.stopPropagation();
-                        }}
-                      >
-                        <${Download} size=${14} />
-                      </a>
-                    </div>
-                  `;
-                })}
+                ${
+                  playlistView === 'albums'
+                    ? ALBUMS.map(
+                        (album) => html`
+                          <button
+                            key=${album.id}
+                            onClick=${() => {
+                              audioEngine.playClick();
+                              setViewingAlbumId(album.id);
+                              setPlaylistView('tracks');
+                            }}
+                            className=${`w-full text-left px-3 py-3 rounded flex items-center gap-4 transition-all cursor-none group border border-transparent hover:border-white/10 hover:bg-white/5 outline-none`}
+                          >
+                            <div
+                              className="w-10 h-10 rounded bg-primary/10 text-primary flex items-center justify-center shrink-0"
+                            >
+                              <${Library} size=${16} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div
+                                className="text-sm font-bold truncate text-light group-hover:text-white"
+                              >
+                                ${album.title}
+                              </div>
+                              <div
+                                className="text-[10px] font-mono text-muted uppercase tracking-widest"
+                              >
+                                ${album.tracks.length} Channels
+                              </div>
+                            </div>
+                          </button>
+                        `
+                      )
+                    : activeAlbum.tracks.map((t, idx) => {
+                        const isActive =
+                          activeTrack.name === t.name && activeTrack.folder === t.folder;
+
+                        return html`
+                          <div
+                            key=${t.name}
+                            className=${`w-full flex items-center justify-between rounded transition-all group ${isActive ? 'bg-primary/10 text-primary font-bold' : 'hover:bg-white/5 text-fog hover:text-white'}`}
+                          >
+                            <button
+                              onClick=${() => handleTrackSelect(t)}
+                              className="flex-1 flex items-center gap-3 px-3 py-2.5 text-left cursor-none truncate outline-none rounded"
+                            >
+                              <span className="font-mono text-[10px] opacity-50 w-5 shrink-0"
+                                >${idx + 1}</span
+                              >
+                              <span className="text-xs truncate uppercase font-bold"
+                                >${t.title.replace(/_/g, ' ')}</span
+                              >
+                              ${isActive &&
+                              html`
+                                <div
+                                  className="w-1.5 h-1.5 rounded-full shadow-[0_0_8px_#22c55e] bg-primary animate-pulse shrink-0 ml-2"
+                                />
+                              `}
+                            </button>
+
+                            <a
+                              href=${`https://www.stevencasteel.com/assets/audio/music/elf_girl/${t.folder}/${t.name}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              download
+                              className="p-2.5 shrink-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity cursor-none outline-none rounded hover:text-primary-400"
+                              title="Download track"
+                              onClick=${(e) => {
+                                audioEngine.playSFX(
+                                  'https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3',
+                                  0.4
+                                );
+                                e.stopPropagation();
+                              }}
+                            >
+                              <${Download} size=${14} />
+                            </a>
+                          </div>
+                        `;
+                      })
+                }
               </div>
             </div>
 
@@ -545,16 +657,16 @@ export function AudioConsoleModal({
                     }}
                     className=${`flex items-center p-1 px-2.5 rounded text-[9px] font-mono font-bold uppercase transition border cursor-none h-8 ${isMuted ? 'border-red-500 bg-red-500/10 text-red-500 shadow-[0_0_8px_rgba(239,68,68,0.2)]' : 'border-white/10 hover:border-white/20 text-muted hover:text-white'}`}
                   >
-                    <span>${isMuted ? "Unmute" : "Mute All"}</span>
+                    <span>${isMuted ? 'Unmute' : 'Mute All'}</span>
                   </button>
                 </div>
               </div>
 
               <div className="flex flex-col flex-1 justify-center gap-6 p-5 md:p-6 bg-void/50">
-                ${renderSlider("Master Out", "master", mixerMaster, setMixerMaster)}
-                ${renderSlider("Music Synthesizer", "music", volume, setVolume)}
-                ${renderSlider("Tactile SFX Engine", "sfx", mixerSfx, setMixerSfx)}
-                ${renderSlider("Ambient Noise Node", "ambience", mixerAmbience, setMixerAmbience)}
+                ${renderSlider('Master Out', 'master', mixerMaster, setMixerMaster)}
+                ${renderSlider('Music Synthesizer', 'music', volume, setVolume)}
+                ${renderSlider('Tactile SFX Engine', 'sfx', mixerSfx, setMixerSfx)}
+                ${renderSlider('Ambient Noise Node', 'ambience', mixerAmbience, setMixerAmbience)}
               </div>
             </div>
 
