@@ -34,7 +34,7 @@ export function HeroHeader({ seqStep, setSeqStep }) {
               onComplete=${() => setSeqStep("line2")} 
             />
           </div>
-          <div class="inline-block text-primary transition-all duration-300">
+          <div class=${`inline-block transition-all duration-300 ${seqStep === "typing" ? 'text-prismatic-foil' : 'text-primary'}`}>
             <${ScrambleText} 
               text="NAME" 
               delay=${0} 

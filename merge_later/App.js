@@ -38,6 +38,11 @@ function App() {
   const [lenis, setLenis] = useState(null);
 
   // 1:1 Global Mixer State Variables
+  const [isPrismaticEnabled, setIsPrismaticEnabled] = useState(() => {
+    const saved = localStorage.getItem('mesoelfy_prismatic_enabled');
+    return saved !== null ? saved === 'true' : true;
+  });
+
   const [mixerMaster, setMixerMaster] = useState(() => {
     const saved = localStorage.getItem('mesoelfy_mixer_master');
     return saved !== null ? parseFloat(saved) : 1.0;
@@ -99,6 +104,11 @@ function App() {
       audioEngine.ctx.resume().catch(() => {});
     }
   };
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('prismatic-mode-active', isPrismaticEnabled);
+    localStorage.setItem('mesoelfy_prismatic_enabled', isPrismaticEnabled.toString());
+  }, [isPrismaticEnabled]);
 
   // Sync Audio Node Mixers to the context variables
   useEffect(() => {
@@ -400,6 +410,8 @@ function App() {
       <!-- ── FULL SCREEN AUDIO CONSOLE MIXER MODAL ── -->
       <${AudioConsoleModal} 
         isOpen=${isConsoleOpen}
+        isPrismaticEnabled=${isPrismaticEnabled}
+        setIsPrismaticEnabled=${setIsPrismaticEnabled}
         onClose=${() => setIsConsoleOpen(false)}
         activeTrack=${activeTrack}
         trackMetadata=${trackMetadata}

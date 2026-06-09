@@ -71,12 +71,38 @@ nav a:hover, nav button:hover {
 }
 
 .prismatic-border-hover {
+  position: relative;
   transition: border-color 0.35s ease, box-shadow 0.35s ease;
   border-color: rgba(255, 255, 255, 0.08);
+}
+.prismatic-border-hover::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(90deg, #22c55e, #3b82f6, #a855f7, #ef4444, #22c55e);
+  background-size: 200% auto;
+  animation: prismatic-sweep 5s linear infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 5;
 }
 .prismatic-border-hover:hover {
   border-color: rgba(255, 100, 255, 0.4) !important;
   box-shadow: 0 0 15px rgba(255, 100, 255, 0.25);
+}
+.prismatic-mode-active .prismatic-border-hover:hover {
+  border-color: transparent !important;
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.15), 0 0 40px rgba(168, 85, 247, 0.1);
+}
+.prismatic-mode-active .prismatic-border-hover:hover::before {
+  opacity: 1;
 }
 
 @keyframes fade-in-scale {
@@ -148,7 +174,12 @@ nav a:hover, nav button:hover {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
 .text-prismatic-foil {
+  color: #22c55e;
+  transition: color 0.35s ease;
+}
+.prismatic-mode-active .text-prismatic-foil {
   background: linear-gradient(90deg, #22c55e, #3b82f6, #a855f7, #ef4444, #22c55e);
   background-size: 200% auto;
   -webkit-background-clip: text;
@@ -222,6 +253,11 @@ nav a:hover, nav button:hover {
   position: absolute;
   inset: 0;
   border-radius: inherit;
+  border: 1px solid #22c55e;
+  pointer-events: none;
+  z-index: 10;
+}
+.prismatic-mode-active .console-btn-prismatic-border {
   background: linear-gradient(90deg, #22c55e, #3b82f6, #a855f7, #ef4444, #22c55e);
   background-size: 200% auto;
   animation: prismatic-sweep 5s linear infinite;
@@ -229,10 +265,14 @@ nav a:hover, nav button:hover {
   mask-composite: exclude;
   -webkit-mask-composite: xor;
   padding: 1px;
-  pointer-events: none;
-  z-index: 10;
+  border: none;
 }
+
 .console-btn-prismatic-blur {
+  display: none;
+}
+.prismatic-mode-active .console-btn-prismatic-blur {
+  display: block;
   position: absolute;
   inset: 0;
   border-radius: inherit;

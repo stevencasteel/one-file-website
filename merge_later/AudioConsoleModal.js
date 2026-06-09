@@ -170,7 +170,9 @@ export function AudioConsoleModal({
   mixerAmbience,
   setMixerAmbience,
   isMuted,
-  setIsMuted
+  setIsMuted,
+  isPrismaticEnabled,
+  setIsPrismaticEnabled
 }) {
   const [showShader, setShowShader] = useState(true);
   const [playlistView, setPlaylistView] = useState("tracks");
