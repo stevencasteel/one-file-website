@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Name // Digital Media Archive</title>
+  <title>Steven Casteel // Digital Media Archive</title>
   
   <!-- Tailwind CSS & Google Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -204,25 +204,114 @@
     .animate-phosphor {
       animation: phosphor-flicker 0.25s infinite;
     }
+
+    /* Retro CRT Scanlines overlay */
+    .lcd-scanlines {
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 0px,
+        rgba(0, 0, 0, 0) 1px,
+        rgba(0, 0, 0, 0.18) 1px,
+        rgba(0, 0, 0, 0.18) 2px
+      );
+    }
+
+    /* Sunken Well Bezel */
+    .surface-hardware-well {
+      background-color: #0c0d11;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.95), inset 0 -1px 1px rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 0, 0, 0.5);
+    }
+
+    /* Hardware Button */
+    .surface-hardware-btn {
+      background: linear-gradient(180deg, #1d1e24 0%, #121318 100%);
+      border: 1px solid rgba(0, 0, 0, 0.6);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 3px solid #08090b;
+      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    .surface-hardware-btn:active {
+      transform: translateY(1.5px);
+      border-bottom-width: 0px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 1px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Prismatic Background Sweep */
+    @keyframes prismatic-sweep {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .text-prismatic-foil {
+      background: linear-gradient(90deg, #22c55e, #3b82f6, #a855f7, #ef4444, #22c55e);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: prismatic-sweep 5s linear infinite;
+    }
+
+    /* Custom range fader knob with exact SVG layers encoded safely in CSS */
+    .custom-range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 24px;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 24'><defs><linearGradient id='knob-body' x1='0' y1='0' x2='0' y2='1'><stop offset='0%25' stop-color='%23323238'/><stop offset='50%25' stop-color='%231a1a1f'/><stop offset='100%25' stop-color='%230c0c0e'/></linearGradient></defs><rect x='0.5' y='0.5' width='17' height='23' rx='3' fill='url(%23knob-body)' stroke='%23000' stroke-width='0.5'/><rect x='1.5' y='1.5' width='15' height='1' rx='0.5' fill='%23ffffff' opacity='0.12'/><line x1='2.5' y1='3' x2='2.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='3.5' y1='3' x2='3.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/><line x1='15.5' y1='3' x2='15.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='14.5' y1='3' x2='14.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/></svg>");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      cursor: pointer;
+      border: none;
+      background-color: transparent;
+    }
+    .custom-range-slider::-moz-range-thumb {
+      width: 18px;
+      height: 24px;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 24'><defs><linearGradient id='knob-body' x1='0' y1='0' x2='0' y2='1'><stop offset='0%25' stop-color='%23323238'/><stop offset='50%25' stop-color='%231a1a1f'/><stop offset='100%25' stop-color='%230c0c0e'/></linearGradient></defs><rect x='0.5' y='0.5' width='17' height='23' rx='3' fill='url(%23knob-body)' stroke='%23000' stroke-width='0.5'/><rect x='1.5' y='1.5' width='15' height='1' rx='0.5' fill='%23ffffff' opacity='0.12'/><line x1='2.5' y1='3' x2='2.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='3.5' y1='3' x2='3.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/><line x1='15.5' y1='3' x2='15.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='14.5' y1='3' x2='14.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/></svg>");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      cursor: pointer;
+      border: none;
+      background-color: transparent;
+    }
+
+    /* Continuous physical rotation loops */
+    @keyframes spin-clockwise {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes spin-counterclockwise {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(-360deg); }
+    }
+    .gear-spin-clockwise {
+      animation: spin-clockwise 14s linear infinite;
+    }
+    .gear-spin-counterclockwise {
+      animation: spin-counterclockwise 11s linear infinite;
+    }
+    .gear-paused {
+      animation-play-state: paused !important;
+    }
   </style>
 </head>
 <body class="selection:bg-primary selection:text-void relative min-h-screen">
 
-  <!-- Local File Protocol Warning Shield -->
+  <!-- Local File Warning Shield -->
   <div id="protocol-warning" style="display: none; position: fixed; inset: 0; z-index: 99999; background-color: #050505; color: #f2f2f2; font-family: 'Recursive', sans-serif; padding: 2rem; box-sizing: border-box; align-items: center; justify-content: center; overflow-y: auto;">
     <div style="max-width: 520px; width: 100%; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; background-color: #0a0a0a; padding: 2.5rem; text-align: center; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);">
-      
       <h2 style="font-size: 20px; font-weight: 800; margin-top: 0; margin-bottom: 1.75rem; color: #ffffff; line-height: 1.3; font-family: 'Bricolage Grotesque', sans-serif;">
         YOU'RE <span class="wavy-breathe-text"><span class="cascade-char" style="animation-delay: 0s;">1</span><span class="cascade-char" style="animation-delay: 0.08s;">0</span><span class="cascade-char" style="animation-delay: 0.16s;"> </span><span class="cascade-char" style="animation-delay: 0.24s;">M</span><span class="cascade-char" style="animation-delay: 0.32s;">I</span><span class="cascade-char" style="animation-delay: 0.4s;">N</span><span class="cascade-char" style="animation-delay: 0.48s;">U</span><span class="cascade-char" style="animation-delay: 0.56s;">T</span><span class="cascade-char" style="animation-delay: 0.64s;">E</span><span class="cascade-char" style="animation-delay: 0.72s;">S</span><span class="cascade-char" style="animation-delay: 0.8s;"> </span><span class="cascade-char" style="animation-delay: 0.88s;">A</span><span class="cascade-char" style="animation-delay: 0.96s;">W</span><span class="cascade-char" style="animation-delay: 1.04s;">A</span><span class="cascade-char" style="animation-delay: 1.12s;">Y</span></span> FROM A PERSONAL LIVE WEBSITE
       </h2>
-
-      <!-- Sign Up Steps -->
       <div style="border-radius: 12px; text-align: left; margin-bottom: 1.75rem;">
         <p style="margin: 0 0 1rem 0; font-weight: 800; color: #f59e0b; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'Bricolage Grotesque', sans-serif;">
           REQUIRED ONBOARDING TASKS
         </p>
         <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-          
           <a href="https://github.com/signup" target="_blank" class="onboarding-link-card">
             <div style="display: flex; align-items: center; gap: 1rem;">
               <div style="font-size: 1.25rem; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.08);">⚙️</div>
@@ -233,7 +322,6 @@
               <span style="font-size: 12px; line-height: 1;">➔</span>
             </div>
           </a>
-
           <a href="https://dash.cloudflare.com/sign-up/workers-and-pages" target="_blank" class="onboarding-link-card">
             <div style="display: flex; align-items: center; gap: 1rem;">
               <div style="font-size: 1.25rem; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.08);">☁️</div>
@@ -244,62 +332,17 @@
               <span style="font-size: 12px; line-height: 1;">➔</span>
             </div>
           </a>
-
-          <a href="https://chatgpt.com/" target="_blank" class="onboarding-link-card">
-            <div style="display: flex; align-items: center; gap: 1rem;">
-              <div style="font-size: 1.25rem; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.08);">🤖</div>
-              <span class="url-text" style="font-size: 13px; font-family: monospace; color: #ffffff; transition: text-decoration 0.2s;">https://chatgpt.com/</span>
-            </div>
-            <div style="color: #22c55e; font-size: 11px; font-weight: 700; font-family: monospace; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 4px;">
-              <span>Free</span>
-              <span style="font-size: 12px; line-height: 1;">➔</span>
-            </div>
-          </a>
-
         </div>
       </div>
-
-      <!-- Drag & Drop Graphic -->
-      <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin: 2rem 0; user-select: none;">
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
-          <span style="font-size: 3.5rem; line-height: 1;">📄</span>
-          <span style="font-size: 11px; color: #666; font-family: monospace;">index.html</span>
-        </div>
-        
-        <svg width="40" height="24" viewBox="0 0 40 24" fill="none" style="color: #22c55e;">
-          <path d="M4 12H36M36 12L28 4M36 12L28 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        
-        <a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer" style="position: relative; padding: 12px 18px; display: inline-block; text-decoration: none; border-radius: 8px; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);" onmouseover="this.style.backgroundColor='rgba(34, 197, 94, 0.05)'; this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 15px rgba(34, 197, 94, 0.15)';" onmouseout="this.style.backgroundColor='transparent'; this.style.transform='scale(1)'; this.style.boxShadow='none';">
-          <svg style="position: absolute; inset: 0; width: 100%; height: 100%;" overflow="visible">
-            <rect x="0" y="0" width="100%" height="100%" fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="6,4" rx="8" ry="8">
-              <animate attributeName="stroke-dashoffset" values="10;0" dur="1s" repeatCount="indefinite" />
-            </rect>
-          </svg>
-          <span style="position: relative; z-index: 10; font-weight: 700; color: #22c55e; font-size: 14px; font-family: monospace;">ChatGPT.com</span>
-        </a>
-      </div>
-
-      <!-- Next Step Action Card -->
       <div style="background-color: rgba(239, 68, 68, 0.02); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 8px; padding: 1.5rem; text-align: left; margin-bottom: 2rem; position: relative; overflow: hidden;">
         <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background-color: #ef4444;"></div>
         <p style="margin: 0 0 0.5rem 0; font-weight: 700; color: #ffffff; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
-          <span style="color: #ef4444;">🚀</span> Next Step
+          <span>🚀</span> Next Step
         </p>
         <p style="margin: 0; color: #a0a0a0; font-size: 13px; line-height: 1.45;">
           Drag and drop this file into ChatGPT. The AI has instructions inside to guide you through set up.
         </p>
       </div>
-
-      <!-- Explanation Section -->
-      <div style="text-align: left; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1.5rem;">
-        <p style="margin: 0 0 0.5rem 0; font-weight: 700; color: #f59e0b; font-size: 13px; font-style: italic; font-variation-settings: 'MONO' 0, 'CASL' 0.35, 'slnt' -14, 'CRSV' 1, 'wght' 700;">
-          Why does my live site look awesome, but I'm stuck on this screen when I view the HTML file?
-        </p>
-        <p style="margin: 0; color: #888888; font-size: 12px; line-height: 1.45; text-wrap: pretty;">
-          Don't worry, you just need to set up <span style="color: #22c55e; font-style: italic; font-weight: 600; font-variation-settings: 'MONO' 0, 'CASL' 0.35, 'slnt' -14, 'CRSV' 1, 'wght' 600;">Vite</span> so you can view local changes at <span style="color: #22c55e; font-style: italic; font-family: monospace; font-variation-settings: 'MONO' 1, 'CASL' 0, 'slnt' -14, 'CRSV' 1, 'wght' 400;">http://localhost:1111</span>. After you get your live Cloudflare URL, the AI is ready to help configure this and guide you through further&nbsp;onboarding.</p>
-      </div>
-
     </div>
   </div>
   <script>
@@ -340,6 +383,8 @@
     import { Sidebar } from './merge_later/Sidebar.js';
     import { HeroHeader } from './merge_later/HeroHeader.js';
     import { MainContent } from './merge_later/MainContent.js';
+    import { audioEngine } from './merge_later/AudioEngine.js';
+    import { AudioConsoleModal } from './merge_later/AudioConsoleModal.js';
 
     const html = htm.bind(React.createElement);
 
@@ -352,32 +397,15 @@
       return arr;
     }
 
-    // Interactive SFX Handler
-    const playSFX = (type) => {
-      let src = "";
-      if (type === "click") {
-        src = "https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3";
-      } else if (type === "release") {
-        src = "https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3";
-      }
-      if (src) {
-        const audio = new Audio(src);
-        audio.volume = 0.35;
-        audio.play().catch(() => {});
-      }
-    };
-
     // ── MAIN APP COMPONENT ───────────────────────────────────────────────────
     function App() {
       // Lightbox / Modal Context
       const [lightbox, setLightbox] = useState(null);
       const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+      const [isConsoleOpen, setIsConsoleOpen] = useState(false);
       const [activeSection, setActiveSection] = useState("audio");
 
-      // Sequential Timeline Sequence Step: "line1" -> "line2" -> "typing"
       const [seqStep, setSeqStep] = useState("line1");
-
-      // Lenis Instance
       const [lenis, setLenis] = useState(null);
 
       // Audio Player Context
@@ -411,6 +439,20 @@
       });
       const [currentTime, setCurrentTime] = useState(0);
       const [duration, setDuration] = useState(0);
+
+      // Initialize / Restore Audio Context dynamically on user interaction
+      const ensureAudioInitialized = () => {
+        if (!audioEngine.isInitialized && audioElRef.current) {
+          audioEngine.init(audioElRef.current);
+          audioEngine.setVolume("master", 1.0);
+          audioEngine.setVolume("music", volume);
+          audioEngine.setVolume("sfx", 0.8);
+          audioEngine.setVolume("ambience", 0.5);
+        }
+        if (audioEngine.ctx && audioEngine.ctx.state === 'suspended') {
+          audioEngine.ctx.resume().catch(() => {});
+        }
+      };
 
       // Initialize Lenis Smooth Scroll
       useEffect(() => {
@@ -456,7 +498,6 @@
         return () => window.removeEventListener("scroll", handleSpy);
       }, []);
 
-      // Initialize / Restore Audio Context
       useEffect(() => {
         const savedPosition = localStorage.getItem('mesoelfy_player_position');
         const savedAutoplay = localStorage.getItem('mesoelfy_player_autoplay');
@@ -467,6 +508,7 @@
 
         const handleUnlock = () => {
           if (savedAutoplay === 'true' && audioElRef.current) {
+            ensureAudioInitialized();
             audioElRef.current.play()
               .then(() => setIsPlaying(true))
               .catch(() => {});
@@ -495,11 +537,15 @@
         if (audioElRef.current) {
           audioElRef.current.volume = volume;
           localStorage.setItem('mesoelfy_player_volume', volume.toString());
+          if (audioEngine.isInitialized) {
+            audioEngine.setVolume("music", volume);
+          }
         }
       }, [volume]);
 
       const togglePlay = () => {
         if (!audioElRef.current) return;
+        ensureAudioInitialized();
         if (isPlaying) {
           audioElRef.current.pause();
           setIsPlaying(false);
@@ -516,6 +562,7 @@
 
       const handleNext = () => {
         if (playerState.queue.length === 0) return;
+        ensureAudioInitialized();
         setPlayerState((prev) => ({
           ...prev,
           currentIdx: (prev.currentIdx + 1) % prev.queue.length
@@ -524,6 +571,7 @@
 
       const handlePrev = () => {
         if (playerState.queue.length === 0) return;
+        ensureAudioInitialized();
         setPlayerState((prev) => ({
           ...prev,
           currentIdx: (prev.currentIdx - 1 + prev.queue.length) % prev.queue.length
@@ -545,6 +593,7 @@
 
       const handleScrubberChange = (e) => {
         const val = parseFloat(e.target.value);
+        ensureAudioInitialized();
         if (audioElRef.current) {
           audioElRef.current.currentTime = val;
           setCurrentTime(val);
@@ -553,6 +602,7 @@
 
       const toggleShuffleState = () => {
         const targetState = !isShuffle;
+        ensureAudioInitialized();
         setIsShuffle(targetState);
         localStorage.setItem('mesoelfy_player_shuffle', targetState.toString());
         
@@ -618,10 +668,11 @@
       };
 
       return html`
-        <div class="relative w-full flex flex-col md:flex-row min-h-screen">
+        <div class="relative w-full flex flex-col md:flex-row min-h-screen" onClick=${ensureAudioInitialized}>
           <audio 
             ref=${audioElRef} 
             src="https://www.stevencasteel.com/assets/audio/music/elf_girl/${activeTrack.folder}/${activeTrack.name}"
+            crossOrigin="anonymous"
             onTimeUpdate=${handleTimeUpdate}
             onLoadedMetadata=${handleLoadedMetadata}
             onEnded=${handleNext}
@@ -633,8 +684,8 @@
             setIsSidebarOpen=${setIsSidebarOpen}
             activeSection=${activeSection}
             handleNavigation=${handleNavigation}
-            playSFX=${playSFX}
             playerProps=${playerProps}
+            onOpenConsole=${() => { ensureAudioInitialized(); setIsConsoleOpen(true); }}
           />
 
           <!-- ── MAIN CONTENT ZONE ── -->
@@ -670,6 +721,29 @@
               </div>
             </div>
           `}
+
+          <!-- ── FULL SCREEN AUDIO CONSOLE MIXER MODAL ── -->
+          <${AudioConsoleModal} 
+            isOpen=${isConsoleOpen}
+            onClose=${() => setIsConsoleOpen(false)}
+            activeTrack=${activeTrack}
+            isPlaying=${isPlaying}
+            currentTime=${currentTime}
+            duration=${duration}
+            volume=${volume}
+            isShuffle=${isShuffle}
+            handleScrubberChange=${handleScrubberChange}
+            handlePrev=${handlePrev}
+            togglePlay=${togglePlay}
+            handleNext=${handleNext}
+            toggleShuffleState=${toggleShuffleState}
+            setVolume=${setVolume}
+            formatTime=${formatTime}
+            playTrackByIndex=${(idx) => {
+              setPlayerState(prev => ({ ...prev, currentIdx: idx }));
+              setIsPlaying(true);
+            }}
+          />
 
         </div>
       `;
