@@ -3,6 +3,7 @@ import htm from 'htm';
 import { Settings2, Pause, Play, SkipForward, SkipBack, Shuffle, X, Library, VolumeX, Volume2, Star, ChevronLeft, Download } from 'lucide-react';
 import { audioEngine } from './AudioEngine.js';
 import { AUDIO_TRACKS } from 'media-data';
+import { ScrollingText } from './components.js';
 
 const html = htm.bind(React.createElement);
 
@@ -41,7 +42,7 @@ export function AudioConsoleModal({
   formatTime,
   playTrackByIndex,
 
-  // Global Mixer State Bindings (1:1 with useVolumeStore.ts)
+  // Global Mixer State Bindings
   mixerMaster,
   setMixerMaster,
   volume, // musicVolume
@@ -60,6 +61,10 @@ export function AudioConsoleModal({
   const [showShader, setShowShader] = useState(true);
   const [playlistView, setPlaylistView] = useState("tracks");
   const [viewingAlbumId, setViewingAlbumId] = useState(ALBUMS[0]?.id || "");
+
+  // Tracks are kept static to prevent GC spikes in canvas
+  const peaksRef = useRef(new Array(64).fill(0));
+  const smoothedValuesRef = useRef(new Array(64).fill(0));
 
   // Synced on opening/active track swap
   useEffect(() => {
@@ -84,18 +89,17 @@ export function AudioConsoleModal({
 
     const analyser = audioEngine.analyser;
     const bufferLength = analyser ? analyser.frequencyBinCount : 64;
-    const peaks = new Array(64).fill(0);
-    const smoothedValues = new Array(64).fill(0);
+    const dataArray = new Uint8Array(bufferLength);
+    const barCount = 64;
 
     const drawVisualizer = () => {
+      animationRef.current = requestAnimationFrame(drawVisualizer);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const dataArray = new Uint8Array(bufferLength);
 
       if (analyser) {
         analyser.getByteFrequencyData(dataArray);
       }
 
-      const barCount = 64;
       const barWidth = (canvas.width / barCount) - 2;
       let x = 0;
 
@@ -103,6 +107,12 @@ export function AudioConsoleModal({
       gradient.addColorStop(0, "rgb(59, 130, 246)"); // Blue
       gradient.addColorStop(0.5, "rgb(168, 85, 247)"); // Purple
       gradient.addColorStop(1, "rgb(239, 68, 68)"); // Red
+
+      const peaks = peaksRef.current;
+      const smoothedValues = smoothedValuesRef.current;
+
+      const decayRate = isPlaying ? 0.15 : 0.015;
+      const peakDrop = isPlaying ? 1.2 : 0.3;
 
       for (let i = 0; i < barCount; i++) {
         let rawValue = 0;
@@ -113,13 +123,13 @@ export function AudioConsoleModal({
           rawValue = dataArray[dataIndex] || 0;
         }
 
-        smoothedValues[i] += (rawValue - smoothedValues[i]) * 0.15;
+        smoothedValues[i] += (rawValue - smoothedValues[i]) * (rawValue > smoothedValues[i] ? 0.8 : decayRate);
         const barHeight = (smoothedValues[i] / 255) * canvas.height;
 
         if (barHeight > peaks[i]) {
           peaks[i] = barHeight;
         } else {
-          peaks[i] = Math.max(0, peaks[i] - 1.2);
+          peaks[i] = Math.max(0, peaks[i] - peakDrop);
         }
 
         if (barHeight > 0.5) {
@@ -134,8 +144,6 @@ export function AudioConsoleModal({
 
         x += barWidth + 2;
       }
-
-      animationRef.current = requestAnimationFrame(drawVisualizer);
     };
 
     drawVisualizer();
@@ -170,7 +178,7 @@ export function AudioConsoleModal({
   // 1:1 Overdriven Spectrum Gain Ticks (13 notches)
   const ticks = Array.from({ length: 13 }, (_, i) => i * 8.33);
 
-  // Reusable Studio Mixer Slider Component (1:1 with AudioSlider.tsx)
+  // Reusable Studio Mixer Slider Component with Neumorph Shadows
   const renderSlider = (label, type, value, setter) => {
     const displayPercent = Math.round(value * 100);
     const physicalPercent = Math.round((value / 3.0) * 100); // Max fader is 3.0 (300%)
@@ -200,7 +208,7 @@ export function AudioConsoleModal({
         </div>
 
         <div class="relative h-7 flex items-center w-full select-none">
-          <div class="absolute left-0 right-0 h-2 bg-void rounded border border-black/40 shadow-inner" />
+          <div class="absolute left-0 right-0 h-2 bg-void rounded shadow-neumorph-recessed-sm border border-black/40" />
           
           <div class="absolute left-1 right-1 h-1 rounded overflow-hidden pointer-events-none z-10 opacity-75">
             <div class="h-full transition-all duration-100 ease-out" style=${{ width: `${physicalPercent}%`, backgroundColor: sliderColor }} />
@@ -217,7 +225,7 @@ export function AudioConsoleModal({
             `)}
           </div>
 
-          <!-- Knob thumb -->
+          <!-- Knob fader thumb -->
           <div 
             class=${`absolute pointer-events-none z-20 flex items-center justify-center transition-all duration-100 ${isMuted ? 'opacity-40' : ''}`} 
             style=${{ left: `calc(${physicalPercent}% - 9px)`, width: '18px', height: '24px' }}
@@ -251,7 +259,7 @@ export function AudioConsoleModal({
 
   return html`
     <div class="fixed inset-0 bg-void/95 backdrop-blur-md z-[110] flex items-center justify-center p-4 cursor-none animate-lightbox-entry">
-      <div class="relative w-full max-w-5xl bg-panel rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-[#3a3a40] overflow-hidden flex flex-col cursor-none">
+      <div class="relative w-full max-w-5xl bg-panel rounded-2xl shadow-neumorph-elevated-md border border-[#3a3a40] overflow-hidden flex flex-col cursor-none">
         
         <!-- Header Bar -->
         <div class="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-void">
@@ -263,12 +271,12 @@ export function AudioConsoleModal({
           </div>
           <button 
             onClick=${() => {
-              playSound("modal.leave");
+              audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/leave_modal.mp3", 0.4);
               onClose();
             }}
             class="flex items-center justify-center w-8 h-8 rounded-md bg-white/5 border border-white/10 hover:border-primary-400 hover:text-primary-400 hover:bg-primary-400/10 transition-all duration-300 cursor-none outline-none"
           >
-            <${X} size=${16} />
+            <${X} size={16} />
           </button>
         </div>
 
@@ -286,15 +294,19 @@ export function AudioConsoleModal({
               <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none z-20" />
             </div>
 
-            <div class="flex-1 w-full flex flex-col justify-between gap-4 md:gap-0">
+            <div class="flex-1 w-full flex flex-col justify-between gap-4 md:gap-0 min-w-0">
               <div class="flex justify-between items-start">
-                <div>
+                <div class="min-w-0 flex-1">
                   <span class="text-[10px] font-mono font-bold tracking-widest text-primary-400 uppercase select-none">
                     // ACTIVE SOURCE FEED
                   </span>
-                  <h3 class="text-2xl font-display font-black text-white uppercase truncate mt-1">
-                    ${cleanTitle}
-                  </h3>
+                  
+                  <div class="h-8 overflow-hidden relative flex items-center mt-1">
+                    <${ScrollingText} isUiActive=${isPlaying} className="relative leading-none text-2xl font-display font-black text-white uppercase">
+                      <span>${cleanTitle}</span>
+                    </${ScrollingText}>
+                  </div>
+                  
                   <p class="text-xs font-mono text-muted uppercase tracking-widest truncate mt-0.5 select-none">
                     ${cleanAlbum}
                   </p>
@@ -302,10 +314,10 @@ export function AudioConsoleModal({
                 
                 <button 
                   onClick=${() => {
-                    playSound(showShader ? "audio.visualizerHide" : "audio.visualizerShow");
+                    audioEngine.playSFX(showShader ? "audio.visualizerHide" : "audio.visualizerShow");
                     setShowShader(!showShader);
                   }}
-                  class="text-muted hover:text-primary-400 transition"
+                  class="text-muted hover:text-primary-400 transition cursor-none outline-none ml-2 shrink-0"
                   title="Toggle Visualizer"
                 >
                   <span class="text-sm font-mono tracking-widest uppercase">
@@ -378,7 +390,7 @@ export function AudioConsoleModal({
               <div class="relative rounded-xl overflow-hidden border border-white/5 shadow-inner bg-void h-32 w-full">
                 <canvas 
                   ref=${canvasRef} 
-                  width="1000" 
+                  width="600" 
                   height="128" 
                   class="w-full h-full opacity-90"
                 />
@@ -390,13 +402,13 @@ export function AudioConsoleModal({
           <!-- Double Column bottom rack -->
           <div class="flex flex-col lg:flex-row gap-6 items-stretch w-full">
             
-            <!-- Left Column: Playlist Card (1:1 UI design) -->
+            <!-- Left Column: Playlist Card -->
             <div class="w-full lg:flex-1 relative flex flex-col bg-ink rounded-xl border border-white/5 overflow-hidden shadow-inner h-[380px]">
               <div class="flex items-center justify-between px-3 py-3 border-b border-white/10 bg-ink shrink-0 h-[46px] select-none">
                 ${playlistView === "tracks" ? html`
                   <button 
                     onClick=${() => {
-                      playSound("ui.click");
+                      audioEngine.playClick();
                       setPlaylistView("albums");
                     }}
                     class="p-1.5 hover:bg-white/10 rounded cursor-none text-fog hover:text-white transition flex items-center gap-1 shrink-0 outline-none"
@@ -423,7 +435,7 @@ export function AudioConsoleModal({
                   <button 
                     key=${album.id}
                     onClick=${() => {
-                      playSound("ui.click");
+                      audioEngine.playClick();
                       setViewingAlbumId(album.id);
                       setPlaylistView("tracks");
                     }}
@@ -466,7 +478,7 @@ export function AudioConsoleModal({
                         class="p-2.5 shrink-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity cursor-none outline-none rounded hover:text-primary-400"
                         title="Download track"
                         onClick=${(e) => {
-                          playSound("ui.success");
+                          audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
                           e.stopPropagation();
                         }}
                       >
@@ -493,7 +505,7 @@ export function AudioConsoleModal({
                   </button>
                   <button 
                     onClick=${() => {
-                      playSound("ui.click");
+                      audioEngine.playClick();
                       setIsMuted(!isMuted);
                     }}
                     class=${`flex items-center p-1 px-2.5 rounded text-[9px] font-mono font-bold uppercase transition border cursor-none h-8 ${isMuted ? 'border-red-500 bg-red-500/10 text-red-500 shadow-[0_0_8px_rgba(239,68,68,0.2)]' : 'border-white/10 hover:border-white/20 text-muted hover:text-white'}`}
@@ -503,7 +515,7 @@ export function AudioConsoleModal({
                 </div>
               </div>
 
-              <!-- Mixer Faders scaled to 3.0 (300%) -->
+              <!-- Mixer Faders scaled to 3.0 (300%) with Neumorph Shadows -->
               <div class="flex flex-col flex-1 justify-center gap-6 p-5 md:p-6 bg-void/50">
                 ${renderSlider("Master Out", "master", mixerMaster, setMixerMaster)}
                 ${renderSlider("Music Synthesizer", "music", volume, setVolume)}

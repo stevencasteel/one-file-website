@@ -102,10 +102,14 @@ export function MusicPlayerDeck({
   const miniPlayerBgRef = 'url(' + String.fromCharCode(35) + 'mini-player-bg)';
   const innerShadowRef = 'url(' + String.fromCharCode(35) + 'lcd-inner-shadow)';
   const settingsGearBgRef = 'url(' + String.fromCharCode(35) + 'gear-bg-settings)';
-  const lcdClipRef = 'url(' + String.fromCharCode(35) + 'lcd-display-clip)';
+
+  const UNIFIED_LCD_PATH = "M604.605,554 L3116.675,554 c65.83,0 120,54.17 120,120 c0,222.67 184.5,405.91 408.72,405.91 c65.83,0 120,54.17 120,120 L3765.395,1348.18 c0,66.27 -53.73,120 -120,120 L604.605,1468.18 c-66.27,0 -120,-53.73 -120,-120 L484.605,674 c0,-66.27 53.73,-120 120,-120 Z";
+  const exactLcdMask = `url("data:image/svg+xml,%3Csvg viewBox='296 383 3658 2595' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='${UNIFIED_LCD_PATH}' fill='white'/%3E%3C/svg%3E")`;
 
   const cleanTitle = trackMetadata?.title || activeTrack.title.replace(/_/g, ' ');
   const cleanAlbum = trackMetadata?.artist ? `${trackMetadata.artist} // ${activeTrack.folder.replace(/_/g, ' ')}` : activeTrack.folder.replace(/_/g, ' ');
+
+  const isUiActive = isPlaying;
 
   return html`
     <div class="shrink-0 p-4 bg-gradient-to-t from-panel to-rgb(12, 13, 17) border-t border-black flex flex-col gap-3 relative z-20">
@@ -128,9 +132,6 @@ export function MusicPlayerDeck({
               <stop offset="0%" stop-color="rgb(30, 30, 36)" />
               <stop offset="100%" stop-color="rgb(10, 10, 10)" />
             </linearGradient>
-            <clipPath id="lcd-display-clip">
-              <path d="M604.605,554 L3116.675,554 c65.83,0 120,54.17 120,120 c0,222.67 184.5,405.91 408.72,405.91 c65.83,0 120,54.17 120,120 L3765.395,1348.18 c0,66.27 -53.73,120 -120,120 L604.605,1468.18 c-66.27,0 -120,-53.73 -120,-120 L484.605,674 c0,-66.27 53.73,-120 120,-120 Z" />
-            </clipPath>
           </defs>
           <path 
             d="M451.625,383.598l2852.76,0a120,120 0 0,1 120,120a408.723,405.909 0 0,0 408.723,405.909a120,120 0 0,1 120,120l0,1792.06c0,85.533 -69.827,155.916 -154.684,155.916l-3346.8,0c-84.857,0 -154.684,-70.383 -154.684,-155.916l0,-2282.05c0,-85.533 69.827,-155.917 154.684,-155.917Z" 
@@ -184,16 +185,18 @@ export function MusicPlayerDeck({
           </button>
         </div>
 
-        <!-- LCD Screen Mask (Top Center) -->
+        <!-- LCD Screen Mask (Top Center) with CSS Mask Parity -->
         <div 
-          class="absolute overflow-hidden z-20 bg-rgb(3, 4, 2)"
+          class="absolute overflow-hidden z-20 bg-[#030402]"
           style=${{
             left: '5.16%',
             top: '6.59%',
             width: '89.68%',
             height: '35.23%',
-            clipPath: lcdClipRef,
-            WebkitClipPath: lcdClipRef
+            WebkitMaskImage: exactLcdMask,
+            WebkitMaskSize: '100% 100%',
+            maskImage: exactLcdMask,
+            maskSize: '100% 100%'
           }}
         >
           <div class="absolute inset-0 lcd-scanlines pointer-events-none z-25 select-none opacity-20" />
@@ -216,16 +219,16 @@ export function MusicPlayerDeck({
             <div class="relative flex-1 min-w-0 flex flex-col justify-center text-left pr-2">
               <div class="min-w-0">
                 <!-- Dynamic Scrolling Album Title -->
-                <div class="relative w-full overflow-hidden h-[12px]">
-                  <p class="absolute inset-y-0 left-0 text-[8px] opacity-40 tracking-widest truncate uppercase leading-none flex items-center whitespace-nowrap">
-                    ${cleanAlbum}
-                  </p>
+                <div class="relative w-full overflow-hidden h-[12px] flex items-center">
+                  <${ScrollingText} isUiActive=${isUiActive} className="relative leading-none text-[8px] opacity-40 tracking-widest uppercase text-primary">
+                    <span>${cleanAlbum}</span>
+                  </${ScrollingText}>
                 </div>
                 <!-- Dynamic Scrolling Track Title -->
-                <div class="relative w-full overflow-hidden h-[16px] mt-0.5">
-                  <p class="absolute inset-y-0 left-0 text-[11px] font-bold tracking-wider truncate uppercase text-primary animate-phosphor drop-shadow-[0_0_2px_rgba(34,197,94,1)] leading-none flex items-center whitespace-nowrap">
-                    ${cleanTitle}
-                  </p>
+                <div class="relative w-full overflow-hidden h-[16px] mt-0.5 flex items-center">
+                  <${ScrollingText} isUiActive=${isUiActive} className="relative leading-none text-[11px] font-bold tracking-wider uppercase text-primary animate-phosphor drop-shadow-[0_0_2px_rgba(34,197,94,1)]">
+                    <span>${cleanTitle}</span>
+                  </${ScrollingText}>
                 </div>
               </div>
 

@@ -126,6 +126,15 @@ nav a:hover, nav button:hover {
   border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
+/* Hardware Track */
+.surface-hardware-track {
+  background-color: #0c0d11;
+  box-shadow:
+    inset 0 3px 6px rgba(0, 0, 0, 0.9),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.03),
+    0 1px 1px rgba(255, 255, 255, 0.09);
+}
+
 /* Hardware Button */
 .surface-hardware-btn {
   background: linear-gradient(180deg, #1d1e24 0%, #121318 100%);
@@ -135,10 +144,13 @@ nav a:hover, nav button:hover {
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
-.surface-hardware-btn:active {
+.surface-hardware-btn:active, .surface-hardware-btn.is-active {
   transform: translateY(1.5px);
+  border-top-color: transparent;
   border-bottom-width: 0px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+  background-image: none !important;
+  background-color: #111115;
 }
 
 /* Prismatic Background Sweep */
@@ -156,30 +168,28 @@ nav a:hover, nav button:hover {
   animation: prismatic-sweep 5s linear infinite;
 }
 
-/* Custom range fader knob with exact SVG layers encoded safely in CSS */
-.custom-range-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 18px;
-  height: 24px;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 24'><defs><linearGradient id='knob-body' x1='0' y1='0' x2='0' y2='1'><stop offset='0%25' stop-color='%23323238'/><stop offset='50%25' stop-color='%231a1a1f'/><stop offset='100%25' stop-color='%230c0c0e'/></linearGradient></defs><rect x='0.5' y='0.5' width='17' height='23' rx='3' fill='url(%23knob-body)' stroke='%23000' stroke-width='0.5'/><rect x='1.5' y='1.5' width='15' height='1' rx='0.5' fill='%23ffffff' opacity='0.12'/><line x1='2.5' y1='3' x2='2.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='3.5' y1='3' x2='3.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/><line x1='15.5' y1='3' x2='15.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='14.5' y1='3' x2='14.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/></svg>");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  cursor: pointer;
-  border: none;
-  background-color: transparent;
+/* High-Performance Marquee text animation */
+@keyframes marquee-text {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
-.custom-range-slider::-moz-range-thumb {
-  width: 18px;
-  height: 24px;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 24'><defs><linearGradient id='knob-body' x1='0' y1='0' x2='0' y2='1'><stop offset='0%25' stop-color='%23323238'/><stop offset='50%25' stop-color='%231a1a1f'/><stop offset='100%25' stop-color='%230c0c0e'/></linearGradient></defs><rect x='0.5' y='0.5' width='17' height='23' rx='3' fill='url(%23knob-body)' stroke='%23000' stroke-width='0.5'/><rect x='1.5' y='1.5' width='15' height='1' rx='0.5' fill='%23ffffff' opacity='0.12'/><line x1='2.5' y1='3' x2='2.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='3.5' y1='3' x2='3.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/><line x1='15.5' y1='3' x2='15.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='14.5' y1='3' x2='14.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/></svg>");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  cursor: pointer;
-  border: none;
-  background-color: transparent;
+.animate-marquee-text {
+  animation: marquee-text 12s linear infinite;
+}
+.animate-marquee-text:hover {
+  animation-play-state: paused;
+}
+
+/* Dual-shadow Neumorphic shadows */
+.shadow-neumorph-elevated-sm {
+  box-shadow: -1px -1px 2px hsla(0, 0%, 100%, 0.04), 2px 2px 4px hsla(0, 0%, 0%, 0.4);
+}
+.shadow-neumorph-recessed-sm {
+  box-shadow: inset 1px 1px 3px hsla(0, 0%, 0%, 0.4), inset -1px -1px 2px hsla(0, 0%, 100%, 0.03);
 }
 
 /* Continuous physical rotation loops */
