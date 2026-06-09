@@ -2,17 +2,24 @@
 │          STEVEN CASTEEL ARCHIVE PROJECT          │
 │        Vite + React (ESM CDN) + Tailwind CSS     │
 └──────────────────────────────────────────────────┘
- [SYSTEM] Generated: 6/8/2026, 8:31:25 PM
+ [SYSTEM] Generated: 6/8/2026, 8:54:59 PM
  [BASELINE]: React 18, HTM, Lucide React, Lenis Scroll, Tailwind CSS
 
 ─── ABRIDGED DIRECTORY STRUCTURE ───────────────────
 .
+├── merge_later/
+│   ├── components.js
+│   ├── GlobalScrollbar.js
+│   ├── HeroHeader.js
+│   ├── MainContent.js
+│   ├── media_data.js
+│   ├── MusicPlayerDeck.js
+│   └── Sidebar.js
 ├── node_modules/ (contents skipped)
 ├── AI_INSTRUCTIONS.txt
 ├── create_source_context.command
 ├── create_source_context.js
 ├── index.html
-├── media-data.js
 ├── one-file-website_source_code.txt
 ├── package-lock.json
 ├── package.json
@@ -227,7 +234,7 @@ protocol based on scope:
         "htm": "https://esm.sh/htm@3.1.1",
         "lucide-react": "https://esm.sh/lucide-react@0.344.0",
         "lenis": "https://esm.sh/lenis@1.1.13",
-        "media-data": "./media-data.js",
+        "media-data": "./merge_later/media_data.js",
         "animejs": "https://esm.sh/animejs@3.2.2"
       }
     }
@@ -279,8 +286,6 @@ protocol based on scope:
       font-variation-settings: "MONO" 0, "CASL" 0.35, "slnt" 0, "CRSV" 0.5, "wght" 750;
     }
 
-
-
     /* Custom Cursor styles with translation improvements */
     .custom-cursor {
       position: fixed;
@@ -322,7 +327,7 @@ protocol based on scope:
       box-shadow: 0 0 15px rgba(255, 100, 255, 0.25);
     }
 
-        /* GPU-Accelerated Lightbox Overlay Animations */
+    /* GPU-Accelerated Lightbox Overlay Animations */
     @keyframes fade-in-scale {
       from {
         opacity: 0;
@@ -401,7 +406,7 @@ protocol based on scope:
         YOU'RE <span class="wavy-breathe-text"><span class="cascade-char" style="animation-delay: 0s;">1</span><span class="cascade-char" style="animation-delay: 0.08s;">0</span><span class="cascade-char" style="animation-delay: 0.16s;"> </span><span class="cascade-char" style="animation-delay: 0.24s;">M</span><span class="cascade-char" style="animation-delay: 0.32s;">I</span><span class="cascade-char" style="animation-delay: 0.4s;">N</span><span class="cascade-char" style="animation-delay: 0.48s;">U</span><span class="cascade-char" style="animation-delay: 0.56s;">T</span><span class="cascade-char" style="animation-delay: 0.64s;">E</span><span class="cascade-char" style="animation-delay: 0.72s;">S</span><span class="cascade-char" style="animation-delay: 0.8s;"> </span><span class="cascade-char" style="animation-delay: 0.88s;">A</span><span class="cascade-char" style="animation-delay: 0.96s;">W</span><span class="cascade-char" style="animation-delay: 1.04s;">A</span><span class="cascade-char" style="animation-delay: 1.12s;">Y</span></span> FROM A PERSONAL LIVE WEBSITE
       </h2>
 
-      <!-- Sign Up Steps (Polished Interactive Dashboard) -->
+      <!-- Sign Up Steps -->
       <div style="border-radius: 12px; text-align: left; margin-bottom: 1.75rem;">
         <p style="margin: 0 0 1rem 0; font-weight: 800; color: #f59e0b; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'Bricolage Grotesque', sans-serif;">
           REQUIRED ONBOARDING TASKS
@@ -443,7 +448,8 @@ protocol based on scope:
 
         </div>
       </div>
-      <!-- Drag & Drop Graphic with Marching Ants -->
+
+      <!-- Drag & Drop Graphic -->
       <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin: 2rem 0; user-select: none;">
         <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
           <span style="font-size: 3.5rem; line-height: 1;">📄</span>
@@ -464,7 +470,7 @@ protocol based on scope:
         </a>
       </div>
 
-      <!-- Next Step Priority Action Card (Red Accent Line) -->
+      <!-- Next Step Action Card -->
       <div style="background-color: rgba(239, 68, 68, 0.02); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 8px; padding: 1.5rem; text-align: left; margin-bottom: 2rem; position: relative; overflow: hidden;">
         <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background-color: #ef4444;"></div>
         <p style="margin: 0 0 0.5rem 0; font-weight: 700; color: #ffffff; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
@@ -475,7 +481,7 @@ protocol based on scope:
         </p>
       </div>
 
-      <!-- Vite / Local Change Explanation Section (Yellow Grammar Accent) -->
+      <!-- Explanation Section -->
       <div style="text-align: left; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1.5rem;">
         <p style="margin: 0 0 0.5rem 0; font-weight: 700; color: #f59e0b; font-size: 13px; font-style: italic; font-variation-settings: 'MONO' 0, 'CASL' 0.35, 'slnt' -14, 'CRSV' 1, 'wght' 700;">
           Why does my live site look awesome, but I'm stuck on this screen when I view the HTML file?
@@ -492,7 +498,7 @@ protocol based on scope:
     }
   </script>
 
-  <!-- Custom Cursor Elements (Electric Green) -->
+  <!-- Custom Cursor Elements -->
   <div id="custom-cursor" class="custom-cursor">
     <div id="cursor-arrow" class="cursor-element" style="display: block;">
       <svg width="24" height="24" viewBox="0 0 100 100" fill="#22c55e" style="filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.8));">
@@ -515,48 +521,26 @@ protocol based on scope:
     import ReactDOM from 'react-dom/client';
     import htm from 'htm';
     import Lenis from 'lenis';
-    import anime from 'animejs';
-    import { 
-      Menu, Music, ChevronRight 
-    } from 'lucide-react';
     
-    // Import URL arrays and configurations from the external registry data file
-    import { MISC_ART, MISC_MEDIA, AUDIO_TRACKS } from 'media-data';
+    // Import configurations from data module
+    import { AUDIO_TRACKS } from 'media-data';
+
+    // Import isolated components from merge_later
+    import { GlobalScrollbar } from './merge_later/GlobalScrollbar.js';
+    import { Sidebar } from './merge_later/Sidebar.js';
+    import { HeroHeader } from './merge_later/HeroHeader.js';
+    import { MainContent } from './merge_later/MainContent.js';
 
     const html = htm.bind(React.createElement);
 
-    // Helper to generate legible titles from URL string names
-    const getMediaTitle = (url) => {
-      try {
-        const parts = url.split("/");
-        const file = parts[parts.length - 1];
-        const name = file.substring(0, file.lastIndexOf("."));
-        return name
-          .split("_")
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(" ");
-      } catch (e) {
-        return "Digital Media Asset";
-      }
-    };
-
-    // ── SHUFFLE HELPER ───────────────────────────────────────────────────────
-    const shuffleArray = (array) => {
-      const arr = [...array];
+    function getShuffledIndices(length) {
+      const arr = Array.from({ length }, (_, i) => i);
       for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [arr[i], arr[j]] = [arr[j], arr[i]];
       }
       return arr;
-    };
-
-    function getShuffledIndices(length) {
-      return shuffleArray(Array.from({ length }, (_, i) => i));
     }
-
-    // Pre-shuffled order loaded on every new load of the page
-    const SHUFFLED_ART = shuffleArray(MISC_ART);
-    const SHUFFLED_MEDIA = shuffleArray(MISC_MEDIA);
 
     // Interactive SFX Handler
     const playSFX = (type) => {
@@ -572,312 +556,6 @@ protocol based on scope:
         audio.play().catch(() => {});
       }
     };
-
-    // ── SCRAMBLE TEXT COMPONENT (Anime.js Animation Engine Integration) ──────
-    function ScrambleText({ text, delay = 0, onComplete, enabled = true }) {
-      const [displayText, setDisplayText] = useState("");
-      const DEFAULT_CHARS = "-_~=+*!@#%&<>";
-      const settleDuration = 100;
-
-      useEffect(() => {
-        if (!enabled) {
-          // Keep a fully scrambled layout structure prior to step trigger
-          const scrambledPlaceholder = Array.from({ length: text.length }, () => 
-            DEFAULT_CHARS[Math.floor(Math.random() * DEFAULT_CHARS.length)]
-          ).join("");
-          setDisplayText(scrambledPlaceholder);
-          return;
-        }
-
-        const stepRevealTime = 90; // ~90ms step frequency rate per character
-        const totalRevealTime = text.length * stepRevealTime;
-        const totalDuration = totalRevealTime + settleDuration;
-        const animObj = { time: 0 };
-
-        let timeoutId = setTimeout(() => {
-          anime({
-            targets: animObj,
-            time: totalDuration,
-            duration: totalDuration,
-            easing: 'linear',
-            update: () => {
-              const elapsed = animObj.time;
-              let result = "";
-              for (let i = 0; i < text.length; i++) {
-                const revealTriggerTime = i * stepRevealTime;
-                if (elapsed < revealTriggerTime) {
-                  // Not triggered yet -> scramble
-                  result += DEFAULT_CHARS[Math.floor(Math.random() * DEFAULT_CHARS.length)];
-                } else if (elapsed < revealTriggerTime + settleDuration) {
-                  // Settle sequence -> scramble transition
-                  result += DEFAULT_CHARS[Math.floor(Math.random() * DEFAULT_CHARS.length)];
-                } else {
-                  // Settled -> lock character in
-                  result += text[i];
-                }
-              }
-              setDisplayText(result);
-            },
-            complete: () => {
-              setDisplayText(text);
-              if (onComplete) onComplete();
-            }
-          });
-        }, delay);
-
-        return () => {
-          clearTimeout(timeoutId);
-        };
-      }, [text, delay, enabled]);
-
-      return html`<span class="select-none inline-block">${displayText}</span>`;
-    }
-
-    // ── TYPED LOG COMPONENT (Glass Box Typewriter with White Square) ─────────
-    function TypedLog({ text, speed = 40, delay = 0, enabled = false, onComplete }) {
-      const [displayed, setDisplayed] = useState("");
-      const cursorRef = useRef(null);
-
-      useEffect(() => {
-        if (!enabled) return;
-
-        let timeoutId = setTimeout(() => {
-          if (cursorRef.current) {
-            cursorRef.current.style.opacity = "1";
-          }
-
-          let currentIndex = 0;
-          let currentStr = "";
-          const intervalId = setInterval(() => {
-            if (currentIndex < text.length) {
-              currentStr += text[currentIndex];
-              setDisplayed(currentStr);
-              currentIndex++;
-            } else {
-              clearInterval(intervalId);
-              if (cursorRef.current) {
-                cursorRef.current.style.visibility = "hidden";
-              }
-              if (onComplete) onComplete();
-            }
-          }, speed);
-
-          return () => clearInterval(intervalId);
-        }, delay);
-
-        return () => clearTimeout(timeoutId);
-      }, [text, speed, delay, enabled]);
-
-      return html`
-        <span style=${{ textShadow: '0 0 4px currentColor' }}>
-          ${displayed}
-          <span 
-            ref=${cursorRef}
-            class="w-2 h-[1.1em] bg-current inline-block ml-1 align-middle -translate-y-[2px] relative z-10 animate-phosphor shadow-[0_0_8px_currentColor]"
-            style=${{ opacity: 0, transition: 'opacity 0.2s ease' }}
-          />
-        </span>
-      `;
-    }
-
-    // ── HIGH-PERFORMANCE STATIC PANEL CONTAINER (Replaces unstable glass filters for Safari speed) ─
-    function GlassContainer({ children, className = "" }) {
-      const borderClass = "border-white/10";
-      const bgClass = "bg-panel"; // crisp flat dark container (#111114) for fast GPU-layer caching
-
-      return html`
-        <div class="relative rounded-xl border shadow-[0_8px_32px_rgba(0,0,0,0.5)] transition-all duration-300 ${borderClass} ${bgClass} ${className}">
-          <!-- Main slot interior context -->
-          <div class="relative z-10 w-full h-full">
-            ${children}
-          </div>
-        </div>
-      `;
-    }
-
-    // ── CUSTOM SCROLLBAR COMPONENT ───────────────────────────────────────────
-    function GlobalScrollbar({ lenisInstance }) {
-      const [scrollY, setScrollY] = useState(0);
-      const [maxScrollY, setMaxScrollY] = useState(3000);
-      const [scrollOffset, setScrollOffset] = useState(380);
-      const [isImgLoaded, setIsImgLoaded] = useState(false);
-      const trackRef = useRef(null);
-      const thumbRef = useRef(null);
-
-      React.useLayoutEffect(() => {
-        const handleScroll = () => {
-          const hero = document.getElementById('hero-header');
-          const offset = hero ? (hero.offsetTop + hero.offsetHeight) : 380;
-          setScrollOffset(offset);
-          setScrollY(window.scrollY);
-          setMaxScrollY(document.documentElement.scrollHeight - window.innerHeight);
-        };
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        window.addEventListener('resize', handleScroll);
-        window.addEventListener('load', handleScroll);
-        handleScroll();
-        
-        const t1 = setTimeout(handleScroll, 100);
-        const t2 = setTimeout(handleScroll, 500);
-        const t3 = setTimeout(handleScroll, 1200);
-        const t4 = setTimeout(handleScroll, 2500);
-        
-        return () => {
-          window.removeEventListener('scroll', handleScroll);
-          window.removeEventListener('resize', handleScroll);
-          window.removeEventListener('load', handleScroll);
-          clearTimeout(t1);
-          clearTimeout(t2);
-          clearTimeout(t3);
-          clearTimeout(t4);
-        };
-      }, [])
-
-      const progress = maxScrollY > 0 ? scrollY / maxScrollY : 0;
-      
-      const trackTopOffset = (window.innerWidth >= 768 ? 0 : 56) + 24;
-      
-      const trackHeight = trackRef.current ? trackRef.current.clientHeight : 1;
-      const thumbHeight = thumbRef.current ? thumbRef.current.clientHeight : 0;
-      const usableHeight = Math.max(1, trackHeight - thumbHeight);
-      
-      const heroBottomPadding = 8;
-      const threshold = Math.max(0, scrollOffset + heroBottomPadding - trackTopOffset);
-      const initialProgress = Math.max(0, Math.min(1, (scrollOffset + heroBottomPadding - trackTopOffset) / usableHeight));
-      
-      let clampedProgress = initialProgress;
-      if (scrollY >= threshold) {
-        const remainingScroll = maxScrollY - threshold;
-        const progressInRemaining = remainingScroll > 0 ? (scrollY - threshold) / remainingScroll : 1;
-        clampedProgress = initialProgress + (1 - initialProgress) * progressInRemaining;
-      }
-      clampedProgress = Math.max(0, Math.min(1, clampedProgress));
-
-      const handleTrackClick = (e) => {
-        if (!trackRef.current || !thumbRef.current) return;
-        const rect = trackRef.current.getBoundingClientRect();
-        const thumbRect = thumbRef.current.getBoundingClientRect();
-        const thumbHeight = thumbRect.height;
-        const clickY = e.clientY - rect.top;
-        
-        const usableHeight = rect.height - thumbHeight;
-        let ratio = 0;
-        if (usableHeight > 0) {
-          ratio = Math.max(0, Math.min(1, (clickY - thumbHeight / 2) / usableHeight));
-        }
-        const targetY = ratio * maxScrollY;
-        
-        if (lenisInstance) {
-          lenisInstance.scrollTo(targetY);
-        } else {
-          window.scrollTo({ top: targetY, behavior: 'smooth' });
-        }
-      };
-
-      const handlePointerDown = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        document.body.style.userSelect = 'none';
-
-        const startY = e.clientY;
-        const startScroll = window.scrollY;
-        const capturedMax = maxScrollY;
-
-        const handlePointerMove = (moveEvent) => {
-          if (!trackRef.current || !thumbRef.current) return;
-          const deltaY = moveEvent.clientY - startY;
-          const trackHeight = trackRef.current.clientHeight;
-          const thumbHeight = thumbRef.current.clientHeight;
-          const usableHeight = trackHeight - thumbHeight;
-          
-          let scrollDelta = 0;
-          if (usableHeight > 0) {
-            scrollDelta = (deltaY / usableHeight) * capturedMax;
-          }
-          const targetY = Math.max(0, Math.min(capturedMax, startScroll + scrollDelta));
-          
-          if (lenisInstance) {
-            lenisInstance.scrollTo(targetY, { immediate: true });
-          } else {
-            window.scrollTo(0, targetY);
-          }
-        };
-
-        const handlePointerUp = () => {
-          document.body.style.userSelect = '';
-          document.removeEventListener('pointermove', handlePointerMove);
-          document.removeEventListener('pointerup', handlePointerUp);
-        };
-
-        document.addEventListener('pointermove', handlePointerMove);
-        document.addEventListener('pointerup', handlePointerUp);
-      };
-
-      const trackTop = window.innerWidth >= 768 ? 0 : 56;
-
-      return html`
-        <div class="global-scrollbar fixed inset-y-0 right-0 z-[80] w-[18px] md:w-12 pointer-events-none group transition-opacity duration-300">
-          <div 
-            ref=${trackRef}
-            onPointerDown=${handleTrackClick}
-            class="absolute left-0 right-0 pointer-events-auto touch-none"
-            style=${{ top: `${trackTop + 24}px`, bottom: '8px' }}
-          >
-
-            
-            <!-- Draggable Scrollbar Thumb -->
-            <div 
-              ref=${thumbRef}
-              onPointerDown=${handlePointerDown}
-              class="absolute left-[3px] right-[3px] md:left-[8px] md:right-[8px] aspect-[492/1299] pointer-events-auto touch-none select-none group transition-opacity duration-300"
-              style=${{
-                top: `${clampedProgress * 100}%`,
-                transform: `translateY(-${clampedProgress * 100}%)`,
-                willChange: 'top, transform'
-              }}
-            >
-              <div class="relative w-full h-full">
-                <img 
-                  src="https://www.stevencasteel.com/assets/brand/scrollbar.png" 
-                  alt="Scrollbar Thumb"
-                  onLoad=${() => setIsImgLoaded(true)}
-                  class="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] z-10"
-                  style=${{ opacity: isImgLoaded ? 1 : 0 }}
-                  draggable="false"
-                />
-                <!-- Accent Indicators inside scrollbar thumb -->
-                <div class="absolute inset-[2px] rounded-full opacity-0 group-hover:opacity-[0.15] transition-opacity duration-500 z-20 pointer-events-none blur-[4px] bg-primary-400" />
-                <div 
-                  class="absolute opacity-90 z-30 pointer-events-none rounded-[1.5px] bg-primary-400 shadow-[0_0_8px_#22c55e]"
-                  style=${{
-                    left: "8%",
-                    width: "84%",
-                    top: "calc(50% - 1px)",
-                    height: "3px"
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    // Navigation Blueprint for dynamic building
-    const NAV_SECTIONS = [
-      {
-        group: "Portfolio",
-        items: [
-          { id: "misc-art", label: "Misc Art" }
-        ]
-      },
-      {
-        group: "Interests",
-        items: [
-          { id: "misc-media", label: "Misc Media" }
-        ]
-      }
-    ];
 
     // ── MAIN APP COMPONENT ───────────────────────────────────────────────────
     function App() {
@@ -1113,15 +791,21 @@ protocol based on scope:
         }
       };
 
-      // Distribute Portfolio images into columns for stable, bug-free masonry layouts in Safari
-      const cols4 = [[], [], [], []];
-      SHUFFLED_ART.forEach((url, i) => cols4[i % 4].push(url));
-
-      const cols3 = [[], [], []];
-      SHUFFLED_ART.forEach((url, i) => cols3[i % 3].push(url));
-
-      const cols2 = [[], []];
-      SHUFFLED_ART.forEach((url, i) => cols2[i % 2].push(url));
+      const playerProps = {
+        activeTrack,
+        isPlaying,
+        currentTime,
+        duration,
+        volume,
+        isShuffle,
+        handleScrubberChange,
+        handlePrev,
+        togglePlay,
+        handleNext,
+        toggleShuffleState,
+        setVolume,
+        formatTime
+      };
 
       return html`
         <div class="relative w-full flex flex-col md:flex-row min-h-screen">
@@ -1133,363 +817,26 @@ protocol based on scope:
             onEnded=${handleNext}
           />
 
-          <!-- ── MOBILE HEADER ── -->
-          <header class="md:hidden fixed top-0 left-0 w-full h-14 bg-gradient-to-b from-panel to-void z-[60] border-b border-black shadow-lg pr-4 pl-4 flex justify-between items-center cursor-none">
-            <button 
-              onPointerDown=${() => { playSFX("click"); handleNavigation("audio"); }}
-              onPointerUp=${() => playSFX("release")}
-              class="text-fog hover:text-white text-xs font-bold tracking-widest uppercase font-mono cursor-none"
-            >
-              YOUR NAME // 2026
-            </button>
-            <button 
-              onClick=${() => setIsSidebarOpen(!isSidebarOpen)}
-              class="text-white p-1.5 cursor-none outline-none"
-            >
-              <${Menu} size=${20} />
-            </button>
-          </header>
-
-          <!-- ── NAVIGATION SIDEBAR PANEL ── -->
-          <aside class=${`fixed top-14 md:top-0 left-0 h-[calc(100dvh-56px)] md:h-[100dvh] w-64 bg-ink border-r border-white/5 z-50 flex flex-col cursor-none transition-transform duration-300 md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-            <!-- Logo Button -->
-            <div class="p-4 lg:p-5 bg-gradient-to-b from-panel to-[#0c0d11] border-b border-black shadow-inner hidden md:flex items-center gap-3 shrink-0 relative z-20">
-              <button 
-                onPointerDown=${() => { playSFX("click"); handleNavigation("audio"); }}
-                onPointerUp=${() => playSFX("release")}
-                class="w-full text-center text-xs font-bold tracking-widest uppercase font-mono border border-white/10 rounded-lg py-2.5 hover:border-primary/40 transition duration-300 cursor-none text-primary"
-              >
-                YN // 2026
-              </button>
-            </div>
-
-            <!-- Navigation Tree -->
-            <nav class="flex-1 px-4 py-6 space-y-6 overflow-y-auto custom-scrollbar relative z-10 select-none">
-              <!-- System Console Group -->
-              <div>
-                <div class="px-2 mb-2">
-                  <h3 class="text-[10px] font-mono font-bold text-muted uppercase tracking-widest">/ Control Deck</h3>
-                </div>
-                <ul class="space-y-1">
-                  <li>
-                    <button 
-                      onClick=${() => handleNavigation("audio")}
-                      class=${`flex items-center gap-2.5 px-3 py-2 text-sm rounded-md w-full text-left transition duration-200 cursor-none ${activeSection === 'audio' ? 'text-primary font-bold bg-white/5' : 'text-fog hover:text-white'}`}
-                    >
-                      <${Music} size=${16} />
-                      <span>System Console</span>
-                    </button>
-                  </li>
-                </ul>
-              </div>
-
-              <!-- Programmatically Rendered Group Sections -->
-              ${NAV_SECTIONS.map((sec) => html`
-                <div key=${sec.group}>
-                  <div class="px-2 mb-2 border-t border-white/5 pt-4">
-                    <h3 class="text-[10px] font-mono font-bold text-muted uppercase tracking-widest">/ ${sec.group}</h3>
-                  </div>
-                  <ul class="space-y-1">
-                    ${sec.items.map((item) => html`
-                      <li key=${item.id}>
-                        <button 
-                          onClick=${() => handleNavigation(item.id)}
-                          class=${`flex items-center gap-2.5 px-3 py-1.5 text-xs rounded-md w-full text-left transition duration-200 cursor-none ${activeSection === item.id ? 'text-white font-bold bg-white/5' : 'text-fog hover:text-white'}`}
-                        >
-                          <${ChevronRight} size=${12} class=${activeSection === item.id ? 'text-primary' : 'text-muted'} />
-                          <span>${item.label}</span>
-                        </button>
-                      </li>
-                    `)}
-                  </ul>
-                </div>
-              `)}
-            </nav>
-
-            <!-- TALL SIDEBAR MUSIC PLAYER DECK -->
-            <div class="shrink-0 bg-gradient-to-t from-panel to-[#0c0d11] flex flex-col border-t border-black p-4 gap-4 relative z-20">
-              <!-- Title, directory, and progress status -->
-              <div class="space-y-2">
-                <div class="flex items-start gap-2.5 bg-void/50 p-2 rounded-lg border border-white/5">
-                  <div class="w-8 h-8 rounded bg-black border border-white/10 flex items-center justify-center shrink-0">
-                    <${Music} size=${14} class=${isPlaying ? 'animate-pulse text-[#22c55e]' : 'text-muted'} />
-                  </div>
-                  <div class="min-w-0 flex-1">
-                    <p class="text-[9px] font-mono text-muted uppercase tracking-wider truncate">
-                      ${activeTrack.folder.replace(/_/g, ' ')}
-                    </p>
-                    <p class="text-xs text-white truncate font-bold font-mono">
-                      ${activeTrack.title.replace(/_/g, ' ')}
-                    </p>
-                  </div>
-                </div>
-                
-                <!-- Scrubber and Time Counters -->
-                <div class="space-y-1">
-                  <input 
-                    type="range" 
-                    min="0" 
-                    max=${duration || 0} 
-                    value=${currentTime} 
-                    onChange=${handleScrubberChange}
-                    class="w-full h-1 rounded-full appearance-none bg-void accent-primary cursor-none focus:outline-none"
-                    style=${{
-                      background: `linear-gradient(to right, #22c55e ${(currentTime / (duration || 1)) * 100}%, #111114 ${(currentTime / (duration || 1)) * 100}%)`
-                    }}
-                  />
-                  <div class="flex justify-between text-[10px] font-mono text-muted select-none">
-                    <span>${formatTime(currentTime)}</span>
-                    <span>${formatTime(duration)}</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Controls (Prev, Play, Next, Shuffle) -->
-              <div class="flex items-center justify-between gap-1">
-                <button 
-                  onClick=${handlePrev} 
-                  class="p-2 rounded-lg bg-void/40 border border-white/5 hover:border-[#22c55e]/30 text-fog hover:text-white transition cursor-none"
-                  title="Previous"
-                >
-                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" /></svg>
-                </button>
-
-                <button 
-                  onClick=${togglePlay} 
-                  class="p-2.5 rounded-full bg-void border border-white/10 hover:border-[#22c55e]/40 text-white transition hover:scale-105 cursor-none"
-                  title=${isPlaying ? "Pause" : "Play"}
-                >
-                  ${isPlaying 
-                    ? html`<svg class="w-4 h-4 fill-current text-[#22c55e]" viewBox="0 0 24 24"><path d="M6 19h4V5H6v13zm8-14v13h4V5h-4z"/></svg>`
-                    : html`<svg class="w-4 h-4 fill-current ml-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`
-                  }
-                </button>
-
-                <button 
-                  onClick=${handleNext} 
-                  class="p-2 rounded-lg bg-void/40 border border-white/5 hover:border-[#22c55e]/30 text-fog hover:text-white transition cursor-none"
-                  title="Next"
-                >
-                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6zm9-12v12h2V6z" /></svg>
-                </button>
-
-                <button 
-                  onClick=${toggleShuffleState} 
-                  class=${`p-2 rounded-lg border transition duration-200 cursor-none text-[10px] font-mono ${isShuffle ? 'border-[#22c55e]/30 bg-[#22c55e]/5 text-[#22c55e]' : 'border-white/5 text-muted'}`}
-                  title="Shuffle"
-                >
-                  SHUF
-                </button>
-              </div>
-
-              <!-- Volume Control Slider -->
-              <div class="flex items-center gap-2 bg-void/20 p-1.5 rounded-lg border border-white/5">
-                <svg class="w-3 h-3 text-muted shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-                <input 
-                  type="range" 
-                  min="0" 
-                  max="1" 
-                  step="0.01" 
-                  value=${volume} 
-                  onChange=${(e) => setVolume(parseFloat(e.target.value))}
-                  class="w-full h-1 bg-void rounded-lg appearance-none accent-primary cursor-none"
-                />
-              </div>
-            </div>
-          </aside>
+          <!-- ── NAVIGATION & HEADER SYSTEM ── -->
+          <${Sidebar} 
+            isSidebarOpen=${isSidebarOpen}
+            setIsSidebarOpen=${setIsSidebarOpen}
+            activeSection=${activeSection}
+            handleNavigation=${handleNavigation}
+            playSFX=${playSFX}
+            playerProps=${playerProps}
+          />
 
           <!-- ── MAIN CONTENT ZONE ── -->
           <div class="flex-1 md:pl-64 min-w-0 pb-20 pt-14 md:pt-0">
-            <!-- ── HERO HEADER SECTION ── -->
-            <header id="hero-header" class="relative w-full py-[72px] pl-1.5 pr-[18px] md:px-12 bg-grid-pattern border-b border-white/10 flex flex-col items-center justify-center text-center overflow-hidden">
-              <!-- Ambient Green Background Glow behind Typography -->
-              <div 
-                aria-hidden="true"
-                class="absolute inset-0 pointer-events-none select-none overflow-hidden"
-              >
-                <div 
-                  class="absolute inset-0 opacity-40"
-                  style=${{
-                    filter: "blur(80px)",
-                    WebkitFilter: "blur(80px)",
-                    transform: "translate3d(0, 0, 0)",
-                    background: "radial-gradient(circle, rgba(34,197,94,0.18) 0%, transparent 65%)"
-                  }}
-                />
-              </div>
+            <${HeroHeader} 
+              seqStep=${seqStep}
+              setSeqStep=${setSeqStep}
+            />
 
-              <!-- Sequential Scramble Title Layout with Fluid Clamp Typography (Single-Line Integration) -->
-              <div class="relative w-full mb-4 flex flex-row items-center justify-center select-none leading-none">
-                <h1 
-                  class="text-[clamp(2.75rem,14vw,4.75rem)] md:text-[10vw] leading-[0.9] md:leading-[0.85] font-display font-bold tracking-[0.09em] md:tracking-[0.165em] uppercase text-white flex flex-row items-center justify-center gap-[0.25em] whitespace-nowrap"
-                >
-                  <div class="inline-block">
-                    <${ScrambleText} 
-                      text="YOUR" 
-                      delay=${200} 
-                      enabled=${true} 
-                      onComplete=${() => setSeqStep("line2")} 
-                    />
-                  </div>
-                  <div class="inline-block text-primary transition-all duration-300">
-                    <${ScrambleText} 
-                      text="NAME" 
-                      delay=${0} 
-                      enabled=${seqStep !== "line1"} 
-                      onComplete=${() => setSeqStep("typing")} 
-                    />
-                  </div>
-                </h1>
-              </div>
-
-              <!-- Sleek High-Performance Solid Panels -->
-              <div class="mt-8 flex flex-col md:flex-row items-center justify-center gap-4 w-full relative z-10 select-none">
-                <!-- Terminal Log Panel with Typewriter Integration -->
-                <${GlassContainer} 
-                  className="inline-flex items-center px-5 py-3 min-h-[46px]"
-                >
-                  <span class="flex items-center justify-center gap-2 font-mono text-[10px] min-[380px]:text-xs md:text-sm leading-normal tracking-wider uppercase text-light flex-wrap md:flex-nowrap">
-                    <${TypedLog} 
-                      text="📟 Digital Media Generalist | Creative Director of AI 🤖" 
-                      speed=${40} 
-                      delay=${0} 
-                      enabled=${seqStep === "typing"} 
-                    />
-                  </span>
-                </${GlassContainer}>
-
-                <!-- Pageview Tracker Panel -->
-                <${GlassContainer} 
-                  className="inline-flex items-center px-5 py-3 min-h-[46px]"
-                >
-                  <span class="flex items-center justify-center gap-2 font-mono text-[10px] min-[380px]:text-xs md:text-sm leading-normal tracking-wider uppercase text-light flex-wrap md:flex-nowrap">
-                    <span class="text-emerald-400 font-bold">PAGEVIEWS:</span>
-                    <span>000,000</span>
-                  </span>
-                </${GlassContainer}>
-              </div>
-            </header>
-
-            <main class="w-full py-12 flex flex-col gap-16 relative z-10">
-              
-              <!-- ── PORTFOLIO SECTION ── -->
-              <section id="misc-art" class="space-y-16 scroll-mt-20 pl-1.5 pr-[18px] md:px-12">
-                <div class="border-b border-white/10 pb-4">
-                  <h2 class="text-4xl font-display font-black uppercase text-white tracking-tight">PORTFOLIO</h2>
-                </div>
-
-                <!-- Misc Art Section -->
-                <div class="space-y-6">
-                  <h3 class="text-xl font-display font-bold uppercase tracking-wider text-fog">// Misc Art</h3>
-                  
-                  <!-- Responsive 4-Column Grid (Large screens) -->
-                  <div class="hidden lg:grid grid-cols-4 gap-4">
-                    ${cols4.map(col => html`
-                      <div class="flex flex-col gap-4">
-                        ${col.map(url => html`
-                          <div 
-                            key=${url} 
-                            onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
-                            class="relative transform hover:scale-[1.03] transition-all duration-300 hover:z-20 cursor-none"
-                          >
-                            <${GlassContainer} className="overflow-hidden prismatic-border-hover">
-                              <img 
-                                src=${url} 
-                                alt=${getMediaTitle(url)} 
-                                class="w-full h-auto block"
-                                loading="lazy"
-                              />
-                            </${GlassContainer}>
-                          </div>
-                        `)}
-                      </div>
-                    `)}
-                  </div>
-
-                  <!-- Responsive 3-Column Grid (Tablet/Medium screens) -->
-                  <div class="hidden sm:grid lg:hidden grid-cols-3 gap-4">
-                    ${cols3.map(col => html`
-                      <div class="flex flex-col gap-4">
-                        ${col.map(url => html`
-                          <div 
-                            key=${url} 
-                            onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
-                            class="relative transform hover:scale-[1.03] transition-all duration-300 hover:z-20 cursor-none"
-                          >
-                            <${GlassContainer} className="overflow-hidden prismatic-border-hover">
-                              <img 
-                                src=${url} 
-                                alt=${getMediaTitle(url)} 
-                                class="w-full h-auto block"
-                                loading="lazy"
-                              />
-                            </${GlassContainer}>
-                          </div>
-                        `)}
-                      </div>
-                    `)}
-                  </div>
-
-                  <!-- Responsive 2-Column Grid (Mobile screens) -->
-                  <div class="grid sm:hidden grid-cols-2 gap-4">
-                    ${cols2.map(col => html`
-                      <div class="flex flex-col gap-4">
-                        ${col.map(url => html`
-                          <div 
-                            key=${url} 
-                            onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
-                            class="relative transform hover:scale-[1.03] transition-all duration-300 hover:z-20 cursor-none"
-                          >
-                            <${GlassContainer} className="overflow-hidden prismatic-border-hover">
-                              <img 
-                                src=${url} 
-                                alt=${getMediaTitle(url)} 
-                                class="w-full h-auto block"
-                                loading="lazy"
-                              />
-                            </${GlassContainer}>
-                          </div>
-                        `)}
-                      </div>
-                    `)}
-                  </div>
-
-                </div>
-              </section>
-
-                            <!-- ── INTERESTS SECTION ── -->
-              <section id="misc-media" class="space-y-16 scroll-mt-20 pl-1.5 pr-[18px] md:px-12">
-                <div class="border-b border-white/10 pb-4">
-                  <h2 class="text-4xl font-display font-black uppercase text-white tracking-tight">INTERESTS</h2>
-                </div>
-
-                <!-- Misc Media Section -->
-                <div class="space-y-6">
-                  <h3 class="text-xl font-display font-bold uppercase tracking-wider text-fog">// Misc Media</h3>
-                  <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-5 gap-4">
-                    ${SHUFFLED_MEDIA.map((url) => html`
-                      <div 
-                        key=${url} 
-                        onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
-                        class="aspect-[2/3] transform hover:scale-[1.05] hover:z-20 transition-all duration-300"
-                      >
-                        <${GlassContainer} 
-                          className="w-full h-full overflow-hidden prismatic-border-hover"
-                        >
-                          <img 
-                            src=${url} 
-                            alt=${getMediaTitle(url)} 
-                            class="w-full h-full object-cover block"
-                            loading="lazy"
-                          />
-                        </${GlassContainer}>
-                      </div>
-                    `)}
-                  </div>
-                </div>
-              </section>
-
-            </main>
+            <${MainContent} 
+              setLightbox=${setLightbox}
+            />
           </div>
 
           <!-- ── GLOBAL CUSTOM SCROLLBAR ── -->
@@ -1566,7 +913,780 @@ protocol based on scope:
 
 
 
-● ./media-data.js
+● ./merge_later/GlobalScrollbar.js
+────────────────────────────────────────────────────
+import React, { useState, useLayoutEffect, useRef } from 'react';
+import htm from 'htm';
+
+const html = htm.bind(React.createElement);
+
+export function GlobalScrollbar({ lenisInstance }) {
+  const [scrollY, setScrollY] = useState(0);
+  const [maxScrollY, setMaxScrollY] = useState(3000);
+  const [scrollOffset, setScrollOffset] = useState(380);
+  const [isImgLoaded, setIsImgLoaded] = useState(false);
+  const trackRef = useRef(null);
+  const thumbRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const handleScroll = () => {
+      const hero = document.getElementById('hero-header');
+      const offset = hero ? (hero.offsetTop + hero.offsetHeight) : 380;
+      setScrollOffset(offset);
+      setScrollY(window.scrollY);
+      setMaxScrollY(document.documentElement.scrollHeight - window.innerHeight);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+    window.addEventListener('load', handleScroll);
+    handleScroll();
+    
+    const t1 = setTimeout(handleScroll, 100);
+    const t2 = setTimeout(handleScroll, 500);
+    const t3 = setTimeout(handleScroll, 1200);
+    const t4 = setTimeout(handleScroll, 2500);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+      window.removeEventListener('load', handleScroll);
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      clearTimeout(t4);
+    };
+  }, []);
+
+  const progress = maxScrollY > 0 ? scrollY / maxScrollY : 0;
+  
+  const trackTopOffset = (window.innerWidth >= 768 ? 0 : 56) + 24;
+  
+  const trackHeight = trackRef.current ? trackRef.current.clientHeight : 1;
+  const thumbHeight = thumbRef.current ? thumbRef.current.clientHeight : 0;
+  const usableHeight = Math.max(1, trackHeight - thumbHeight);
+  
+  const heroBottomPadding = 8;
+  const threshold = Math.max(0, scrollOffset + heroBottomPadding - trackTopOffset);
+  const initialProgress = Math.max(0, Math.min(1, (scrollOffset + heroBottomPadding - trackTopOffset) / usableHeight));
+  
+  let clampedProgress = initialProgress;
+  if (scrollY >= threshold) {
+    const remainingScroll = maxScrollY - threshold;
+    const progressInRemaining = remainingScroll > 0 ? (scrollY - threshold) / remainingScroll : 1;
+    clampedProgress = initialProgress + (1 - initialProgress) * progressInRemaining;
+  }
+  clampedProgress = Math.max(0, Math.min(1, clampedProgress));
+
+  const handleTrackClick = (e) => {
+    if (!trackRef.current || !thumbRef.current) return;
+    const rect = trackRef.current.getBoundingClientRect();
+    const thumbRect = thumbRef.current.getBoundingClientRect();
+    const thumbHeight = thumbRect.height;
+    const clickY = e.clientY - rect.top;
+    
+    const usableHeight = rect.height - thumbHeight;
+    let ratio = 0;
+    if (usableHeight > 0) {
+      ratio = Math.max(0, Math.min(1, (clickY - thumbHeight / 2) / usableHeight));
+    }
+    const targetY = ratio * maxScrollY;
+    
+    if (lenisInstance) {
+      lenisInstance.scrollTo(targetY);
+    } else {
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    }
+  };
+
+  const handlePointerDown = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    document.body.style.userSelect = 'none';
+
+    const startY = e.clientY;
+    const startScroll = window.scrollY;
+    const capturedMax = maxScrollY;
+
+    const handlePointerMove = (moveEvent) => {
+      if (!trackRef.current || !thumbRef.current) return;
+      const deltaY = moveEvent.clientY - startY;
+      const trackHeight = trackRef.current.clientHeight;
+      const thumbHeight = thumbRef.current.clientHeight;
+      const usableHeight = trackHeight - thumbHeight;
+      
+      let scrollDelta = 0;
+      if (usableHeight > 0) {
+        scrollDelta = (deltaY / usableHeight) * capturedMax;
+      }
+      const targetY = Math.max(0, Math.min(capturedMax, startScroll + scrollDelta));
+      
+      if (lenisInstance) {
+        lenisInstance.scrollTo(targetY, { immediate: true });
+      } else {
+        window.scrollTo(0, targetY);
+      }
+    };
+
+    const handlePointerUp = () => {
+      document.body.style.userSelect = '';
+      document.removeEventListener('pointermove', handlePointerMove);
+      document.removeEventListener('pointerup', handlePointerUp);
+    };
+
+    document.addEventListener('pointermove', handlePointerMove);
+    document.addEventListener('pointerup', handlePointerUp);
+  };
+
+  const trackTop = window.innerWidth >= 768 ? 0 : 56;
+
+  return html`
+    <div class="global-scrollbar fixed inset-y-0 right-0 z-[80] w-[18px] md:w-12 pointer-events-none group transition-opacity duration-300">
+      <div 
+        ref=${trackRef}
+        onPointerDown=${handleTrackClick}
+        class="absolute left-0 right-0 pointer-events-auto touch-none"
+        style=${{ top: `${trackTop + 24}px`, bottom: '8px' }}
+      >
+        <div 
+          ref=${thumbRef}
+          onPointerDown=${handlePointerDown}
+          class="absolute left-[3px] right-[3px] md:left-[8px] md:right-[8px] aspect-[492/1299] pointer-events-auto touch-none select-none group transition-opacity duration-300"
+          style=${{
+            top: `${clampedProgress * 100}%`,
+            transform: `translateY(-${clampedProgress * 100}%)`,
+            willChange: 'top, transform'
+          }}
+        >
+          <div class="relative w-full h-full">
+            <img 
+              src="https://www.stevencasteel.com/assets/brand/scrollbar.png" 
+              alt="Scrollbar Thumb"
+              onLoad=${() => setIsImgLoaded(true)}
+              class="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] z-10"
+              style=${{ opacity: isImgLoaded ? 1 : 0 }}
+              draggable="false"
+            />
+            <div class="absolute inset-[2px] rounded-full opacity-0 group-hover:opacity-[0.15] transition-opacity duration-500 z-20 pointer-events-none blur-[4px] bg-primary-400" />
+            <div 
+              class="absolute opacity-90 z-30 pointer-events-none rounded-[1.5px] bg-primary-400 shadow-[0_0_8px_#22c55e]"
+              style=${{
+                left: "8%",
+                width: "84%",
+                top: "calc(50% - 1px)",
+                height: "3px"
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+
+
+● ./merge_later/HeroHeader.js
+────────────────────────────────────────────────────
+import React from 'react';
+import htm from 'htm';
+import { ScrambleText, TypedLog, GlassContainer } from './components.js';
+
+const html = htm.bind(React.createElement);
+
+export function HeroHeader({ seqStep, setSeqStep }) {
+  return html`
+    <header id="hero-header" class="relative w-full py-[72px] pl-1.5 pr-[18px] md:px-12 bg-grid-pattern border-b border-white/10 flex flex-col items-center justify-center text-center overflow-hidden">
+      <div 
+        aria-hidden="true"
+        class="absolute inset-0 pointer-events-none select-none overflow-hidden"
+      >
+        <div 
+          class="absolute inset-0 opacity-40"
+          style=${{
+            filter: "blur(80px)",
+            WebkitFilter: "blur(80px)",
+            transform: "translate3d(0, 0, 0)",
+            background: "radial-gradient(circle, rgba(34,197,94,0.18) 0%, transparent 65%)"
+          }}
+        />
+      </div>
+
+      <div class="relative w-full mb-4 flex flex-row items-center justify-center select-none leading-none">
+        <h1 
+          class="text-[clamp(2.75rem,14vw,4.75rem)] md:text-[10vw] leading-[0.9] md:leading-[0.85] font-display font-bold tracking-[0.09em] md:tracking-[0.165em] uppercase text-white flex flex-row items-center justify-center gap-[0.25em] whitespace-nowrap"
+        >
+          <div class="inline-block">
+            <${ScrambleText} 
+              text="YOUR" 
+              delay=${200} 
+              enabled=${true} 
+              onComplete=${() => setSeqStep("line2")} 
+            />
+          </div>
+          <div class="inline-block text-primary transition-all duration-300">
+            <${ScrambleText} 
+              text="NAME" 
+              delay=${0} 
+              enabled=${seqStep !== "line1"} 
+              onComplete=${() => setSeqStep("typing")} 
+            />
+          </div>
+        </h1>
+      </div>
+
+      <div class="mt-8 flex flex-col md:flex-row items-center justify-center gap-4 w-full relative z-10 select-none">
+        <${GlassContainer} 
+          className="inline-flex items-center px-5 py-3 min-h-[46px]"
+        >
+          <span class="flex items-center justify-center gap-2 font-mono text-[10px] min-[380px]:text-xs md:text-sm leading-normal tracking-wider uppercase text-light flex-wrap md:flex-nowrap">
+            <${TypedLog} 
+              text="📟 Digital Media Generalist | Creative Director of AI 🤖" 
+              speed=${40} 
+              delay=${0} 
+              enabled=${seqStep === "typing"} 
+            />
+          </span>
+        </${GlassContainer}>
+
+        <${GlassContainer} 
+          className="inline-flex items-center px-5 py-3 min-h-[46px]"
+        >
+          <span class="flex items-center justify-center gap-2 font-mono text-[10px] min-[380px]:text-xs md:text-sm leading-normal tracking-wider uppercase text-light flex-wrap md:flex-nowrap">
+            <span class="text-emerald-400 font-bold">PAGEVIEWS:</span>
+            <span>000,000</span>
+          </span>
+        </${GlassContainer}>
+      </div>
+    </header>
+  `;
+}
+
+
+
+● ./merge_later/MainContent.js
+────────────────────────────────────────────────────
+import React from 'react';
+import htm from 'htm';
+import { MISC_ART, MISC_MEDIA } from 'media-data';
+import { GlassContainer } from './components.js';
+
+const html = htm.bind(React.createElement);
+
+const shuffleArray = (array) => {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
+
+const SHUFFLED_ART = shuffleArray(MISC_ART);
+const SHUFFLED_MEDIA = shuffleArray(MISC_MEDIA);
+
+const getMediaTitle = (url) => {
+  try {
+    const parts = url.split("/");
+    const file = parts[parts.length - 1];
+    const name = file.substring(0, file.lastIndexOf("."));
+    return name
+      .split("_")
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  } catch (e) {
+    return "Digital Media Asset";
+  }
+};
+
+export function MainContent({ setLightbox }) {
+  const cols4 = [[], [], [], []];
+  SHUFFLED_ART.forEach((url, i) => cols4[i % 4].push(url));
+
+  const cols3 = [[], [], []];
+  SHUFFLED_ART.forEach((url, i) => cols3[i % 3].push(url));
+
+  const cols2 = [[], []];
+  SHUFFLED_ART.forEach((url, i) => cols2[i % 2].push(url));
+
+  return html`
+    <main class="w-full py-12 flex flex-col gap-16 relative z-10">
+      
+      <!-- ── PORTFOLIO SECTION ── -->
+      <section id="misc-art" class="space-y-16 scroll-mt-20 pl-1.5 pr-[18px] md:px-12">
+        <div class="border-b border-white/10 pb-4">
+          <h2 class="text-4xl font-display font-black uppercase text-white tracking-tight">PORTFOLIO</h2>
+        </div>
+
+        <div class="space-y-6">
+          <h3 class="text-xl font-display font-bold uppercase tracking-wider text-fog">// Misc Art</h3>
+          
+          <!-- Responsive 4-Column Grid -->
+          <div class="hidden lg:grid grid-cols-4 gap-4">
+            ${cols4.map(col => html`
+              <div class="flex flex-col gap-4">
+                ${col.map(url => html`
+                  <div 
+                    key=${url} 
+                    onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
+                    class="relative transform hover:scale-[1.03] transition-all duration-300 hover:z-20 cursor-none"
+                  >
+                    <${GlassContainer} className="overflow-hidden prismatic-border-hover">
+                      <img 
+                        src=${url} 
+                        alt=${getMediaTitle(url)} 
+                        class="w-full h-auto block"
+                        loading="lazy"
+                      />
+                    </${GlassContainer}>
+                  </div>
+                `)}
+              </div>
+            `)}
+          </div>
+
+          <!-- Responsive 3-Column Grid -->
+          <div class="hidden sm:grid lg:hidden grid-cols-3 gap-4">
+            ${cols3.map(col => html`
+              <div class="flex flex-col gap-4">
+                ${col.map(url => html`
+                  <div 
+                    key=${url} 
+                    onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
+                    class="relative transform hover:scale-[1.03] transition-all duration-300 hover:z-20 cursor-none"
+                  >
+                    <${GlassContainer} className="overflow-hidden prismatic-border-hover">
+                      <img 
+                        src=${url} 
+                        alt=${getMediaTitle(url)} 
+                        class="w-full h-auto block"
+                        loading="lazy"
+                      />
+                    </${GlassContainer}>
+                  </div>
+                `)}
+              </div>
+            `)}
+          </div>
+
+          <!-- Responsive 2-Column Grid -->
+          <div class="grid sm:hidden grid-cols-2 gap-4">
+            ${cols2.map(col => html`
+              <div class="flex flex-col gap-4">
+                ${col.map(url => html`
+                  <div 
+                    key=${url} 
+                    onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
+                    class="relative transform hover:scale-[1.03] transition-all duration-300 hover:z-20 cursor-none"
+                  >
+                    <${GlassContainer} className="overflow-hidden prismatic-border-hover">
+                      <img 
+                        src=${url} 
+                        alt=${getMediaTitle(url)} 
+                        class="w-full h-auto block"
+                        loading="lazy"
+                      />
+                    </${GlassContainer}>
+                  </div>
+                `)}
+              </div>
+            `)}
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── INTERESTS SECTION ── -->
+      <section id="misc-media" class="space-y-16 scroll-mt-20 pl-1.5 pr-[18px] md:px-12">
+        <div class="border-b border-white/10 pb-4">
+          <h2 class="text-4xl font-display font-black uppercase text-white tracking-tight">INTERESTS</h2>
+        </div>
+
+        <div class="space-y-6">
+          <h3 class="text-xl font-display font-bold uppercase tracking-wider text-fog">// Misc Media</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-5 gap-4">
+            ${SHUFFLED_MEDIA.map((url) => html`
+              <div 
+                key=${url} 
+                onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
+                class="aspect-[2/3] transform hover:scale-[1.05] hover:z-20 transition-all duration-300"
+              >
+                <${GlassContainer} 
+                  className="w-full h-full overflow-hidden prismatic-border-hover"
+                >
+                  <img 
+                    src=${url} 
+                    alt=${getMediaTitle(url)} 
+                    class="w-full h-full object-cover block"
+                    loading="lazy"
+                  />
+                </${GlassContainer}>
+              </div>
+            `)}
+          </div>
+        </div>
+      </section>
+
+    </main>
+  `;
+}
+
+
+
+● ./merge_later/MusicPlayerDeck.js
+────────────────────────────────────────────────────
+import React from 'react';
+import htm from 'htm';
+import { Music } from 'lucide-react';
+
+const html = htm.bind(React.createElement);
+
+export function MusicPlayerDeck({
+  activeTrack,
+  isPlaying,
+  currentTime,
+  duration,
+  volume,
+  isShuffle,
+  handleScrubberChange,
+  handlePrev,
+  togglePlay,
+  handleNext,
+  toggleShuffleState,
+  setVolume,
+  formatTime
+}) {
+  return html`
+    <div class="shrink-0 bg-gradient-to-t from-panel to-[#0c0d11] flex flex-col border-t border-black p-4 gap-4 relative z-20">
+      <div class="space-y-2">
+        <div class="flex items-start gap-2.5 bg-void/50 p-2 rounded-lg border border-white/5">
+          <div class="w-8 h-8 rounded bg-black border border-white/10 flex items-center justify-center shrink-0">
+            <${Music} size=${14} class=${isPlaying ? 'animate-pulse text-[#22c55e]' : 'text-muted'} />
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="text-[9px] font-mono text-muted uppercase tracking-wider truncate">
+              ${activeTrack.folder.replace(/_/g, ' ')}
+            </p>
+            <p class="text-xs text-white truncate font-bold font-mono">
+              ${activeTrack.title.replace(/_/g, ' ')}
+            </p>
+          </div>
+        </div>
+        
+        <div class="space-y-1">
+          <input 
+            type="range" 
+            min="0" 
+            max=${duration || 0} 
+            value=${currentTime} 
+            onChange=${handleScrubberChange}
+            class="w-full h-1 rounded-full appearance-none bg-void accent-primary cursor-none focus:outline-none"
+            style=${{
+              background: `linear-gradient(to right, #22c55e ${(currentTime / (duration || 1)) * 100}%, #111114 ${(currentTime / (duration || 1)) * 100}%)`
+            }}
+          />
+          <div class="flex justify-between text-[10px] font-mono text-muted select-none">
+            <span>${formatTime(currentTime)}</span>
+            <span>${formatTime(duration)}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between gap-1">
+        <button 
+          onClick=${handlePrev} 
+          class="p-2 rounded-lg bg-void/40 border border-white/5 hover:border-[#22c55e]/30 text-fog hover:text-white transition cursor-none"
+          title="Previous"
+        >
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" /></svg>
+        </button>
+
+        <button 
+          onClick=${togglePlay} 
+          class="p-2.5 rounded-full bg-void border border-white/10 hover:border-[#22c55e]/40 text-white transition hover:scale-105 cursor-none"
+          title=${isPlaying ? "Pause" : "Play"}
+        >
+          ${isPlaying 
+            ? html`<svg class="w-4 h-4 fill-current text-[#22c55e]" viewBox="0 0 24 24"><path d="M6 19h4V5H6v13zm8-14v13h4V5h-4z"/></svg>`
+            : html`<svg class="w-4 h-4 fill-current ml-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`
+          }
+        </button>
+
+        <button 
+          onClick=${handleNext} 
+          class="p-2 rounded-lg bg-void/40 border border-white/5 hover:border-[#22c55e]/30 text-fog hover:text-white transition cursor-none"
+          title="Next"
+        >
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6zm9-12v12h2V6z" /></svg>
+        </button>
+
+        <button 
+          onClick=${toggleShuffleState} 
+          class=${`p-2 rounded-lg border transition duration-200 cursor-none text-[10px] font-mono ${isShuffle ? 'border-[#22c55e]/30 bg-[#22c55e]/5 text-[#22c55e]' : 'border-white/5 text-muted'}`}
+          title="Shuffle"
+        >
+          SHUF
+        </button>
+      </div>
+
+      <div class="flex items-center gap-2 bg-void/20 p-1.5 rounded-lg border border-white/5">
+        <svg class="w-3 h-3 text-muted shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+        <input 
+          type="range" 
+          min="0" 
+          max="1" 
+          step="0.01" 
+          value=${volume} 
+          onChange=${(e) => setVolume(parseFloat(e.target.value))}
+          class="w-full h-1 bg-void rounded-lg appearance-none accent-primary cursor-none"
+        />
+      </div>
+    </div>
+  `;
+}
+
+
+
+● ./merge_later/Sidebar.js
+────────────────────────────────────────────────────
+import React from 'react';
+import htm from 'htm';
+import { Menu, Music, ChevronRight } from 'lucide-react';
+import { MusicPlayerDeck } from './MusicPlayerDeck.js';
+
+const html = htm.bind(React.createElement);
+
+const NAV_SECTIONS = [
+  {
+    group: "Portfolio",
+    items: [
+      { id: "misc-art", label: "Misc Art" }
+    ]
+  },
+  {
+    group: "Interests",
+    items: [
+      { id: "misc-media", label: "Misc Media" }
+    ]
+  }
+];
+
+export function Sidebar({
+  isSidebarOpen,
+  setIsSidebarOpen,
+  activeSection,
+  handleNavigation,
+  playSFX,
+  playerProps
+}) {
+  return html`
+    <div class="contents">
+      <!-- ── MOBILE HEADER ── -->
+      <header class="md:hidden fixed top-0 left-0 w-full h-14 bg-gradient-to-b from-panel to-void z-[60] border-b border-black shadow-lg pr-4 pl-4 flex justify-between items-center cursor-none">
+        <button 
+          onPointerDown=${() => { playSFX("click"); handleNavigation("audio"); }}
+          onPointerUp=${() => playSFX("release")}
+          class="text-fog hover:text-white text-xs font-bold tracking-widest uppercase font-mono cursor-none"
+        >
+          YOUR NAME // 2026
+        </button>
+        <button 
+          onClick=${() => setIsSidebarOpen(!isSidebarOpen)}
+          class="text-white p-1.5 cursor-none outline-none"
+        >
+          <${Menu} size=${20} />
+        </button>
+      </header>
+
+      <!-- ── NAVIGATION SIDEBAR PANEL ── -->
+      <aside class=${`fixed top-14 md:top-0 left-0 h-[calc(100dvh-56px)] md:h-[100dvh] w-64 bg-ink border-r border-white/5 z-50 flex flex-col cursor-none transition-transform duration-300 md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <!-- Logo Button -->
+        <div class="p-4 lg:p-5 bg-gradient-to-b from-panel to-[#0c0d11] border-b border-black shadow-inner hidden md:flex items-center gap-3 shrink-0 relative z-20">
+          <button 
+            onPointerDown=${() => { playSFX("click"); handleNavigation("audio"); }}
+            onPointerUp=${() => playSFX("release")}
+            class="w-full text-center text-xs font-bold tracking-widest uppercase font-mono border border-white/10 rounded-lg py-2.5 hover:border-primary/40 transition duration-300 cursor-none text-primary"
+          >
+            YN // 2026
+          </button>
+        </div>
+
+        <!-- Navigation Tree -->
+        <nav class="flex-1 px-4 py-6 space-y-6 overflow-y-auto custom-scrollbar relative z-10 select-none">
+          <!-- System Console Group -->
+          <div>
+            <div class="px-2 mb-2">
+              <h3 class="text-[10px] font-mono font-bold text-muted uppercase tracking-widest">/ Control Deck</h3>
+            </div>
+            <ul class="space-y-1">
+              <li>
+                <button 
+                  onClick=${() => handleNavigation("audio")}
+                  class=${`flex items-center gap-2.5 px-3 py-2 text-sm rounded-md w-full text-left transition duration-200 cursor-none ${activeSection === 'audio' ? 'text-primary font-bold bg-white/5' : 'text-fog hover:text-white'}`}
+                >
+                  <${Music} size=${16} />
+                  <span>System Console</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Programmatically Rendered Group Sections -->
+          ${NAV_SECTIONS.map((sec) => html`
+            <div key=${sec.group}>
+              <div class="px-2 mb-2 border-t border-white/5 pt-4">
+                <h3 class="text-[10px] font-mono font-bold text-muted uppercase tracking-widest">/ ${sec.group}</h3>
+              </div>
+              <ul class="space-y-1">
+                ${sec.items.map((item) => html`
+                  <li key=${item.id}>
+                    <button 
+                      onClick=${() => handleNavigation(item.id)}
+                      class=${`flex items-center gap-2.5 px-3 py-1.5 text-xs rounded-md w-full text-left transition duration-200 cursor-none ${activeSection === item.id ? 'text-white font-bold bg-white/5' : 'text-fog hover:text-white'}`}
+                    >
+                      <${ChevronRight} size=${12} class=${activeSection === item.id ? 'text-primary' : 'text-muted'} />
+                      <span>${item.label}</span>
+                    </button>
+                  </li>
+                `)}
+              </ul>
+            </div>
+          `)}
+        </nav>
+
+        <!-- Tall Sidebar Music Player Deck -->
+        <${MusicPlayerDeck} ...${playerProps} />
+      </aside>
+    </div>
+  `;
+}
+
+
+
+● ./merge_later/components.js
+────────────────────────────────────────────────────
+import React, { useState, useEffect, useRef } from 'react';
+import htm from 'htm';
+import anime from 'animejs';
+
+const html = htm.bind(React.createElement);
+
+export function ScrambleText({ text, delay = 0, onComplete, enabled = true }) {
+  const [displayText, setDisplayText] = useState("");
+  const DEFAULT_CHARS = "-_~=+*!@#%&<>";
+  const settleDuration = 100;
+
+  useEffect(() => {
+    if (!enabled) {
+      const scrambledPlaceholder = Array.from({ length: text.length }, () => 
+        DEFAULT_CHARS[Math.floor(Math.random() * DEFAULT_CHARS.length)]
+      ).join("");
+      setDisplayText(scrambledPlaceholder);
+      return;
+    }
+
+    const stepRevealTime = 90;
+    const totalRevealTime = text.length * stepRevealTime;
+    const totalDuration = totalRevealTime + settleDuration;
+    const animObj = { time: 0 };
+
+    let timeoutId = setTimeout(() => {
+      anime({
+        targets: animObj,
+        time: totalDuration,
+        duration: totalDuration,
+        easing: 'linear',
+        update: () => {
+          const elapsed = animObj.time;
+          let result = "";
+          for (let i = 0; i < text.length; i++) {
+            const revealTriggerTime = i * stepRevealTime;
+            if (elapsed < revealTriggerTime) {
+              result += DEFAULT_CHARS[Math.floor(Math.random() * DEFAULT_CHARS.length)];
+            } else if (elapsed < revealTriggerTime + settleDuration) {
+              result += DEFAULT_CHARS[Math.floor(Math.random() * DEFAULT_CHARS.length)];
+            } else {
+              result += text[i];
+            }
+          }
+          setDisplayText(result);
+        },
+        complete: () => {
+          setDisplayText(text);
+          if (onComplete) onComplete();
+        }
+      });
+    }, delay);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [text, delay, enabled]);
+
+  return html`<span class="select-none inline-block">${displayText}</span>`;
+}
+
+export function TypedLog({ text, speed = 40, delay = 0, enabled = false, onComplete }) {
+  const [displayed, setDisplayed] = useState("");
+  const cursorRef = useRef(null);
+
+  useEffect(() => {
+    if (!enabled) return;
+
+    let timeoutId = setTimeout(() => {
+      if (cursorRef.current) {
+        cursorRef.current.style.opacity = "1";
+      }
+
+      let currentIndex = 0;
+      let currentStr = "";
+      const intervalId = setInterval(() => {
+        if (currentIndex < text.length) {
+          currentStr += text[currentIndex];
+          setDisplayed(currentStr);
+          currentIndex++;
+        } else {
+          clearInterval(intervalId);
+          if (cursorRef.current) {
+            cursorRef.current.style.visibility = "hidden";
+          }
+          if (onComplete) onComplete();
+        }
+      }, speed);
+
+      return () => clearInterval(intervalId);
+    }, delay);
+
+    return () => clearTimeout(timeoutId);
+  }, [text, speed, delay, enabled]);
+
+  return html`
+    <span style=${{ textShadow: '0 0 4px currentColor' }}>
+      ${displayed}
+      <span 
+        ref=${cursorRef}
+        class="w-2 h-[1.1em] bg-current inline-block ml-1 align-middle -translate-y-[2px] relative z-10 animate-phosphor shadow-[0_0_8px_currentColor]"
+        style=${{ opacity: 0, transition: 'opacity 0.2s ease' }}
+      />
+    </span>
+  `;
+}
+
+export function GlassContainer({ children, className = "" }) {
+  const borderClass = "border-white/10";
+  const bgClass = "bg-panel";
+
+  return html`
+    <div class="relative rounded-xl border shadow-[0_8px_32px_rgba(0,0,0,0.5)] transition-all duration-300 ${borderClass} ${bgClass} ${className}">
+      <div class="relative z-10 w-full h-full">
+        ${children}
+      </div>
+    </div>
+  `;
+}
+
+
+
+● ./merge_later/media_data.js
 ────────────────────────────────────────────────────
 const PORTFOLIO_BASE = "https://www.stevencasteel.com/assets/portfolio/";
 const INTERESTS_BASE = "https://www.stevencasteel.com/assets/interests/";
@@ -2037,17 +2157,59 @@ export const AUDIO_TRACKS = Object.entries(AUDIO_TRACK_GROUPS).flatMap(([folder,
 ────────────────────────────────────────────────────
 import { defineConfig } from 'vite';
 
+const externalImports = [
+  'react',
+  'react-dom',
+  'react-dom/client',
+  'htm',
+  'lucide-react',
+  'lenis',
+  'media-data',
+  'animejs'
+];
+
+function viteIgnoreStaticImport(importKeys) {
+  const escapedKeys = importKeys.map(k => k.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
+  const reg = new RegExp(`/@id/(${escapedKeys.join('|')})(?:\\?[^"']*)?`, 'g');
+
+  return {
+    name: 'vite-plugin-ignore-static-import',
+    enforce: 'pre',
+    config(config) {
+      config.optimizeDeps = {
+        ...(config.optimizeDeps ?? {}),
+        exclude: [...(config.optimizeDeps?.exclude ?? []), ...importKeys],
+      };
+    },
+    configResolved(resolvedConfig) {
+      resolvedConfig.plugins.push({
+        name: 'vite-plugin-ignore-static-import-replace-idprefix',
+        transform: (code) => reg.test(code) ? code.replace(reg, (m, s1) => s1) : code,
+      });
+    },
+    resolveId(id) {
+      if (importKeys.includes(id)) {
+        return { id, external: true };
+      }
+      return null;
+    },
+    load(id) {
+      if (importKeys.includes(id)) {
+        return 'export default {};';
+      }
+      return null;
+    }
+  };
+}
+
 export default defineConfig({
-  optimizeDeps: {
-    exclude: [
-      'react',
-      'react-dom',
-      'react-dom/client',
-      'htm',
-      'lucide-react',
-      'lenis',
-      'media-data'
-    ]
+  plugins: [
+    viteIgnoreStaticImport(externalImports)
+  ],
+  build: {
+    rollupOptions: {
+      external: externalImports
+    }
   }
 });
 
