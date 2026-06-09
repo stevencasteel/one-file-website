@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true,
+    "strict": false,
+    "baseUrl": ".",
+    "paths": {
+      "media-data": ["./merge_later/media_data.js"]
+    }
+  },
+  "include": ["merge_later/**/*.js", "merge_later/**/*.d.ts"]
+}

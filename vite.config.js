@@ -46,6 +46,7 @@ function viteIgnoreStaticImport(importKeys) {
 }
 
 export default defineConfig({
+  base: './',
   plugins: [
     viteIgnoreStaticImport(externalImports)
   ],
