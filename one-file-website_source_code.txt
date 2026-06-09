@@ -2,12 +2,14 @@
 │          STEVEN CASTEEL ARCHIVE PROJECT          │
 │        Vite + React (ESM CDN) + Tailwind CSS     │
 └──────────────────────────────────────────────────┘
- [SYSTEM] Generated: 6/8/2026, 9:00:00 PM
+ [SYSTEM] Generated: 6/8/2026, 9:20:24 PM
  [BASELINE]: React 18, HTM, Lucide React, Lenis Scroll, Tailwind CSS
 
 ─── ABRIDGED DIRECTORY STRUCTURE ───────────────────
 .
 ├── merge_later/
+│   ├── AudioConsoleModal.js
+│   ├── AudioEngine.js
 │   ├── components.js
 │   ├── GlobalScrollbar.js
 │   ├── HeroHeader.js
@@ -193,7 +195,7 @@ protocol based on scope:
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Name // Digital Media Archive</title>
+  <title>Steven Casteel // Digital Media Archive</title>
   
   <!-- Tailwind CSS & Google Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -394,25 +396,114 @@ protocol based on scope:
     .animate-phosphor {
       animation: phosphor-flicker 0.25s infinite;
     }
+
+    /* Retro CRT Scanlines overlay */
+    .lcd-scanlines {
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 0px,
+        rgba(0, 0, 0, 0) 1px,
+        rgba(0, 0, 0, 0.18) 1px,
+        rgba(0, 0, 0, 0.18) 2px
+      );
+    }
+
+    /* Sunken Well Bezel */
+    .surface-hardware-well {
+      background-color: #0c0d11;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.95), inset 0 -1px 1px rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 0, 0, 0.5);
+    }
+
+    /* Hardware Button */
+    .surface-hardware-btn {
+      background: linear-gradient(180deg, #1d1e24 0%, #121318 100%);
+      border: 1px solid rgba(0, 0, 0, 0.6);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 3px solid #08090b;
+      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    .surface-hardware-btn:active {
+      transform: translateY(1.5px);
+      border-bottom-width: 0px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 1px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Prismatic Background Sweep */
+    @keyframes prismatic-sweep {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .text-prismatic-foil {
+      background: linear-gradient(90deg, #22c55e, #3b82f6, #a855f7, #ef4444, #22c55e);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: prismatic-sweep 5s linear infinite;
+    }
+
+    /* Custom range fader knob with exact SVG layers encoded safely in CSS */
+    .custom-range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 24px;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 24'><defs><linearGradient id='knob-body' x1='0' y1='0' x2='0' y2='1'><stop offset='0%25' stop-color='%23323238'/><stop offset='50%25' stop-color='%231a1a1f'/><stop offset='100%25' stop-color='%230c0c0e'/></linearGradient></defs><rect x='0.5' y='0.5' width='17' height='23' rx='3' fill='url(%23knob-body)' stroke='%23000' stroke-width='0.5'/><rect x='1.5' y='1.5' width='15' height='1' rx='0.5' fill='%23ffffff' opacity='0.12'/><line x1='2.5' y1='3' x2='2.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='3.5' y1='3' x2='3.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/><line x1='15.5' y1='3' x2='15.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='14.5' y1='3' x2='14.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/></svg>");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      cursor: pointer;
+      border: none;
+      background-color: transparent;
+    }
+    .custom-range-slider::-moz-range-thumb {
+      width: 18px;
+      height: 24px;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 24'><defs><linearGradient id='knob-body' x1='0' y1='0' x2='0' y2='1'><stop offset='0%25' stop-color='%23323238'/><stop offset='50%25' stop-color='%231a1a1f'/><stop offset='100%25' stop-color='%230c0c0e'/></linearGradient></defs><rect x='0.5' y='0.5' width='17' height='23' rx='3' fill='url(%23knob-body)' stroke='%23000' stroke-width='0.5'/><rect x='1.5' y='1.5' width='15' height='1' rx='0.5' fill='%23ffffff' opacity='0.12'/><line x1='2.5' y1='3' x2='2.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='3.5' y1='3' x2='3.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/><line x1='15.5' y1='3' x2='15.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='14.5' y1='3' x2='14.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/></svg>");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      cursor: pointer;
+      border: none;
+      background-color: transparent;
+    }
+
+    /* Continuous physical rotation loops */
+    @keyframes spin-clockwise {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes spin-counterclockwise {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(-360deg); }
+    }
+    .gear-spin-clockwise {
+      animation: spin-clockwise 14s linear infinite;
+    }
+    .gear-spin-counterclockwise {
+      animation: spin-counterclockwise 11s linear infinite;
+    }
+    .gear-paused {
+      animation-play-state: paused !important;
+    }
   </style>
 </head>
 <body class="selection:bg-primary selection:text-void relative min-h-screen">
 
-  <!-- Local File Protocol Warning Shield -->
+  <!-- Local File Warning Shield -->
   <div id="protocol-warning" style="display: none; position: fixed; inset: 0; z-index: 99999; background-color: #050505; color: #f2f2f2; font-family: 'Recursive', sans-serif; padding: 2rem; box-sizing: border-box; align-items: center; justify-content: center; overflow-y: auto;">
     <div style="max-width: 520px; width: 100%; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; background-color: #0a0a0a; padding: 2.5rem; text-align: center; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);">
-      
       <h2 style="font-size: 20px; font-weight: 800; margin-top: 0; margin-bottom: 1.75rem; color: #ffffff; line-height: 1.3; font-family: 'Bricolage Grotesque', sans-serif;">
         YOU'RE <span class="wavy-breathe-text"><span class="cascade-char" style="animation-delay: 0s;">1</span><span class="cascade-char" style="animation-delay: 0.08s;">0</span><span class="cascade-char" style="animation-delay: 0.16s;"> </span><span class="cascade-char" style="animation-delay: 0.24s;">M</span><span class="cascade-char" style="animation-delay: 0.32s;">I</span><span class="cascade-char" style="animation-delay: 0.4s;">N</span><span class="cascade-char" style="animation-delay: 0.48s;">U</span><span class="cascade-char" style="animation-delay: 0.56s;">T</span><span class="cascade-char" style="animation-delay: 0.64s;">E</span><span class="cascade-char" style="animation-delay: 0.72s;">S</span><span class="cascade-char" style="animation-delay: 0.8s;"> </span><span class="cascade-char" style="animation-delay: 0.88s;">A</span><span class="cascade-char" style="animation-delay: 0.96s;">W</span><span class="cascade-char" style="animation-delay: 1.04s;">A</span><span class="cascade-char" style="animation-delay: 1.12s;">Y</span></span> FROM A PERSONAL LIVE WEBSITE
       </h2>
-
-      <!-- Sign Up Steps -->
       <div style="border-radius: 12px; text-align: left; margin-bottom: 1.75rem;">
         <p style="margin: 0 0 1rem 0; font-weight: 800; color: #f59e0b; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'Bricolage Grotesque', sans-serif;">
           REQUIRED ONBOARDING TASKS
         </p>
         <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-          
           <a href="https://github.com/signup" target="_blank" class="onboarding-link-card">
             <div style="display: flex; align-items: center; gap: 1rem;">
               <div style="font-size: 1.25rem; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.08);">⚙️</div>
@@ -423,7 +514,6 @@ protocol based on scope:
               <span style="font-size: 12px; line-height: 1;">➔</span>
             </div>
           </a>
-
           <a href="https://dash.cloudflare.com/sign-up/workers-and-pages" target="_blank" class="onboarding-link-card">
             <div style="display: flex; align-items: center; gap: 1rem;">
               <div style="font-size: 1.25rem; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.08);">☁️</div>
@@ -434,62 +524,17 @@ protocol based on scope:
               <span style="font-size: 12px; line-height: 1;">➔</span>
             </div>
           </a>
-
-          <a href="https://chatgpt.com/" target="_blank" class="onboarding-link-card">
-            <div style="display: flex; align-items: center; gap: 1rem;">
-              <div style="font-size: 1.25rem; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.08);">🤖</div>
-              <span class="url-text" style="font-size: 13px; font-family: monospace; color: #ffffff; transition: text-decoration 0.2s;">https://chatgpt.com/</span>
-            </div>
-            <div style="color: #22c55e; font-size: 11px; font-weight: 700; font-family: monospace; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 4px;">
-              <span>Free</span>
-              <span style="font-size: 12px; line-height: 1;">➔</span>
-            </div>
-          </a>
-
         </div>
       </div>
-
-      <!-- Drag & Drop Graphic -->
-      <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin: 2rem 0; user-select: none;">
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
-          <span style="font-size: 3.5rem; line-height: 1;">📄</span>
-          <span style="font-size: 11px; color: #666; font-family: monospace;">index.html</span>
-        </div>
-        
-        <svg width="40" height="24" viewBox="0 0 40 24" fill="none" style="color: #22c55e;">
-          <path d="M4 12H36M36 12L28 4M36 12L28 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        
-        <a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer" style="position: relative; padding: 12px 18px; display: inline-block; text-decoration: none; border-radius: 8px; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);" onmouseover="this.style.backgroundColor='rgba(34, 197, 94, 0.05)'; this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 15px rgba(34, 197, 94, 0.15)';" onmouseout="this.style.backgroundColor='transparent'; this.style.transform='scale(1)'; this.style.boxShadow='none';">
-          <svg style="position: absolute; inset: 0; width: 100%; height: 100%;" overflow="visible">
-            <rect x="0" y="0" width="100%" height="100%" fill="none" stroke="#22c55e" stroke-width="2" stroke-dasharray="6,4" rx="8" ry="8">
-              <animate attributeName="stroke-dashoffset" values="10;0" dur="1s" repeatCount="indefinite" />
-            </rect>
-          </svg>
-          <span style="position: relative; z-index: 10; font-weight: 700; color: #22c55e; font-size: 14px; font-family: monospace;">ChatGPT.com</span>
-        </a>
-      </div>
-
-      <!-- Next Step Action Card -->
       <div style="background-color: rgba(239, 68, 68, 0.02); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 8px; padding: 1.5rem; text-align: left; margin-bottom: 2rem; position: relative; overflow: hidden;">
         <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background-color: #ef4444;"></div>
         <p style="margin: 0 0 0.5rem 0; font-weight: 700; color: #ffffff; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
-          <span style="color: #ef4444;">🚀</span> Next Step
+          <span>🚀</span> Next Step
         </p>
         <p style="margin: 0; color: #a0a0a0; font-size: 13px; line-height: 1.45;">
           Drag and drop this file into ChatGPT. The AI has instructions inside to guide you through set up.
         </p>
       </div>
-
-      <!-- Explanation Section -->
-      <div style="text-align: left; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1.5rem;">
-        <p style="margin: 0 0 0.5rem 0; font-weight: 700; color: #f59e0b; font-size: 13px; font-style: italic; font-variation-settings: 'MONO' 0, 'CASL' 0.35, 'slnt' -14, 'CRSV' 1, 'wght' 700;">
-          Why does my live site look awesome, but I'm stuck on this screen when I view the HTML file?
-        </p>
-        <p style="margin: 0; color: #888888; font-size: 12px; line-height: 1.45; text-wrap: pretty;">
-          Don't worry, you just need to set up <span style="color: #22c55e; font-style: italic; font-weight: 600; font-variation-settings: 'MONO' 0, 'CASL' 0.35, 'slnt' -14, 'CRSV' 1, 'wght' 600;">Vite</span> so you can view local changes at <span style="color: #22c55e; font-style: italic; font-family: monospace; font-variation-settings: 'MONO' 1, 'CASL' 0, 'slnt' -14, 'CRSV' 1, 'wght' 400;">http://localhost:1111</span>. After you get your live Cloudflare URL, the AI is ready to help configure this and guide you through further&nbsp;onboarding.</p>
-      </div>
-
     </div>
   </div>
   <script>
@@ -530,6 +575,8 @@ protocol based on scope:
     import { Sidebar } from './merge_later/Sidebar.js';
     import { HeroHeader } from './merge_later/HeroHeader.js';
     import { MainContent } from './merge_later/MainContent.js';
+    import { audioEngine } from './merge_later/AudioEngine.js';
+    import { AudioConsoleModal } from './merge_later/AudioConsoleModal.js';
 
     const html = htm.bind(React.createElement);
 
@@ -542,32 +589,15 @@ protocol based on scope:
       return arr;
     }
 
-    // Interactive SFX Handler
-    const playSFX = (type) => {
-      let src = "";
-      if (type === "click") {
-        src = "https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3";
-      } else if (type === "release") {
-        src = "https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3";
-      }
-      if (src) {
-        const audio = new Audio(src);
-        audio.volume = 0.35;
-        audio.play().catch(() => {});
-      }
-    };
-
     // ── MAIN APP COMPONENT ───────────────────────────────────────────────────
     function App() {
       // Lightbox / Modal Context
       const [lightbox, setLightbox] = useState(null);
       const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+      const [isConsoleOpen, setIsConsoleOpen] = useState(false);
       const [activeSection, setActiveSection] = useState("audio");
 
-      // Sequential Timeline Sequence Step: "line1" -> "line2" -> "typing"
       const [seqStep, setSeqStep] = useState("line1");
-
-      // Lenis Instance
       const [lenis, setLenis] = useState(null);
 
       // Audio Player Context
@@ -601,6 +631,20 @@ protocol based on scope:
       });
       const [currentTime, setCurrentTime] = useState(0);
       const [duration, setDuration] = useState(0);
+
+      // Initialize / Restore Audio Context dynamically on user interaction
+      const ensureAudioInitialized = () => {
+        if (!audioEngine.isInitialized && audioElRef.current) {
+          audioEngine.init(audioElRef.current);
+          audioEngine.setVolume("master", 1.0);
+          audioEngine.setVolume("music", volume);
+          audioEngine.setVolume("sfx", 0.8);
+          audioEngine.setVolume("ambience", 0.5);
+        }
+        if (audioEngine.ctx && audioEngine.ctx.state === 'suspended') {
+          audioEngine.ctx.resume().catch(() => {});
+        }
+      };
 
       // Initialize Lenis Smooth Scroll
       useEffect(() => {
@@ -646,7 +690,6 @@ protocol based on scope:
         return () => window.removeEventListener("scroll", handleSpy);
       }, []);
 
-      // Initialize / Restore Audio Context
       useEffect(() => {
         const savedPosition = localStorage.getItem('mesoelfy_player_position');
         const savedAutoplay = localStorage.getItem('mesoelfy_player_autoplay');
@@ -657,6 +700,7 @@ protocol based on scope:
 
         const handleUnlock = () => {
           if (savedAutoplay === 'true' && audioElRef.current) {
+            ensureAudioInitialized();
             audioElRef.current.play()
               .then(() => setIsPlaying(true))
               .catch(() => {});
@@ -685,11 +729,15 @@ protocol based on scope:
         if (audioElRef.current) {
           audioElRef.current.volume = volume;
           localStorage.setItem('mesoelfy_player_volume', volume.toString());
+          if (audioEngine.isInitialized) {
+            audioEngine.setVolume("music", volume);
+          }
         }
       }, [volume]);
 
       const togglePlay = () => {
         if (!audioElRef.current) return;
+        ensureAudioInitialized();
         if (isPlaying) {
           audioElRef.current.pause();
           setIsPlaying(false);
@@ -706,6 +754,7 @@ protocol based on scope:
 
       const handleNext = () => {
         if (playerState.queue.length === 0) return;
+        ensureAudioInitialized();
         setPlayerState((prev) => ({
           ...prev,
           currentIdx: (prev.currentIdx + 1) % prev.queue.length
@@ -714,6 +763,7 @@ protocol based on scope:
 
       const handlePrev = () => {
         if (playerState.queue.length === 0) return;
+        ensureAudioInitialized();
         setPlayerState((prev) => ({
           ...prev,
           currentIdx: (prev.currentIdx - 1 + prev.queue.length) % prev.queue.length
@@ -735,6 +785,7 @@ protocol based on scope:
 
       const handleScrubberChange = (e) => {
         const val = parseFloat(e.target.value);
+        ensureAudioInitialized();
         if (audioElRef.current) {
           audioElRef.current.currentTime = val;
           setCurrentTime(val);
@@ -743,6 +794,7 @@ protocol based on scope:
 
       const toggleShuffleState = () => {
         const targetState = !isShuffle;
+        ensureAudioInitialized();
         setIsShuffle(targetState);
         localStorage.setItem('mesoelfy_player_shuffle', targetState.toString());
         
@@ -808,10 +860,11 @@ protocol based on scope:
       };
 
       return html`
-        <div class="relative w-full flex flex-col md:flex-row min-h-screen">
+        <div class="relative w-full flex flex-col md:flex-row min-h-screen" onClick=${ensureAudioInitialized}>
           <audio 
             ref=${audioElRef} 
             src="https://www.stevencasteel.com/assets/audio/music/elf_girl/${activeTrack.folder}/${activeTrack.name}"
+            crossOrigin="anonymous"
             onTimeUpdate=${handleTimeUpdate}
             onLoadedMetadata=${handleLoadedMetadata}
             onEnded=${handleNext}
@@ -823,8 +876,8 @@ protocol based on scope:
             setIsSidebarOpen=${setIsSidebarOpen}
             activeSection=${activeSection}
             handleNavigation=${handleNavigation}
-            playSFX=${playSFX}
             playerProps=${playerProps}
+            onOpenConsole=${() => { ensureAudioInitialized(); setIsConsoleOpen(true); }}
           />
 
           <!-- ── MAIN CONTENT ZONE ── -->
@@ -860,6 +913,29 @@ protocol based on scope:
               </div>
             </div>
           `}
+
+          <!-- ── FULL SCREEN AUDIO CONSOLE MIXER MODAL ── -->
+          <${AudioConsoleModal} 
+            isOpen=${isConsoleOpen}
+            onClose=${() => setIsConsoleOpen(false)}
+            activeTrack=${activeTrack}
+            isPlaying=${isPlaying}
+            currentTime=${currentTime}
+            duration=${duration}
+            volume=${volume}
+            isShuffle=${isShuffle}
+            handleScrubberChange=${handleScrubberChange}
+            handlePrev=${handlePrev}
+            togglePlay=${togglePlay}
+            handleNext=${handleNext}
+            toggleShuffleState=${toggleShuffleState}
+            setVolume=${setVolume}
+            formatTime=${formatTime}
+            playTrackByIndex=${(idx) => {
+              setPlayerState(prev => ({ ...prev, currentIdx: idx }));
+              setIsPlaying(true);
+            }}
+          />
 
         </div>
       `;
@@ -910,6 +986,572 @@ protocol based on scope:
   </script>
 </body>
 </html>
+
+
+
+● ./merge_later/AudioConsoleModal.js
+────────────────────────────────────────────────────
+import React, { useEffect, useRef, useState } from 'react';
+import htm from 'htm';
+import { Settings2, Pause, Play, SkipForward, SkipBack, Shuffle, X, Library, VolumeX, Volume2 } from 'lucide-react';
+import { audioEngine } from './AudioEngine.js';
+import { AUDIO_TRACKS } from 'media-data';
+
+const html = htm.bind(React.createElement);
+
+// Group standard tracks programmatically to create logical catalog albums
+const ALBUMS = [];
+const grouped = {};
+AUDIO_TRACKS.forEach(t => {
+  if (!grouped[t.folder]) {
+    grouped[t.folder] = [];
+  }
+  grouped[t.folder].push(t);
+});
+
+Object.entries(grouped).forEach(([folder, tracks]) => {
+  ALBUMS.push({
+    id: folder,
+    title: folder.replace(/_/g, ' ').toUpperCase(),
+    artist: "Steven Casteel",
+    tracks
+  });
+});
+
+export function AudioConsoleModal({
+  isOpen,
+  onClose,
+  activeTrack,
+  isPlaying,
+  currentTime,
+  duration,
+  volume,
+  isShuffle,
+  handleScrubberChange,
+  handlePrev,
+  togglePlay,
+  handleNext,
+  toggleShuffleState,
+  setVolume,
+  formatTime,
+  playTrackByIndex
+}) {
+  if (!isOpen) return null;
+
+  const canvasRef = useRef(null);
+  const animationRef = useRef(null);
+  const [playlistView, setPlaylistView] = useState("albums"); // "albums" | "tracks"
+  const [viewingAlbumId, setViewingAlbumId] = useState(ALBUMS[0]?.id || "");
+
+  // Mixer volume states (synchronized with AudioEngine outputs)
+  const [mixerMaster, setMixerMaster] = useState(1.0);
+  const [mixerMusic, setMixerMusic] = useState(volume);
+  const [mixerSfx, setMixerSfx] = useState(0.8);
+  const [mixerAmbience, setMixerAmbience] = useState(0.5);
+  const [isMuted, setIsMuted] = useState(false);
+
+  useEffect(() => {
+    setMixerMusic(volume);
+  }, [volume]);
+
+  // Handle lowpass sweeps on modal mount/unmount
+  useEffect(() => {
+    audioEngine.setLowpass(true);
+    return () => {
+      audioEngine.setLowpass(false);
+    };
+  }, []);
+
+  // Update values across AudioEngine gain nodes on state modifications
+  useEffect(() => {
+    if (isMuted) {
+      audioEngine.setVolume("master", 0);
+    } else {
+      audioEngine.setVolume("master", mixerMaster);
+    }
+  }, [mixerMaster, isMuted]);
+
+  useEffect(() => {
+    audioEngine.setVolume("music", mixerMusic);
+    setVolume(mixerMusic);
+  }, [mixerMusic]);
+
+  useEffect(() => {
+    audioEngine.setVolume("sfx", mixerSfx);
+  }, [mixerSfx]);
+
+  useEffect(() => {
+    audioEngine.setVolume("ambience", mixerAmbience);
+  }, [mixerAmbience]);
+
+  // Master 64-Bar Visualizer draw loop
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const analyser = audioEngine.analyser;
+    const bufferLength = analyser ? analyser.frequencyBinCount : 64;
+    const peaks = new Array(64).fill(0);
+    const smoothedValues = new Array(64).fill(0);
+
+    const drawVisualizer = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const dataArray = new Uint8Array(bufferLength);
+
+      if (analyser) {
+        analyser.getByteFrequencyData(dataArray);
+      }
+
+      const barCount = 64;
+      const barWidth = (canvas.width / barCount) - 1.5;
+      let x = 0;
+
+      // Color sweep gradient definition (emerald to indigo physical styling)
+      const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
+      gradient.addColorStop(0, "#22c55e"); // emerald-500
+      gradient.addColorStop(0.5, "#3b82f6"); // blue-500
+      gradient.addColorStop(1, "#ec4899"); // pink-500
+
+      for (let i = 0; i < barCount; i++) {
+        let rawValue = 0;
+        if (isPlaying && analyser) {
+          // quadratic index spacing focusing on lower ranges
+          const dataIndex = Math.min(
+            bufferLength - 1,
+            Math.floor(i * i * (bufferLength / (barCount * barCount * 1.1)) + 1)
+          );
+          rawValue = dataArray[dataIndex] || 0;
+        }
+
+        smoothedValues[i] += (rawValue - smoothedValues[i]) * 0.15;
+        const barHeight = (smoothedValues[i] / 255) * canvas.height * 0.9;
+
+        // Peak decay calculation
+        if (barHeight > peaks[i]) {
+          peaks[i] = barHeight;
+        } else {
+          peaks[i] = Math.max(0, peaks[i] - 1.2);
+        }
+
+        if (barHeight > 0.5) {
+          ctx.fillStyle = gradient;
+          ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+        }
+
+        // Draw Peak indicator white ledger line
+        if (peaks[i] > 0.5) {
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(x, canvas.height - peaks[i] - 2, barWidth, 2);
+        }
+
+        x += barWidth + 1.5;
+      }
+
+      animationRef.current = requestAnimationFrame(drawVisualizer);
+    };
+
+    drawVisualizer();
+    return () => {
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, [isPlaying]);
+
+  const activeAlbum = ALBUMS.find(a => a.id === viewingAlbumId) || ALBUMS[0];
+  const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
+
+  const handleTrackSelect = (track) => {
+    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4);
+    const globalIdx = AUDIO_TRACKS.findIndex(t => t.name === track.name && t.folder === track.folder);
+    if (globalIdx >= 0) {
+      playTrackByIndex(globalIdx);
+    }
+  };
+
+  const ticks = Array.from({ length: 13 }, (_, i) => i * 8.33);
+
+  const renderSlider = (label, type, value, setter) => {
+    const physicalPercent = value * 100;
+    return html`
+      <div class="flex flex-col gap-2 cursor-none group">
+        <div class="flex justify-between text-[11px] font-mono select-none">
+          <span class="uppercase tracking-widest font-bold text-muted group-hover:text-white transition duration-200">
+            ${label}
+          </span>
+          <span class="font-bold text-primary tabular-nums">
+            ${Math.round(value * 100)}%
+          </span>
+        </div>
+
+        <div class="relative h-7 flex items-center w-full select-none">
+          <div class="absolute left-0 right-0 h-2 bg-void rounded border border-black/40 shadow-inner" />
+          
+          <div class="absolute left-1 right-1 h-1 rounded overflow-hidden pointer-events-none z-10 opacity-75">
+            <div class="h-full bg-primary" style=${{ width: `${physicalPercent}%` }} />
+          </div>
+
+          <!-- Vertical fader tick scale divisions -->
+          <div class="absolute left-0 right-0 -bottom-2.5 h-1.5 pointer-events-none flex justify-between select-none">
+            ${ticks.map((pct, i) => html`
+              <div 
+                key=${i} 
+                class=${`w-[1px] bg-white/20 ${i % 4 === 0 ? 'h-2 w-[1.5px] bg-white/40' : 'h-1'}`}
+              />
+            `)}
+          </div>
+
+          <!-- Aluminum customized hardware range thumb fader knob -->
+          <div 
+            class="absolute pointer-events-none z-20 flex items-center justify-center transition-all duration-100" 
+            style=${{ left: `calc(${physicalPercent}% - 9px)`, width: '18px', height: '24px' }}
+          >
+            <img 
+              src="https://www.stevencasteel.com/assets/svg/slider-thumb.svg" 
+              class="absolute inset-0 w-full h-full object-contain pointer-events-none"
+              draggable="false"
+            />
+            <div class="w-[2px] h-3.5 bg-primary shadow-[0_0_6px_#22c55e] rounded-full z-10" />
+          </div>
+
+          <input 
+            type="range" 
+            min="0" 
+            max="1" 
+            step="0.01" 
+            value=${value} 
+            onChange=${(e) => {
+              setter(parseFloat(e.target.value));
+              if (type === "sfx") {
+                audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.3);
+              }
+            }}
+            class="absolute inset-0 w-full h-full opacity-0 cursor-none z-30" 
+          />
+        </div>
+      </div>
+    `;
+  };
+
+  return html`
+    <div class="fixed inset-0 bg-void/90 backdrop-blur-md z-[110] flex items-center justify-center p-4 cursor-none animate-lightbox-entry">
+      <div class="relative w-full max-w-4xl bg-panel rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-white/10 overflow-hidden flex flex-col cursor-none">
+        
+        <!-- Mixer Console Header Bar -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-ink">
+          <div class="flex items-center gap-3 text-primary">
+            <${Settings2} size=${22} />
+            <h2 class="text-md md:text-lg font-display font-bold uppercase tracking-wider mt-0.5 text-white">
+              AUDIO CONSOLE MIXER
+            </h2>
+          </div>
+          <button 
+            onClick=${() => {
+              audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.35);
+              onClose();
+            }}
+            class="flex items-center justify-center w-8 h-8 rounded-md bg-white/5 border border-white/10 hover:border-primary/40 hover:text-primary transition-all duration-300 cursor-none"
+          >
+            <${X} size=${16} />
+          </button>
+        </div>
+
+        <!-- Scrollable Modal Interior Body -->
+        <div class="p-6 flex flex-col gap-6 overflow-y-auto max-h-[80vh] custom-scrollbar">
+          
+          <!-- Top Display Chassis Art Block -->
+          <div class="flex flex-col md:flex-row gap-6 items-stretch bg-ink p-5 rounded-xl border border-white/5">
+            <div class="w-full md:w-44 h-44 rounded-lg overflow-hidden border border-white/10 bg-void flex items-center justify-center relative shrink-0">
+              <span class="text-4xl">💿</span>
+              <div class=${`absolute inset-2 border border-white/5 rounded-full ${isPlaying ? 'animate-spin' : ''}`} style=${{ animationDuration: '8s' }} />
+            </div>
+
+            <div class="flex-1 flex flex-col justify-between gap-4 min-w-0">
+              <div>
+                <span class="text-[10px] font-mono font-bold tracking-widest text-primary uppercase select-none">
+                  // ACTIVE SOURCE FEED
+                </span>
+                <h3 class="text-2xl font-display font-black text-white uppercase truncate mt-1">
+                  ${activeTrack.title.replace(/_/g, ' ')}
+                </h3>
+                <p class="text-xs font-mono text-muted uppercase tracking-widest truncate mt-0.5">
+                  FOLDER: ${activeTrack.folder.replace(/_/g, ' ')}
+                </p>
+              </div>
+
+              <!-- Audio Console Scrubber timeline -->
+              <div class="space-y-1">
+                <div class="relative w-full h-1.5 bg-void rounded-full overflow-hidden">
+                  <div 
+                    class="h-full bg-primary shadow-[0_0_8px_#22c55e]"
+                    style=${{ width: `${progressPercent}%` }}
+                  />
+                  <input 
+                    type="range" 
+                    min="0" 
+                    max=${duration || 0} 
+                    value=${currentTime} 
+                    onChange=${handleScrubberChange}
+                    class="absolute inset-0 w-full h-full opacity-0 cursor-none"
+                  />
+                </div>
+                <div class="flex justify-between text-[10px] font-mono text-muted select-none">
+                  <span>${formatTime(currentTime)}</span>
+                  <span>${formatTime(duration)}</span>
+                </div>
+              </div>
+
+              <!-- Primary playback controls alignment row -->
+              <div class="flex items-center gap-2">
+                <button 
+                  onClick=${toggleShuffleState}
+                  class=${`flex-1 py-2 rounded-lg border text-xs font-mono font-bold uppercase cursor-none transition ${isShuffle ? 'border-primary/40 bg-primary/5 text-primary' : 'border-white/5 bg-white/5 text-fog hover:text-white'}`}
+                >
+                  Shuffle
+                </button>
+                <button 
+                  onClick=${handlePrev}
+                  class="p-2 px-4 rounded-lg bg-white/5 border border-white/10 hover:border-primary/30 text-fog hover:text-white cursor-none transition"
+                >
+                  <${SkipBack} size=${16} fill="currentColor" />
+                </button>
+                <button 
+                  onClick=${togglePlay}
+                  class="p-2 px-6 rounded-lg bg-primary text-void font-bold cursor-none hover:scale-105 transition flex items-center justify-center shadow-[0_0_12px_rgba(34,197,94,0.4)]"
+                >
+                  ${isPlaying 
+                    ? html`<${Pause} size=${16} fill="currentColor" />`
+                    : html`<${Play} size=${16} fill="currentColor" class="ml-0.5" />`
+                  }
+                </button>
+                <button 
+                  onClick=${handleNext}
+                  class="p-2 px-4 rounded-lg bg-white/5 border border-white/10 hover:border-primary/30 text-fog hover:text-white cursor-none transition"
+                >
+                  <${SkipForward} size=${16} fill="currentColor" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Master Spectrum Analyzer Section -->
+          <div class="w-full bg-void rounded-xl border border-white/10 p-2 overflow-hidden h-32 relative shadow-inner">
+            <canvas 
+              ref=${canvasRef} 
+              width="800" 
+              height="120" 
+              class="w-full h-full opacity-90"
+            />
+            <div class="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none select-none" style=${{ backgroundSize: '16px 16px' }} />
+          </div>
+
+          <!-- Bottom Rack Split: Playlist Library Directory & Global Mixer Sliders -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+            
+            <!-- Category folder library indexing directory -->
+            <div class="bg-ink rounded-xl border border-white/5 p-4 flex flex-col h-[320px]">
+              <div class="flex items-center justify-between border-b border-white/5 pb-3 mb-3 shrink-0">
+                ${playlistView === "tracks" ? html`
+                  <button 
+                    onClick=${() => {
+                      audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.3);
+                      setPlaylistView("albums");
+                    }}
+                    class="text-[10px] font-mono font-bold uppercase text-primary hover:underline cursor-none"
+                  >
+                    ← Back to Library
+                  </button>
+                ` : html`
+                  <span class="text-[10px] font-mono font-bold text-muted uppercase tracking-widest select-none">
+                    Select Directory Folder
+                  </span>
+                `}
+                <span class="text-xs font-display font-bold text-white uppercase select-none">
+                  ${playlistView === "tracks" ? activeAlbum.title : "Library List"}
+                </span>
+              </div>
+
+              <div class="flex-1 overflow-y-auto custom-scrollbar space-y-1">
+                ${playlistView === "albums" ? ALBUMS.map(album => html`
+                  <button 
+                    key=${album.id}
+                    onClick=${() => {
+                      audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.35);
+                      setViewingAlbumId(album.id);
+                      setPlaylistView("tracks");
+                    }}
+                    class="w-full flex items-center gap-3 p-2.5 rounded-lg border border-transparent hover:border-white/5 hover:bg-white/5 text-left transition cursor-none group"
+                  >
+                    <div class="w-8 h-8 rounded bg-void flex items-center justify-center text-muted group-hover:text-primary transition shrink-0">
+                      <${Library} size=${14} />
+                    </div>
+                    <div class="min-w-0 flex-1 select-none">
+                      <p class="text-xs font-bold text-light truncate group-hover:text-white">
+                        ${album.title}
+                      </p>
+                      <p class="text-[9px] font-mono text-muted uppercase tracking-wider mt-0.5">
+                        ${album.tracks.length} Channels
+                      </p>
+                    </div>
+                  </button>
+                `) : activeAlbum.tracks.map((t, idx) => {
+                  const isActive = activeTrack.name === t.name && activeTrack.folder === t.folder;
+                  return html`
+                    <button 
+                      key=${t.name}
+                      onClick=${() => handleTrackSelect(t)}
+                      class=${`w-full p-2.5 rounded-lg border text-left flex items-center justify-between transition cursor-none select-none ${isActive ? 'bg-primary/5 border-primary/20 text-primary' : 'border-transparent hover:border-white/5 text-fog hover:text-white'}`}
+                    >
+                      <span class="text-xs truncate font-bold uppercase font-mono">
+                        ${idx + 1}. ${t.title.replace(/_/g, ' ')}
+                      </span>
+                      ${isActive && html`
+                        <span class="text-[8px] font-mono font-bold bg-primary/20 text-primary px-1.5 py-0.5 rounded tracking-widest uppercase">
+                          ACTIVE
+                        </span>
+                      `}
+                    </button>
+                  `;
+                })}
+              </div>
+            </div>
+
+            <!-- Global Multichannel Mixer Deck -->
+            <div class="bg-ink rounded-xl border border-white/5 p-5 flex flex-col justify-between gap-5 h-[320px]">
+              <div class="flex items-center justify-between border-b border-white/5 pb-3 shrink-0 select-none">
+                <span class="text-[10px] font-mono font-bold text-muted uppercase tracking-widest">
+                  Physical Mixer Console
+                </span>
+                <button 
+                  onClick=${() => {
+                    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.35);
+                    setIsMuted(!isMuted);
+                  }}
+                  class=${`flex items-center gap-1.5 p-1 px-2.5 rounded text-[9px] font-mono font-bold uppercase transition border cursor-none ${isMuted ? 'border-red-500 bg-red-500/10 text-red-500 shadow-[0_0_8px_rgba(239,68,68,0.2)]' : 'border-white/10 hover:border-white/20 text-muted hover:text-white'}`}
+                >
+                  ${isMuted ? html`<${VolumeX} size=${11} />` : html`<${Volume2} size=${11} />`}
+                  <span>${isMuted ? "Unmute" : "Mute All"}</span>
+                </button>
+              </div>
+
+              <div class="flex-1 flex flex-col justify-center gap-4">
+                ${renderSlider("Master Level", "master", mixerMaster, setMixerMaster)}
+                ${renderSlider("Music Synthesizer", "music", mixerMusic, setMixerMusic)}
+                ${renderSlider("Tactile SFX Engine", "sfx", mixerSfx, setMixerSfx)}
+                ${renderSlider("Ambient Noise Node", "ambience", mixerAmbience, setMixerAmbience)}
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  `;
+}
+
+
+
+● ./merge_later/AudioEngine.js
+────────────────────────────────────────────────────
+class AudioEngine {
+  constructor() {
+    this.ctx = null;
+    this.source = null;
+    this.masterGain = null;
+    this.musicGain = null;
+    this.sfxGain = null;
+    this.ambienceGain = null;
+    this.musicFilter = null;
+    this.analyser = null;
+    this.isInitialized = false;
+  }
+
+  init(audioElement) {
+    if (this.isInitialized) return;
+
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+
+    this.ctx = new AudioContextClass();
+
+    this.source = this.ctx.createMediaElementSource(audioElement);
+    this.masterGain = this.ctx.createGain();
+    this.musicGain = this.ctx.createGain();
+    this.sfxGain = this.ctx.createGain();
+    this.ambienceGain = this.ctx.createGain();
+
+    this.musicFilter = this.ctx.createBiquadFilter();
+    this.musicFilter.type = "lowpass";
+    this.musicFilter.frequency.value = 20000;
+
+    this.analyser = this.ctx.createAnalyser();
+    this.analyser.fftSize = 128;
+
+    this.source.connect(this.musicGain);
+    this.musicGain.connect(this.musicFilter);
+    this.musicFilter.connect(this.masterGain);
+    this.masterGain.connect(this.analyser);
+    this.analyser.connect(this.ctx.destination);
+
+    this.sfxGain.connect(this.masterGain);
+    this.ambienceGain.connect(this.masterGain);
+
+    this.isInitialized = true;
+  }
+
+  setVolume(type, value) {
+    if (!this.isInitialized || !this.ctx) return;
+    const targetGain = this[`${type}Gain`];
+    if (targetGain) {
+      targetGain.gain.setValueAtTime(value, this.ctx.currentTime);
+    }
+  }
+
+  setLowpass(active) {
+    if (!this.isInitialized || !this.musicFilter || !this.ctx) return;
+    const now = this.ctx.currentTime;
+    const frequency = active ? 800 : 20000;
+    this.musicFilter.frequency.exponentialRampToValueAtTime(frequency, now + 0.45);
+  }
+
+  playSFX(url, volume = 1.0) {
+    if (!this.isInitialized || !this.ctx) {
+      const audio = new Audio(url);
+      audio.volume = volume * 0.35;
+      audio.play().catch(() => {});
+      return;
+    }
+
+    if (this.ctx.state === "suspended") {
+      this.ctx.resume().catch(() => {});
+    }
+
+    fetch(url)
+      .then((res) => res.arrayBuffer())
+      .then((buffer) => this.ctx.decodeAudioData(buffer))
+      .then((decodedBuffer) => {
+        const sourceNode = this.ctx.createBufferSource();
+        sourceNode.buffer = decodedBuffer;
+
+        const localGain = this.ctx.createGain();
+        localGain.gain.setValueAtTime(volume, this.ctx.currentTime);
+
+        sourceNode.connect(localGain);
+        localGain.connect(this.sfxGain);
+
+        sourceNode.start(0);
+      })
+      .catch(() => {
+        const audio = new Audio(url);
+        audio.volume = volume * 0.35;
+        audio.play().catch(() => {});
+      });
+  }
+}
+
+export const audioEngine = new AudioEngine();
 
 
 
@@ -1334,9 +1976,10 @@ export function MainContent({ setLightbox }) {
 
 ● ./merge_later/MusicPlayerDeck.js
 ────────────────────────────────────────────────────
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import htm from 'htm';
-import { Music } from 'lucide-react';
+import { Settings2, Volume2, VolumeX } from 'lucide-react';
+import { audioEngine } from './AudioEngine.js';
 
 const html = htm.bind(React.createElement);
 
@@ -1353,93 +1996,348 @@ export function MusicPlayerDeck({
   handleNext,
   toggleShuffleState,
   setVolume,
-  formatTime
+  formatTime,
+  onOpenConsole
 }) {
+  const [showVolumePopover, setShowVolumePopover] = useState(false);
+  const miniCanvasRef = useRef(null);
+  const animationRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = miniCanvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const analyser = audioEngine.analyser;
+    const barCount = 14;
+    const smoothedValues = new Array(barCount).fill(0);
+
+    const drawMicroVisualizer = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const dataArray = new Uint8Array(analyser ? analyser.frequencyBinCount : 32);
+
+      if (analyser) {
+        analyser.getByteFrequencyData(dataArray);
+      }
+
+      const barWidth = (canvas.width / barCount) - 1.5;
+      let x = 0;
+
+      for (let i = 0; i < barCount; i++) {
+        let rawValue = 0;
+        if (isPlaying && analyser) {
+          const idx = Math.floor(i * (dataArray.length / barCount) * 0.7);
+          rawValue = dataArray[idx] || 0;
+        } else if (isPlaying) {
+          rawValue = 10 + Math.sin(Date.now() * 0.005 + i * 0.6) * 12 + Math.random() * 5;
+        }
+
+        smoothedValues[i] += (rawValue - smoothedValues[i]) * 0.2;
+        const mappedHeight = (smoothedValues[i] / 255) * canvas.height * 0.85;
+
+        ctx.fillStyle = isPlaying ? '#22c55e' : 'rgba(34, 197, 94, 0.4)';
+        ctx.fillRect(x, canvas.height - mappedHeight, barWidth, mappedHeight);
+
+        x += barWidth + 1.5;
+      }
+
+      animationRef.current = requestAnimationFrame(drawMicroVisualizer);
+    };
+
+    drawMicroVisualizer();
+    return () => {
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, [isPlaying]);
+
+  const handleMuteToggle = () => {
+    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.35);
+    if (volume > 0) {
+      setVolume(0);
+    } else {
+      setVolume(0.75);
+    }
+  };
+
+  const handleTriggerPlay = () => {
+    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.35);
+    togglePlay();
+  };
+
+  const handleTriggerPrev = () => {
+    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.3);
+    handlePrev();
+  };
+
+  const handleTriggerNext = () => {
+    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.3);
+    handleNext();
+  };
+
+  const handleTriggerShuffle = () => {
+    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.35);
+    toggleShuffleState();
+  };
+
+  const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
+
   return html`
-    <div class="shrink-0 bg-gradient-to-t from-panel to-[#0c0d11] flex flex-col border-t border-black p-4 gap-4 relative z-20">
-      <div class="space-y-2">
-        <div class="flex items-start gap-2.5 bg-void/50 p-2 rounded-lg border border-white/5">
-          <div class="w-8 h-8 rounded bg-black border border-white/10 flex items-center justify-center shrink-0">
-            <${Music} size=${14} class=${isPlaying ? 'animate-pulse text-[#22c55e]' : 'text-muted'} />
-          </div>
-          <div class="min-w-0 flex-1">
-            <p class="text-[9px] font-mono text-muted uppercase tracking-wider truncate">
-              ${activeTrack.folder.replace(/_/g, ' ')}
-            </p>
-            <p class="text-xs text-white truncate font-bold font-mono">
-              ${activeTrack.title.replace(/_/g, ' ')}
-            </p>
+    <div class="shrink-0 p-4 bg-gradient-to-t from-panel to-[#0c0d11] border-t border-black flex flex-col gap-3 relative z-20">
+      
+      <!-- Modular aspect-ratio coordinate system box (aspect-[3658/2595]) -->
+      <div class="relative w-full aspect-[3658/2595] rounded-xl border border-white/5 overflow-hidden bg-[#07080a] shadow-inner select-none isolate">
+        
+        <!-- EXACT INLINE SVG player-chassis.svg -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="296 383 3658 2595" preserveAspectRatio="none" width="100%" height="100%" class="absolute inset-0 pointer-events-none select-none z-0">
+          <defs>
+            <filter id="lcd-inner-shadow">
+              <feOffset dx="0" dy="25"/>
+              <feGaussianBlur stdDeviation="20" result="offset-blur"/>
+              <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse"/>
+              <feFlood flood-color="black" flood-opacity="0.95" result="color"/>
+              <feComposite operator="in" in="color" in2="inverse" result="shadow"/>
+              <feComposite operator="over" in="shadow" in2="SourceGraphic"/>
+            </filter>
+            <linearGradient id="mini-player-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#1E1E24" />
+              <stop offset="100%" stop-color="#0A0A0A" />
+            </linearGradient>
+            <clipPath id="lcd-display-clip">
+              <path d="M604.605,554 L3116.675,554 c65.83,0 120,54.17 120,120 c0,222.67 184.5,405.91 408.72,405.91 c65.83,0 120,54.17 120,120 L3765.395,1348.18 c0,66.27 -53.73,120 -120,120 L604.605,1468.18 c-66.27,0 -120,-53.73 -120,-120 L484.605,674 c0,-66.27 53.73,-120 120,-120 Z" />
+            </clipPath>
+          </defs>
+          <path 
+            d="M451.625,383.598l2852.76,0a120,120 0 0,1 120,120a408.723,405.909 0 0,0 408.723,405.909a120,120 0 0,1 120,120l0,1792.06c0,85.533 -69.827,155.916 -154.684,155.916l-3346.8,0c-84.857,0 -154.684,-70.383 -154.684,-155.916l0,-2282.05c0,-85.533 69.827,-155.917 154.684,-155.917Z" 
+            fill="url(#mini-player-bg)" 
+          />
+          <path d="M604.605,554 L3116.675,554 c65.83,0 120,54.17 120,120 c0,222.67 184.5,405.91 408.72,405.91 c65.83,0 120,54.17 120,120 L3765.395,1348.18 c0,66.27 -53.73,120 -120,120 L604.605,1468.18 c-66.27,0 -120,-53.73 -120,-120 L484.605,674 c0,-66.27 53.73,-120 120,-120 Z" fill="#0c0d11" filter="url(#lcd-inner-shadow)" />
+          <path d="M604.605,554 L3116.675,554 c65.83,0 120,54.17 120,120 c0,222.67 184.5,405.91 408.72,405.91 c65.83,0 120,54.17 120,120 L3765.395,1348.18 c0,66.27 -53.73,120 -120,120 L604.605,1468.18 c-66.27,0 -120,-53.73 -120,-120 L484.605,674 c0,-66.27 53.73,-120 120,-120 Z" fill="none" stroke="rgba(0,0,0,0.8)" stroke-width="15" />
+          <path 
+            d="M451.625,383.598l2852.76,0a120,120 0 0,1 120,120a408.723,405.909 0 0,0 408.723,405.909a120,120 0 0,1 120,120l0,1792.06c0,85.533 -69.827,155.916 -154.684,155.916l-3346.8,0c-84.857,0 -154.684,-70.383 -154.684,-155.916l0,-2282.05c0,-85.533 69.827,-155.917 154.684,-155.917Z" 
+            fill="none"
+            stroke="rgba(255,255,255,0.06)"
+            stroke-width="2"
+            vector-effect="non-scaling-stroke"
+          />
+        </svg>
+
+        <!-- Mechanical Left Spinning Gear (Using exact player-gear.svg paths) -->
+        <div 
+          class=${`absolute pointer-events-none select-none z-10 ${isPlaying ? 'gear-spin-clockwise' : 'gear-paused'}`}
+          style=${{
+            left: '20%',
+            top: '64%',
+            width: '20%',
+            height: '28.2%'
+          }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1280" width="100%" height="100%">
+            <defs>
+              <radialGradient id="gear-bg-left" cx="50%" cy="50%" r="50%">
+                <stop offset="20%" stop-color="#3a3a40" />
+                <stop offset="100%" stop-color="#24242a" />
+              </radialGradient>
+            </defs>
+            <path
+              d="M 1220.0 640.0 A 580 580 0 0 0 1191.6 819.2 L 960.8 843.6 A 380 380 0 0 0 932.8 882.2 L 980.9 1109.2 A 580 580 0 0 0 819.2 1191.6 A 580 580 0 0 0 640.0 1220.0 L 545.5 1008.1 A 380 380 0 0 0 500.1 993.3 L 299.1 1109.2 A 580 580 0 0 0 170.8 980.9 A 580 580 0 0 0 88.4 819.2 L 260.7 663.9 A 380 380 0 0 0 260.7 616.1 L 88.4 460.8 A 580 580 0 0 0 170.8 299.1 A 580 580 0 0 0 299.1 170.8 L 500.1 286.7 A 380 380 0 0 0 545.5 271.9 L 640.0 60.0 A 580 580 0 0 0 819.2 88.4 A 580 580 0 0 0 980.9 170.8 L 932.8 397.8 A 380 380 0 0 0 960.8 436.4 L 1191.6 460.8 A 580 580 0 0 0 1220.0 640.0 Z"
+              fill-rule="evenodd"
+              fill="url(#gear-bg-left)"
+              stroke="rgba(255,255,255,0.05)"
+              stroke-width="2"
+              vector-effect="non-scaling-stroke"
+            />
+          </svg>
+        </div>
+
+        <!-- Mechanical Right Interlocking Gear -->
+        <div 
+          class=${`absolute pointer-events-none select-none z-10 ${isPlaying ? 'gear-spin-counterclockwise' : 'gear-paused'}`}
+          style=${{
+            left: '60%',
+            top: '67%',
+            width: '16%',
+            height: '22.56%'
+          }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1280" width="100%" height="100%">
+            <defs>
+              <radialGradient id="gear-bg-right" cx="50%" cy="50%" r="50%">
+                <stop offset="20%" stop-color="#303035" />
+                <stop offset="100%" stop-color="#1d1d22" />
+              </radialGradient>
+            </defs>
+            <path
+              d="M 1220.0 640.0 A 580 580 0 0 0 1191.6 819.2 L 960.8 843.6 A 380 380 0 0 0 932.8 882.2 L 980.9 1109.2 A 580 580 0 0 0 819.2 1191.6 A 580 580 0 0 0 640.0 1220.0 L 545.5 1008.1 A 380 380 0 0 0 500.1 993.3 L 299.1 1109.2 A 580 580 0 0 0 170.8 980.9 A 580 580 0 0 0 88.4 819.2 L 260.7 663.9 A 380 380 0 0 0 260.7 616.1 L 88.4 460.8 A 580 580 0 0 0 170.8 299.1 A 580 580 0 0 0 299.1 170.8 L 500.1 286.7 A 380 380 0 0 0 545.5 271.9 L 640.0 60.0 A 580 580 0 0 0 819.2 88.4 A 580 580 0 0 0 980.9 170.8 L 932.8 397.8 A 380 380 0 0 0 960.8 436.4 L 1191.6 460.8 A 580 580 0 0 0 1220.0 640.0 Z"
+              fill-rule="evenodd"
+              fill="url(#gear-bg-right)"
+              stroke="rgba(255,255,255,0.05)"
+              stroke-width="2"
+              vector-effect="non-scaling-stroke"
+            />
+          </svg>
+        </div>
+
+        <!-- LCD Screen elements masked within the chassis viewport coordinates -->
+        <div 
+          class="absolute overflow-hidden z-15 bg-[#030402]"
+          style=${{
+            left: '5.16%',
+            top: '6.59%',
+            width: '89.68%',
+            height: '35.23%',
+            clipPath: 'url(#lcd-display-clip)',
+            WebkitClipPath: 'url(#lcd-display-clip)'
+          }}
+        >
+          <!-- Vintage scanlines -->
+          <div class="absolute inset-0 lcd-scanlines pointer-events-none z-25 select-none opacity-20" />
+          
+          <div class="absolute inset-0 p-3 py-4 flex flex-col justify-between font-mono text-primary leading-none select-none">
+            
+            <div class="flex justify-between items-start">
+              <div class="min-w-0 flex-1 pr-2">
+                <p class="text-[8px] opacity-40 tracking-widest truncate uppercase">
+                  ${activeTrack.folder.replace(/_/g, ' ')}
+                </p>
+                <p class="text-[10px] font-bold tracking-wider truncate uppercase text-primary animate-phosphor drop-shadow-[0_0_2px_#22c55e]">
+                  ${activeTrack.title.replace(/_/g, ' ')}
+                </p>
+              </div>
+              <span class="text-[9px] font-bold tabular-nums shrink-0 pt-0.5">
+                ${formatTime(currentTime)}
+              </span>
+            </div>
+
+            <!-- Micro Canvas Visualizer -->
+            <div class="flex items-end gap-2.5 h-6 w-full mt-1 overflow-hidden">
+              <div class="flex-1 h-full min-w-0">
+                <canvas 
+                  ref=${miniCanvasRef} 
+                  width="180" 
+                  height="24" 
+                  class="w-full h-full opacity-80"
+                />
+              </div>
+              <span class="text-[9px] font-bold opacity-50 shrink-0 select-none">
+                ${formatTime(duration)}
+              </span>
+            </div>
+
           </div>
         </div>
-        
-        <div class="space-y-1">
+
+      </div>
+
+      <!-- Playback Timeline progress bar -->
+      <div class="space-y-1">
+        <div class="relative w-full h-1 bg-void rounded-full overflow-hidden">
+          <div 
+            class="h-full bg-primary shadow-[0_0_6px_#22c55e]"
+            style=${{ width: `${progressPercent}%` }}
+          />
           <input 
             type="range" 
             min="0" 
             max=${duration || 0} 
             value=${currentTime} 
             onChange=${handleScrubberChange}
-            class="w-full h-1 rounded-full appearance-none bg-void accent-primary cursor-none focus:outline-none"
-            style=${{
-              background: `linear-gradient(to right, #22c55e ${(currentTime / (duration || 1)) * 100}%, #111114 ${(currentTime / (duration || 1)) * 100}%)`
-            }}
+            class="absolute inset-0 w-full h-full opacity-0 cursor-none"
           />
-          <div class="flex justify-between text-[10px] font-mono text-muted select-none">
-            <span>${formatTime(currentTime)}</span>
-            <span>${formatTime(duration)}</span>
-          </div>
         </div>
       </div>
 
-      <div class="flex items-center justify-between gap-1">
+      <!-- Sidebar Player controls rows -->
+      <div class="flex items-center justify-between gap-1 mt-0.5">
+        
         <button 
-          onClick=${handlePrev} 
-          class="p-2 rounded-lg bg-void/40 border border-white/5 hover:border-[#22c55e]/30 text-fog hover:text-white transition cursor-none"
-          title="Previous"
+          onClick=${handleTriggerPrev} 
+          class="p-2 rounded-lg bg-void/50 border border-white/5 hover:border-primary/30 text-fog hover:text-white transition cursor-none"
+          title="Previous Track"
         >
           <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" /></svg>
         </button>
 
         <button 
-          onClick=${togglePlay} 
-          class="p-2.5 rounded-full bg-void border border-white/10 hover:border-[#22c55e]/40 text-white transition hover:scale-105 cursor-none"
+          onClick=${handleTriggerPlay} 
+          class="p-2.5 rounded-full bg-void border border-white/10 hover:border-primary/40 text-white transition hover:scale-105 cursor-none flex items-center justify-center shadow-lg"
           title=${isPlaying ? "Pause" : "Play"}
         >
           ${isPlaying 
-            ? html`<svg class="w-4 h-4 fill-current text-[#22c55e]" viewBox="0 0 24 24"><path d="M6 19h4V5H6v13zm8-14v13h4V5h-4z"/></svg>`
-            : html`<svg class="w-4 h-4 fill-current ml-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`
+            ? html`<svg class="w-4 h-4 fill-current text-primary drop-shadow-[0_0_4px_#22c55e]" viewBox="0 0 24 24"><path d="M6 19h4V5H6v13zm8-14v13h4V5h-4z"/></svg>`
+            : html`<svg class="w-4 h-4 fill-current ml-0.5 text-white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`
           }
         </button>
 
         <button 
-          onClick=${handleNext} 
-          class="p-2 rounded-lg bg-void/40 border border-white/5 hover:border-[#22c55e]/30 text-fog hover:text-white transition cursor-none"
-          title="Next"
+          onClick=${handleTriggerNext} 
+          class="p-2 rounded-lg bg-void/50 border border-white/5 hover:border-primary/30 text-fog hover:text-white transition cursor-none"
+          title="Next Track"
         >
           <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6zm9-12v12h2V6z" /></svg>
         </button>
 
         <button 
-          onClick=${toggleShuffleState} 
-          class=${`p-2 rounded-lg border transition duration-200 cursor-none text-[10px] font-mono ${isShuffle ? 'border-[#22c55e]/30 bg-[#22c55e]/5 text-[#22c55e]' : 'border-white/5 text-muted'}`}
-          title="Shuffle"
+          onClick=${handleTriggerShuffle} 
+          class=${`p-2 rounded-lg border transition duration-200 cursor-none text-[9px] font-mono font-bold uppercase tracking-wider ${isShuffle ? 'border-primary/30 bg-primary/5 text-primary' : 'border-white/5 text-muted'}`}
+          title="Shuffle Playlist"
         >
           SHUF
         </button>
+
+        <!-- Volume dropdown popover trigger -->
+        <div class="relative">
+          <button 
+            onClick=${() => {
+              audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.35);
+              setShowVolumePopover(!showVolumePopover);
+            }}
+            class=${`p-2 rounded-lg border transition duration-200 cursor-none ${showVolumePopover ? 'border-primary/30 bg-primary/5 text-primary' : 'border-white/5 text-fog hover:text-white'}`}
+            title="Volume Control"
+          >
+            ${volume === 0 
+              ? html`<${VolumeX} size=${14} />`
+              : html`<${Volume2} size=${14} />`
+            }
+          </button>
+
+          <!-- Volume sliding controller with custom tactile aluminum fader -->
+          ${showVolumePopover && html`
+            <div class="absolute bottom-10 right-0 z-50 bg-[#0d0e12] border border-white/10 p-3 rounded-lg shadow-2xl flex flex-col items-center gap-2 w-10 animate-lightbox-entry">
+              <input 
+                type="range" 
+                min="0" 
+                max="1" 
+                step="0.01" 
+                value=${volume} 
+                onChange=${(e) => setVolume(parseFloat(e.target.value))}
+                class="h-24 appearance-none rounded-lg outline-none bg-void cursor-none custom-range-slider"
+                style=${{
+                  writingMode: 'bt-lr',
+                  WebkitAppearance: 'slider-vertical'
+                }}
+              />
+              <button 
+                onClick=${handleMuteToggle}
+                class="text-[9px] font-mono text-muted hover:text-white mt-1 cursor-none"
+              >
+                ${volume === 0 ? "UNM" : "MUTE"}
+              </button>
+            </div>
+          `}
+        </div>
+
+        <!-- System Mixer console trigger -->
+        <button 
+          onClick=${onOpenConsole}
+          class="p-2 rounded-lg bg-void/50 border border-white/5 hover:border-primary/30 text-fog hover:text-white transition cursor-none flex items-center justify-center"
+          title="Open Audio Mixer"
+        >
+          <${Settings2} size=${14} />
+        </button>
+
       </div>
 
-      <div class="flex items-center gap-2 bg-void/20 p-1.5 rounded-lg border border-white/5">
-        <svg class="w-3 h-3 text-muted shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-        <input 
-          type="range" 
-          min="0" 
-          max="1" 
-          step="0.01" 
-          value=${volume} 
-          onChange=${(e) => setVolume(parseFloat(e.target.value))}
-          class="w-full h-1 bg-void rounded-lg appearance-none accent-primary cursor-none"
-        />
-      </div>
     </div>
   `;
 }
@@ -1452,6 +2350,7 @@ import React from 'react';
 import htm from 'htm';
 import { Menu, Music, ChevronRight } from 'lucide-react';
 import { MusicPlayerDeck } from './MusicPlayerDeck.js';
+import { audioEngine } from './AudioEngine.js';
 
 const html = htm.bind(React.createElement);
 
@@ -1475,19 +2374,23 @@ export function Sidebar({
   setIsSidebarOpen,
   activeSection,
   handleNavigation,
-  playSFX,
-  playerProps
+  playerProps,
+  onOpenConsole
 }) {
+  const handleNavClick = (targetId) => {
+    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.35);
+    handleNavigation(targetId);
+  };
+
   return html`
     <div class="contents">
-      <!-- ── MOBILE HEADER ── -->
+      <!-- MOBILE HEADER -->
       <header class="md:hidden fixed top-0 left-0 w-full h-14 bg-gradient-to-b from-panel to-void z-[60] border-b border-black shadow-lg pr-4 pl-4 flex justify-between items-center cursor-none">
         <button 
-          onPointerDown=${() => { playSFX("click"); handleNavigation("audio"); }}
-          onPointerUp=${() => playSFX("release")}
+          onClick=${() => handleNavClick("audio")}
           class="text-fog hover:text-white text-xs font-bold tracking-widest uppercase font-mono cursor-none"
         >
-          YOUR NAME // 2026
+          SC // 2026
         </button>
         <button 
           onClick=${() => setIsSidebarOpen(!isSidebarOpen)}
@@ -1497,22 +2400,38 @@ export function Sidebar({
         </button>
       </header>
 
-      <!-- ── NAVIGATION SIDEBAR PANEL ── -->
+      <!-- NAVIGATION SIDEBAR PANEL -->
       <aside class=${`fixed top-14 md:top-0 left-0 h-[calc(100dvh-56px)] md:h-[100dvh] w-64 bg-ink border-r border-white/5 z-50 flex flex-col cursor-none transition-transform duration-300 md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <!-- Logo Button -->
-        <div class="p-4 lg:p-5 bg-gradient-to-b from-panel to-[#0c0d11] border-b border-black shadow-inner hidden md:flex items-center gap-3 shrink-0 relative z-20">
-          <button 
-            onPointerDown=${() => { playSFX("click"); handleNavigation("audio"); }}
-            onPointerUp=${() => playSFX("release")}
-            class="w-full text-center text-xs font-bold tracking-widest uppercase font-mono border border-white/10 rounded-lg py-2.5 hover:border-primary/40 transition duration-300 cursor-none text-primary"
-          >
-            YN // 2026
-          </button>
+        
+        <!-- Sunken Hardware-Style Toggle well -->
+        <div class="p-4 lg:p-5 border-b border-black hidden md:block shrink-0 relative z-20">
+          <div class="relative w-full rounded-lg surface-hardware-well p-[2.5px] isolate">
+            <button 
+              onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+              onPointerUp=${() => {
+                audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+                handleNavigation("audio");
+              }}
+              class="group relative flex items-center justify-center text-xs font-bold tracking-widest uppercase font-display w-full h-[38px] rounded-[5px] text-center transition-all duration-150 cursor-none overflow-hidden isolate outline-none surface-hardware-btn"
+            >
+              <div class="absolute inset-0 pointer-events-none transition-opacity duration-300 bg-primary/5 opacity-0 group-hover:opacity-100 z-0" />
+              
+              <!-- Standard Text Layer (Green Glow Hover State) -->
+              <span class="relative z-10 transition-colors duration-300 text-fog group-hover:text-primary-400">
+                SC // 2026
+              </span>
+
+              <!-- Animated Illuminated Prismatic Foil (Hover Sweep) -->
+              <span class="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none text-prismatic-foil font-bold">
+                SC // 2026
+              </span>
+            </button>
+          </div>
         </div>
 
         <!-- Navigation Tree -->
         <nav class="flex-1 px-4 py-6 space-y-6 overflow-y-auto custom-scrollbar relative z-10 select-none">
-          <!-- System Console Group -->
+          <!-- System Control Group -->
           <div>
             <div class="px-2 mb-2">
               <h3 class="text-[10px] font-mono font-bold text-muted uppercase tracking-widest">/ Control Deck</h3>
@@ -1520,7 +2439,7 @@ export function Sidebar({
             <ul class="space-y-1">
               <li>
                 <button 
-                  onClick=${() => handleNavigation("audio")}
+                  onClick=${() => handleNavClick("audio")}
                   class=${`flex items-center gap-2.5 px-3 py-2 text-sm rounded-md w-full text-left transition duration-200 cursor-none ${activeSection === 'audio' ? 'text-primary font-bold bg-white/5' : 'text-fog hover:text-white'}`}
                 >
                   <${Music} size=${16} />
@@ -1540,7 +2459,7 @@ export function Sidebar({
                 ${sec.items.map((item) => html`
                   <li key=${item.id}>
                     <button 
-                      onClick=${() => handleNavigation(item.id)}
+                      onClick=${() => handleNavClick(item.id)}
                       class=${`flex items-center gap-2.5 px-3 py-1.5 text-xs rounded-md w-full text-left transition duration-200 cursor-none ${activeSection === item.id ? 'text-white font-bold bg-white/5' : 'text-fog hover:text-white'}`}
                     >
                       <${ChevronRight} size=${12} class=${activeSection === item.id ? 'text-primary' : 'text-muted'} />
@@ -1554,7 +2473,7 @@ export function Sidebar({
         </nav>
 
         <!-- Tall Sidebar Music Player Deck -->
-        <${MusicPlayerDeck} ...${playerProps} />
+        <${MusicPlayerDeck} ...${playerProps} onOpenConsole=${onOpenConsole} />
       </aside>
     </div>
   `;

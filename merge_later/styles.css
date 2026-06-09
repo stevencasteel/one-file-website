@@ -1,0 +1,202 @@
+/* Custom Scrollbar Override */
+::-webkit-scrollbar {
+  display: none !important;
+}
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+body {
+  background-color: #050505;
+  color: #f2f2f2;
+  font-family: "Recursive", sans-serif;
+  font-variation-settings: "MONO" 0, "CASL" 0.35, "slnt" 0, "CRSV" 0.5, "wght" 400;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  cursor: none !important;
+}
+a, button, [role="button"], input, select, textarea, img {
+  cursor: none !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-variation-settings: "wght" 800;
+}
+
+/* Dynamic Variable Font Adjustments */
+.font-mono {
+  font-family: "Recursive", monospace !important;
+  font-variation-settings: "MONO" 1, "CASL" 0, "slnt" 0, "CRSV" 0, "wght" 400 !important;
+  transition: font-variation-settings 0.35s cubic-bezier(0.25, 0, 0, 1) !important;
+}
+.font-mono:hover {
+  font-variation-settings: "MONO" 1, "CASL" 0, "slnt" 0, "CRSV" 0, "wght" 700 !important;
+}
+
+nav a, nav button {
+  font-variation-settings: "MONO" 0, "CASL" 0.35, "slnt" 0, "CRSV" 0.5, "wght" 400;
+  transition: font-variation-settings 0.35s cubic-bezier(0.25, 0, 0, 1);
+}
+nav a:hover, nav button:hover {
+  font-variation-settings: "MONO" 0, "CASL" 0.35, "slnt" 0, "CRSV" 0.5, "wght" 750;
+}
+
+/* Custom Cursor styles with translation improvements */
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+  z-index: 100000;
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform;
+  display: none;
+}
+@media (pointer: fine) {
+  .custom-cursor {
+    display: block;
+  }
+}
+.cursor-element {
+  transition: transform 0.1s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center;
+}
+
+/* Dot Grid Backgrounds */
+.bg-grid-pattern {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Clean, stable grid card hover effects */
+.prismatic-border-hover {
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.prismatic-border-hover:hover {
+  border-color: rgba(255, 100, 255, 0.4) !important;
+  box-shadow: 0 0 15px rgba(255, 100, 255, 0.25);
+}
+
+/* GPU-Accelerated Lightbox Overlay Animations */
+@keyframes fade-in-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-lightbox-entry {
+  animation: fade-in-scale 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* System Cursor/Typewriter animations */
+@keyframes phosphor-flicker {
+  0%, 100% { opacity: 0.97; }
+  50% { opacity: 1.0; }
+}
+.animate-phosphor {
+  animation: phosphor-flicker 0.25s infinite;
+}
+
+/* Retro CRT Scanlines overlay */
+.lcd-scanlines {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 1px,
+    rgba(0, 0, 0, 0.18) 1px,
+    rgba(0, 0, 0, 0.18) 2px
+  );
+}
+
+/* Sunken Well Bezel */
+.surface-hardware-well {
+  background-color: #0c0d11;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.95), inset 0 -1px 1px rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+/* Hardware Button */
+.surface-hardware-btn {
+  background: linear-gradient(180deg, #1d1e24 0%, #121318 100%);
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 3px solid #08090b;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.surface-hardware-btn:active {
+  transform: translateY(1.5px);
+  border-bottom-width: 0px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+/* Prismatic Background Sweep */
+@keyframes prismatic-sweep {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.text-prismatic-foil {
+  background: linear-gradient(90deg, #22c55e, #3b82f6, #a855f7, #ef4444, #22c55e);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: prismatic-sweep 5s linear infinite;
+}
+
+/* Custom range fader knob with exact SVG layers encoded safely in CSS */
+.custom-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 24px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 24'><defs><linearGradient id='knob-body' x1='0' y1='0' x2='0' y2='1'><stop offset='0%25' stop-color='%23323238'/><stop offset='50%25' stop-color='%231a1a1f'/><stop offset='100%25' stop-color='%230c0c0e'/></linearGradient></defs><rect x='0.5' y='0.5' width='17' height='23' rx='3' fill='url(%23knob-body)' stroke='%23000' stroke-width='0.5'/><rect x='1.5' y='1.5' width='15' height='1' rx='0.5' fill='%23ffffff' opacity='0.12'/><line x1='2.5' y1='3' x2='2.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='3.5' y1='3' x2='3.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/><line x1='15.5' y1='3' x2='15.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='14.5' y1='3' x2='14.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/></svg>");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+}
+.custom-range-slider::-moz-range-thumb {
+  width: 18px;
+  height: 24px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 24'><defs><linearGradient id='knob-body' x1='0' y1='0' x2='0' y2='1'><stop offset='0%25' stop-color='%23323238'/><stop offset='50%25' stop-color='%231a1a1f'/><stop offset='100%25' stop-color='%230c0c0e'/></linearGradient></defs><rect x='0.5' y='0.5' width='17' height='23' rx='3' fill='url(%23knob-body)' stroke='%23000' stroke-width='0.5'/><rect x='1.5' y='1.5' width='15' height='1' rx='0.5' fill='%23ffffff' opacity='0.12'/><line x1='2.5' y1='3' x2='2.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='3.5' y1='3' x2='3.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/><line x1='15.5' y1='3' x2='15.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='14.5' y1='3' x2='14.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/></svg>");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+}
+
+/* Continuous physical rotation loops */
+@keyframes spin-clockwise {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes spin-counterclockwise {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+.gear-spin-clockwise {
+  animation: spin-clockwise 14s linear infinite;
+}
+.gear-spin-counterclockwise {
+  animation: spin-counterclockwise 11s linear infinite;
+}
+.gear-paused {
+  animation-play-state: paused !important;
+}
