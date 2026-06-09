@@ -25,63 +25,38 @@ Object.entries(grouped).forEach(([folder, tracks]) => {
   });
 });
 
-export function AudioConsoleModal({
-  isOpen,
-  onClose,
-  activeTrack,
-  trackMetadata,
-  isPlaying,
-  currentTime,
-  duration,
-  isShuffle,
-  handleScrubberChange,
-  handlePrev,
-  togglePlay,
-  handleNext,
-  toggleShuffleState,
-  formatTime,
-  playTrackByIndex,
-
-  // Global Mixer State Bindings
-  mixerMaster,
-  setMixerMaster,
-  volume, // musicVolume
-  setVolume, // setMusicVolume
-  mixerSfx,
-  setMixerSfx,
-  mixerAmbience,
-  setMixerAmbience,
-  isMuted,
-  setIsMuted
+// ── CONSOLE BUTTON COMPONENT (1:1 SHARE) ─────────────────────────────────
+function ConsoleButton({
+  children,
+  onClick,
+  active,
+  label,
+  className = "w-8 h-8"
 }) {
-  if (!isOpen) return null;
+  return html`
+    <div class=${`relative rounded-lg surface-hardware-well p-[2.5px] shrink-0 ${className}`}>
+      <button
+        aria-label=${label}
+        title=${label}
+        onClick=${(e) => { e.stopPropagation(); onClick(); }}
+        class=${`relative isolate flex items-center justify-center w-full h-full rounded-[5px] transition-[transform,color] duration-150 cursor-none overflow-hidden outline-none surface-hardware-btn ${active ? 'is-active text-primary' : 'text-fog hover:text-white'}`}
+      >
+        <span class="relative z-10 flex items-center justify-center w-full h-full">
+          ${children}
+        </span>
+      </button>
+    </div>
+  `;
+}
 
+// ── DECOUPLED SPECTRUM VISUALIZER COMPONENT ──────────────────────────────
+function SpectrumVisualizer({ isPlaying }) {
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
-  const [showShader, setShowShader] = useState(true);
-  const [playlistView, setPlaylistView] = useState("tracks");
-  const [viewingAlbumId, setViewingAlbumId] = useState(ALBUMS[0]?.id || "");
-
-  // Tracks are kept static to prevent GC spikes in canvas
   const peaksRef = useRef(new Array(64).fill(0));
   const smoothedValuesRef = useRef(new Array(64).fill(0));
 
-  // Synced on opening/active track swap
   useEffect(() => {
-    if (activeTrack) setViewingAlbumId(activeTrack.folder);
-  }, [activeTrack]);
-
-  // Hook-up Lowpass filter when active console open (focus state logic)
-  useEffect(() => {
-    audioEngine.setLowpass(true);
-    return () => {
-      audioEngine.setLowpass(false);
-    };
-  }, []);
-
-  // FFT Audio Analyzer Spectrum Loop
-  useEffect(() => {
-    if (!showShader) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -150,7 +125,71 @@ export function AudioConsoleModal({
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [isPlaying, showShader]);
+  }, [isPlaying]);
+
+  return html`
+    <div class="w-full overflow-hidden shrink-0 animate-lightbox-entry">
+      <div class="relative rounded-xl overflow-hidden border border-white/5 shadow-inner bg-void h-32 w-full">
+        <canvas 
+          ref=${canvasRef} 
+          width="600" 
+          height="128" 
+          class="w-full h-full opacity-90"
+        />
+        <div class="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none select-none" style=${{ backgroundSize: '16px 16px' }} />
+      </div>
+    </div>
+  `;
+}
+
+// ── MAIN AUDIO CONSOLE MODAL COMPONENT ───────────────────────────────────
+export function AudioConsoleModal({
+  isOpen,
+  onClose,
+  activeTrack,
+  trackMetadata,
+  isPlaying,
+  currentTime,
+  duration,
+  isShuffle,
+  handleScrubberChange,
+  handlePrev,
+  togglePlay,
+  handleNext,
+  toggleShuffleState,
+  formatTime,
+  playTrackByIndex,
+
+  // Global Mixer State Bindings
+  mixerMaster,
+  setMixerMaster,
+  volume, // musicVolume
+  setVolume, // setMusicVolume
+  mixerSfx,
+  setMixerSfx,
+  mixerAmbience,
+  setMixerAmbience,
+  isMuted,
+  setIsMuted
+}) {
+  if (!isOpen) return null;
+
+  const [showShader, setShowShader] = useState(true);
+  const [playlistView, setPlaylistView] = useState("tracks");
+  const [viewingAlbumId, setViewingAlbumId] = useState(ALBUMS[0]?.id || "");
+
+  // Synced on opening/active track swap
+  useEffect(() => {
+    if (activeTrack) setViewingAlbumId(activeTrack.folder);
+  }, [activeTrack]);
+
+  // Hook-up Lowpass filter when active console open (focus state logic)
+  useEffect(() => {
+    audioEngine.setLowpass(true);
+    return () => {
+      audioEngine.setLowpass(false);
+    };
+  }, []);
 
   const activeAlbum = ALBUMS.find(a => a.id === viewingAlbumId) || ALBUMS[0];
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -178,7 +217,7 @@ export function AudioConsoleModal({
   // 1:1 Overdriven Spectrum Gain Ticks (13 notches)
   const ticks = Array.from({ length: 13 }, (_, i) => i * 8.33);
 
-  // Reusable Studio Mixer Slider Component with Neumorph Shadows
+  // Reusable Studio Mixer Slider Component
   const renderSlider = (label, type, value, setter) => {
     const displayPercent = Math.round(value * 100);
     const physicalPercent = Math.round((value / 3.0) * 100); // Max fader is 3.0 (300%)
@@ -225,7 +264,7 @@ export function AudioConsoleModal({
             `)}
           </div>
 
-          <!-- Knob fader thumb -->
+          <!-- Knob thumb -->
           <div 
             class=${`absolute pointer-events-none z-20 flex items-center justify-center transition-all duration-100 ${isMuted ? 'opacity-40' : ''}`} 
             style=${{ left: `calc(${physicalPercent}% - 9px)`, width: '18px', height: '24px' }}
@@ -276,7 +315,7 @@ export function AudioConsoleModal({
             }}
             class="flex items-center justify-center w-8 h-8 rounded-md bg-white/5 border border-white/10 hover:border-primary-400 hover:text-primary-400 hover:bg-primary-400/10 transition-all duration-300 cursor-none outline-none"
           >
-            <${X} size={16} />
+            <${X} size=${16} />
           </button>
         </div>
 
@@ -330,7 +369,8 @@ export function AudioConsoleModal({
               <div class="flex items-center gap-2.5 w-full">
                 <div class="relative flex items-center group/scrub flex-1 h-6">
                   <div class="absolute inset-0 rounded-md surface-hardware-track pointer-events-none" />
-                  <div class="absolute inset-0 rounded-md overflow-hidden pointer-events-none">
+                  <!-- Recessed 3px inset progress bar -->
+                  <div class="absolute inset-[3px] rounded-sm overflow-hidden pointer-events-none">
                     <div class="h-full bg-primary" style=${{ width: `${progressPercent}%` }} />
                   </div>
                   <div class="absolute inset-0 rounded-md shadow-[inset_0_1px_3px_rgba(0,0,0,0.3),inset_0_-1px_1px_rgba(255,255,255,0.12)] pointer-events-none" />
@@ -351,53 +391,50 @@ export function AudioConsoleModal({
                 </div>
               </div>
 
-              <!-- Controls row -->
+              <!-- Controls Row utilizing standard Hardware-Shaded ConsoleButtons -->
               <div class="flex items-center gap-4 w-full">
-                <button 
+                <${ConsoleButton}
+                  label="Shuffle"
                   onClick=${toggleShuffleState}
-                  class=${`py-3 rounded-lg border text-xs font-mono font-bold uppercase cursor-none transition flex-1 max-w-[80px] h-12 flex items-center justify-center ${isShuffle ? 'border-primary/40 bg-primary/5 text-primary' : 'border-white/5 bg-white/5 text-fog hover:text-white'}`}
+                  active=${isShuffle}
+                  className="flex-1 max-w-[80px] h-12"
                 >
                   <${Shuffle} size=${16} />
-                </button>
-                <button 
+                </${ConsoleButton}>
+                
+                <${ConsoleButton}
+                  label="Previous"
                   onClick=${handlePrev}
-                  class="flex-1 py-3 rounded-lg bg-white/5 border border-white/10 hover:border-primary-400 hover:text-white text-fog cursor-none transition h-12 flex items-center justify-center"
+                  className="flex-1 h-12"
                 >
                   <${SkipBack} size=${18} fill="currentColor" />
-                </button>
-                <button 
+                </${ConsoleButton}>
+
+                <${ConsoleButton}
+                  label=${isPlaying ? "Pause" : "Play"}
                   onClick=${togglePlay}
-                  class="flex-1 max-w-[180px] rounded-lg bg-primary text-void font-bold cursor-none hover:scale-105 transition flex items-center justify-center shadow-[0_0_12px_rgba(34,197,94,0.4)] h-12"
+                  active=${isPlaying}
+                  className="flex-1 max-w-[180px] h-12 shadow-lg"
                 >
                   ${isPlaying 
                     ? html`<${Pause} size=${18} fill="currentColor" class="text-void" />`
                     : html`<${Play} size=${18} fill="currentColor" class="text-void ml-0.5" />`
                   }
-                </button>
-                <button 
+                </${ConsoleButton}>
+
+                <${ConsoleButton}
+                  label="Next"
                   onClick=${handleNext}
-                  class="flex-1 py-3 rounded-lg bg-white/5 border border-white/10 hover:border-primary-400 hover:text-white text-fog cursor-none transition h-12 flex items-center justify-center"
+                  className="flex-1 h-12"
                 >
                   <${SkipForward} size=${18} fill="currentColor" />
-                </button>
+                </${ConsoleButton}>
               </div>
             </div>
           </div>
 
-          <!-- Wide collapsible visualizer -->
-          ${showShader && html`
-            <div class="w-full overflow-hidden shrink-0 animate-lightbox-entry">
-              <div class="relative rounded-xl overflow-hidden border border-white/5 shadow-inner bg-void h-32 w-full">
-                <canvas 
-                  ref=${canvasRef} 
-                  width="600" 
-                  height="128" 
-                  class="w-full h-full opacity-90"
-                />
-                <div class="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none select-none" style=${{ backgroundSize: '16px 16px' }} />
-              </div>
-            </div>
-          `}
+          <!-- Wide decoupled visualizer with standard clean mount triggers -->
+          ${showShader && html`<${SpectrumVisualizer} isPlaying=${isPlaying} />`}
 
           <!-- Double Column bottom rack -->
           <div class="flex flex-col lg:flex-row gap-6 items-stretch w-full">
@@ -515,7 +552,7 @@ export function AudioConsoleModal({
                 </div>
               </div>
 
-              <!-- Mixer Faders scaled to 3.0 (300%) with Neumorph Shadows -->
+              <!-- Mixer Faders scaled to 3.0 (300%) -->
               <div class="flex flex-col flex-1 justify-center gap-6 p-5 md:p-6 bg-void/50">
                 ${renderSlider("Master Out", "master", mixerMaster, setMixerMaster)}
                 ${renderSlider("Music Synthesizer", "music", volume, setVolume)}

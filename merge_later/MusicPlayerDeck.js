@@ -7,6 +7,34 @@ import { ScrollingText } from './components.js';
 
 const html = htm.bind(React.createElement);
 
+// ── CONSOLE BUTTON COMPONENT ─────────────────────────────────────────────
+function ConsoleButton({
+  children,
+  onClick,
+  active,
+  label,
+  className = "w-8 h-8",
+  isPrismatic = false,
+  popoverTarget
+}) {
+  return html`
+    <div class=${`relative rounded-lg surface-hardware-well p-[2.5px] shrink-0 ${className}`}>
+      <button
+        aria-label=${label}
+        title=${label}
+        onClick=${(e) => { e.stopPropagation(); onClick(); }}
+        popovertarget=${popoverTarget}
+        class=${`relative isolate flex items-center justify-center w-full h-full rounded-[5px] transition-[transform,color] duration-150 cursor-none overflow-hidden outline-none surface-hardware-btn ${active ? 'is-active text-primary' : 'text-fog hover:text-white'}`}
+      >
+        <span class="relative z-10 flex items-center justify-center w-full h-full">
+          ${children}
+        </span>
+      </button>
+    </div>
+  `;
+}
+
+// ── MAIN MUSIC PLAYER DECK COMPONENT ─────────────────────────────────────
 export function MusicPlayerDeck({
   activeTrack,
   trackMetadata,
@@ -25,10 +53,10 @@ export function MusicPlayerDeck({
   onOpenConsole
 }) {
   const [showVolumePopover, setShowVolumePopover] = useState(false);
-  const [popoverCoords, setPopoverCoords] = useState({ top: 0, left: 0 });
   const volBtnRef = useRef(null);
   const miniCanvasRef = useRef(null);
   const animationRef = useRef(null);
+  const gearTimeoutsRef = useRef([]);
 
   useEffect(() => {
     const canvas = miniCanvasRef.current;
@@ -86,15 +114,38 @@ export function MusicPlayerDeck({
     }
   };
 
-  const toggleVolumePopover = () => {
-    if (!showVolumePopover && volBtnRef.current) {
-      const rect = volBtnRef.current.getBoundingClientRect();
-      setPopoverCoords({
-        top: rect.top + window.scrollY - 145,
-        left: rect.left + window.scrollX + rect.width / 2
-      });
-    }
-    setShowVolumePopover(!showVolumePopover);
+  const clearGearTicks = () => {
+    gearTimeoutsRef.current.forEach((id) => clearTimeout(id));
+    gearTimeoutsRef.current = [];
+  };
+
+  useEffect(() => {
+    return () => {
+      gearTimeoutsRef.current.forEach((id) => clearTimeout(id));
+    };
+  }, []);
+
+  const playGearEnterSound = () => {
+    clearGearTicks();
+    audioEngine.playInnerTick();
+    const t1 = setTimeout(() => audioEngine.playInnerTick(), 60);
+    const t2 = setTimeout(() => audioEngine.playInnerTick(), 120);
+    gearTimeoutsRef.current.push(t1, t2);
+  };
+
+  const playGearLeaveSound = () => {
+    clearGearTicks();
+    audioEngine.playInnerTick();
+    const t1 = setTimeout(() => audioEngine.playInnerTick(), 80);
+    gearTimeoutsRef.current.push(t1);
+  };
+
+  const handleGearMouseEnter = () => {
+    playGearEnterSound();
+  };
+
+  const handleGearMouseLeave = () => {
+    playGearLeaveSound();
   };
 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -148,23 +199,27 @@ export function MusicPlayerDeck({
           />
         </svg>
 
-        <!-- Settings Cog/Gear Trigger Button (Layered Behind Chassis) -->
+        <!-- Settings Cog/Gear Trigger Button with 1:1 Hit Area Shield Layer -->
         <div 
           class="absolute z-5 pointer-events-none"
           style=${{
             top: '-2%',
             right: '-1.5%',
             width: '23%',
-            aspectRatio: '1 / 1'
+            aspectRatio: '1 / 1',
+            filter: 'drop-shadow(0px 4px 6px rgba(0,0,0,0.8)) drop-shadow(-1px -1px 1px rgba(255,255,255,0.15))'
           }}
         >
           <button 
             onClick=${onOpenConsole}
-            onMouseEnter=${() => audioEngine.playInnerTick()}
+            onMouseEnter=${handleGearMouseEnter}
+            onMouseLeave=${handleGearMouseLeave}
             class="w-full h-full cursor-none outline-none rounded-full relative flex items-center justify-center group pointer-events-auto"
             title="Open Console Mixer"
           >
-            <div class="w-full h-full transition-transform duration-300 group-hover:rotate-90 group-active:scale-95">
+            <!-- 1:1 Transparent Overlay preventing Teeth Hover Flicker -->
+            <div class="absolute inset-0 rounded-full bg-white/[0.001] z-10" />
+            <div class="w-full h-full transition-transform duration-300 group-hover:rotate-90 group-active:scale-95 pointer-events-none">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1280" width="100%" height="100%">
                 <defs>
                   <radialGradient id="gear-bg-settings" cx="50%" cy="50%" r="50%">
@@ -185,9 +240,9 @@ export function MusicPlayerDeck({
           </button>
         </div>
 
-        <!-- LCD Screen Mask (Top Center) with CSS Mask Parity -->
+        <!-- LCD Screen Mask (Top Center) with Parity CSS Mask -->
         <div 
-          class="absolute overflow-hidden z-20 bg-[#030402]"
+          class="absolute overflow-hidden z-20"
           style=${{
             left: '5.16%',
             top: '6.59%',
@@ -196,10 +251,11 @@ export function MusicPlayerDeck({
             WebkitMaskImage: exactLcdMask,
             WebkitMaskSize: '100% 100%',
             maskImage: exactLcdMask,
-            maskSize: '100% 100%'
+            maskSize: '100% 100%',
+            backgroundColor: 'rgb(3, 4, 2)'
           }}
         >
-          <div class="absolute inset-0 lcd-scanlines pointer-events-none z-25 select-none opacity-20" />
+          <div class="absolute inset-0 lcd-scanlines pointer-events-none z-25 select-none opacity-20 animate-lcd-flicker" />
           <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.045] to-transparent pointer-events-none z-40" />
 
           <div class="absolute inset-0 flex items-stretch p-[2%] gap-[4%] select-none font-mono text-primary leading-none">
@@ -257,11 +313,12 @@ export function MusicPlayerDeck({
             height: '14%'
           }}
         >
-          <!-- 1:1 Parity Scrubber & timecode design -->
+          <!-- 1:1 Parity Scrubber with Inset Progress Height Limits -->
           <div class="flex items-center gap-2 w-full">
             <div class="relative flex items-center group/scrub flex-1 h-5">
               <div class="absolute inset-0 rounded-md surface-hardware-track pointer-events-none" />
-              <div class="absolute inset-0 rounded-md overflow-hidden pointer-events-none">
+              <!-- Recessed 3px inset to nest the core nicely -->
+              <div class="absolute inset-[3px] rounded-sm overflow-hidden pointer-events-none">
                 <div class="h-full bg-primary" style=${{ width: `${progressPercent}%` }} />
               </div>
               <div class="absolute inset-0 rounded-md shadow-[inset_0_1px_3px_rgba(0,0,0,0.3),inset_0_-1px_1px_rgba(255,255,255,0.12)] pointer-events-none" />
@@ -283,7 +340,7 @@ export function MusicPlayerDeck({
           </div>
         </div>
 
-        <!-- Playback Controls Row (Sunken Well Buttons) -->
+        <!-- Controls Row with Proportional Aspect-Square Sizing -->
         <div
           class="absolute flex items-center justify-between z-30 pointer-events-auto"
           style=${{
@@ -293,121 +350,97 @@ export function MusicPlayerDeck({
             bottom: '7%'
           }}
         >
-          <!-- Shuffle -->
-          <button 
-            onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
-            onPointerUp=${() => {
-              audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
-              toggleShuffleState();
-            }}
-            class=${`relative flex items-center justify-center rounded-[5px] cursor-none border border-black/40 overflow-hidden outline-none surface-hardware-btn text-center select-none font-bold font-mono text-[9px] transition w-[15%] h-full ${isShuffle ? 'is-active text-primary' : 'text-fog hover:text-white'}`}
-            title="Shuffle Mode"
+          <${ConsoleButton}
+            label="Shuffle"
+            onClick=${toggleShuffleState}
+            active=${isShuffle}
+            className="w-[15%] aspect-square"
           >
-            SHUF
-          </button>
+            <${Shuffle} size=${12} />
+          </${ConsoleButton}>
 
-          <!-- Previous -->
-          <button 
-            onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
-            onPointerUp=${() => {
-              audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
-              handlePrev();
-            }}
-            class="relative flex items-center justify-center rounded-[5px] cursor-none border border-black/40 overflow-hidden outline-none surface-hardware-btn w-[17%] h-full text-fog hover:text-white transition"
-            title="Previous Track"
+          <${ConsoleButton}
+            label="Previous"
+            onClick=${handlePrev}
+            className="w-[17%] aspect-square"
           >
             <${SkipBack} size=${12} fill="currentColor" />
-          </button>
+          </${ConsoleButton}>
 
-          <!-- Play / Pause -->
-          <button 
-            onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
-            onPointerUp=${() => {
-              audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
-              togglePlay();
-            }}
-            class=${`relative flex items-center justify-center rounded-[5px] cursor-none border border-black/40 overflow-hidden outline-none surface-hardware-btn w-[21%] h-full shadow-lg ${isPlaying ? 'is-active text-primary' : 'text-white'}`}
-            title=${isPlaying ? "Pause" : "Play"}
+          <${ConsoleButton}
+            label=${isPlaying ? "Pause" : "Play"}
+            onClick=${togglePlay}
+            active=${isPlaying}
+            className="w-[21%] aspect-square shadow-lg"
           >
             ${isPlaying 
               ? html`<${Pause} size=${14} fill="currentColor" class="text-primary drop-shadow-[0_0_4px_rgba(34,197,94,1)]" />`
               : html`<${Play} size=${14} fill="currentColor" class="ml-0.5" />`
             }
-          </button>
+          </${ConsoleButton}>
 
-          <!-- Next -->
-          <button 
-            onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
-            onPointerUp=${() => {
-              audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
-              handleNext();
-            }}
-            class="relative flex items-center justify-center rounded-[5px] cursor-none border border-black/40 overflow-hidden outline-none surface-hardware-btn w-[17%] h-full text-fog hover:text-white transition"
-            title="Next Track"
+          <${ConsoleButton}
+            label="Next"
+            onClick=${handleNext}
+            className="w-[17%] aspect-square"
           >
             <${SkipForward} size=${12} fill="currentColor" />
-          </button>
+          </${ConsoleButton}>
 
-          <!-- Volume -->
-          <div class="relative w-[15%] h-full flex items-center">
-            <button 
-              ref=${volBtnRef}
-              onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
-              onPointerUp=${() => {
-                audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
-                toggleVolumePopover();
-              }}
-              class=${`relative flex items-center justify-center rounded-[5px] cursor-none border border-black/40 overflow-hidden outline-none surface-hardware-btn w-full h-full transition ${showVolumePopover ? 'is-active text-primary' : 'text-fog hover:text-white'}`}
-              title="Volume Control"
+          <div class="relative w-[15%] h-full flex items-center justify-center aspect-square">
+            <${ConsoleButton}
+              label="Volume"
+              onClick=${() => setShowVolumePopover(!showVolumePopover)}
+              active=${showVolumePopover}
+              className="w-full h-full"
             >
               ${volume === 0 
                 ? html`<${VolumeX} size=${12} />`
                 : html`<${Volume2} size=${12} />`
               }
-            </button>
+            </${ConsoleButton}>
+
+            <!-- Hardware styled rotated Volume Popup slider well -->
+            ${showVolumePopover && html`
+              <div 
+                class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 z-[100] flex flex-col items-center bg-[#1a1a1f] border border-white/10 p-2 rounded-lg shadow-2xl w-12 h-[170px] animate-lightbox-entry cursor-none"
+                onClick=${(e) => e.stopPropagation()}
+              >
+                <div class="absolute bottom-0 left-0 right-0 h-5 bg-transparent" />
+                <div class="relative w-[144px] h-8 shrink-0 flex items-center group/vol -rotate-90 origin-center mt-[68px]">
+                  <div class="absolute inset-0 rounded-md surface-hardware-track pointer-events-none" />
+                  <div class="absolute inset-[3px] rounded-sm overflow-hidden pointer-events-none">
+                    <div class="h-full bg-primary" style=${{ width: `${volume * 100}%` }} />
+                  </div>
+                  <div class="absolute inset-0 shadow-[inset_0_1px_3px_rgba(0,0,0,0.3),inset_0_-1px_1px_rgba(255,255,255,0.12)] rounded-md pointer-events-none" />
+                  
+                  <input 
+                    type="range" 
+                    min="0" 
+                    max="1" 
+                    step="0.01" 
+                    value=${volume} 
+                    onChange=${(e) => {
+                      const val = parseFloat(e.target.value);
+                      setVolume(val);
+                    }}
+                    class="absolute inset-0 w-full h-full opacity-0 cursor-none z-30" 
+                  />
+                </div>
+                
+                <button 
+                  onClick=${handleMuteToggle}
+                  class="text-[9px] font-mono text-muted hover:text-white mt-16 uppercase cursor-none shrink-0"
+                >
+                  ${volume === 0 ? "UNM" : "MUTE"}
+                </button>
+              </div>
+            `}
           </div>
+
         </div>
 
       </div>
-
-      <!-- Volume Portal Overlay -->
-      ${showVolumePopover && createPortal(html`
-        <div 
-          class="fixed z-[100] -translate-x-1/2 flex flex-col items-center bg-[#1a1a1f] border border-white/10 p-3 rounded-lg shadow-2xl w-10 animate-lightbox-entry cursor-none"
-          style=${{
-            top: `${popoverCoords.top}px`,
-            left: `${popoverCoords.left}px`
-          }}
-        >
-          <div class="h-24 relative w-2 flex items-center justify-center">
-            <div class="absolute inset-y-0 w-1.5 bg-void rounded-full shadow-inner" />
-            <div class="absolute bottom-0 w-1.5 bg-primary rounded-full shadow-[0_0_8px_rgba(34,197,94,1)]" style=${{ height: `${volume * 100}%` }} />
-            <input 
-              type="range" 
-              min="0" 
-              max="1" 
-              step="0.01" 
-              value=${volume} 
-              onChange=${(e) => {
-                const val = parseFloat(e.target.value);
-                setVolume(val);
-              }}
-              class="absolute inset-0 w-full h-full opacity-0 cursor-none"
-              style=${{ writingMode: 'vertical-lr', direction: 'rtl' }}
-            />
-          </div>
-          <button 
-            onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
-            onPointerUp=${() => {
-              audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
-              handleMuteToggle();
-            }}
-            class="text-[9px] font-mono text-muted hover:text-white mt-2 uppercase cursor-none"
-          >
-            ${volume === 0 ? "UNM" : "MUTE"}
-          </button>
-        </div>
-      `, document.body)}
 
     </div>
   `;
