@@ -2,21 +2,25 @@
 │          STEVEN CASTEEL ARCHIVE PROJECT          │
 │        Vite + React (ESM CDN) + Tailwind CSS     │
 └──────────────────────────────────────────────────┘
- [SYSTEM] Generated: 6/8/2026, 9:20:24 PM
+ [SYSTEM] Generated: 6/8/2026, 9:31:27 PM
  [BASELINE]: React 18, HTM, Lucide React, Lenis Scroll, Tailwind CSS
 
 ─── ABRIDGED DIRECTORY STRUCTURE ───────────────────
 .
 ├── merge_later/
+│   ├── App.js
 │   ├── AudioConsoleModal.js
 │   ├── AudioEngine.js
 │   ├── components.js
+│   ├── CustomCursor.js
 │   ├── GlobalScrollbar.js
 │   ├── HeroHeader.js
 │   ├── MainContent.js
 │   ├── media_data.js
 │   ├── MusicPlayerDeck.js
-│   └── Sidebar.js
+│   ├── ProtocolWarning.js
+│   ├── Sidebar.js
+│   └── styles.css
 ├── node_modules/ (contents skipped)
 ├── AI_INSTRUCTIONS.txt
 ├── create_source_context.command
@@ -242,306 +246,10 @@ protocol based on scope:
     }
   </script>
   
-  <style>
-    /* Custom Scrollbar Override */
-    ::-webkit-scrollbar {
-      display: none !important;
-    }
-    * {
-      scrollbar-width: none !important;
-      -ms-overflow-style: none !important;
-    }
-
-    body {
-      background-color: #050505;
-      color: #f2f2f2;
-      font-family: "Recursive", sans-serif;
-      font-variation-settings: "MONO" 0, "CASL" 0.35, "slnt" 0, "CRSV" 0.5, "wght" 400;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-      cursor: none !important;
-    }
-    a, button, [role="button"], input, select, textarea, img {
-      cursor: none !important;
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-      font-family: "Bricolage Grotesque", sans-serif;
-      font-variation-settings: "wght" 800;
-    }
-
-    /* Dynamic Variable Font Adjustments */
-    .font-mono {
-      font-family: "Recursive", monospace !important;
-      font-variation-settings: "MONO" 1, "CASL" 0, "slnt" 0, "CRSV" 0, "wght" 400 !important;
-      transition: font-variation-settings 0.35s cubic-bezier(0.25, 0, 0, 1) !important;
-    }
-    .font-mono:hover {
-      font-variation-settings: "MONO" 1, "CASL" 0, "slnt" 0, "CRSV" 0, "wght" 700 !important;
-    }
-
-    nav a, nav button {
-      font-variation-settings: "MONO" 0, "CASL" 0.35, "slnt" 0, "CRSV" 0.5, "wght" 400;
-      transition: font-variation-settings 0.35s cubic-bezier(0.25, 0, 0, 1);
-    }
-    nav a:hover, nav button:hover {
-      font-variation-settings: "MONO" 0, "CASL" 0.35, "slnt" 0, "CRSV" 0.5, "wght" 750;
-    }
-
-    /* Custom Cursor styles with translation improvements */
-    .custom-cursor {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 24px;
-      height: 24px;
-      pointer-events: none;
-      z-index: 100000;
-      transform: translate3d(-50%, -50%, 0);
-      will-change: transform;
-      display: none;
-    }
-    @media (pointer: fine) {
-      .custom-cursor {
-        display: block;
-      }
-    }
-    .cursor-element {
-      transition: transform 0.1s cubic-bezier(0.16, 1, 0.3, 1);
-      transform-origin: center;
-    }
-
-    /* Dot Grid Backgrounds */
-    .bg-grid-pattern {
-      background-image:
-        linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-      background-size: 32px 32px;
-    }
-
-    /* Clean, stable grid card hover effects */
-    .prismatic-border-hover {
-      transition: border-color 0.35s ease, box-shadow 0.35s ease;
-      border-color: rgba(255, 255, 255, 0.08);
-    }
-    .prismatic-border-hover:hover {
-      border-color: rgba(255, 100, 255, 0.4) !important;
-      box-shadow: 0 0 15px rgba(255, 100, 255, 0.25);
-    }
-
-    /* GPU-Accelerated Lightbox Overlay Animations */
-    @keyframes fade-in-scale {
-      from {
-        opacity: 0;
-        transform: scale(0.96);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-    .animate-lightbox-entry {
-      animation: fade-in-scale 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    /* Cleaned Onboarding Classes */
-    .onboarding-link-card {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background-color: rgba(255, 255, 255, 0.02);
-      text-decoration: none;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .onboarding-link-card:hover {
-      border-color: rgba(34, 197, 94, 0.4);
-      background-color: rgba(34, 197, 94, 0.04);
-      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.05);
-    }
-    .onboarding-link-card:hover .url-text {
-      text-decoration: underline;
-      text-decoration-color: #22c55e;
-    }
-
-    /* Jitter-Free Cascading Typographic Animation */
-    @keyframes text-cascade-wave {
-      0%, 100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-6px);
-      }
-    }
-    .wavy-breathe-text {
-      display: inline-block;
-      color: #22c55e;
-      text-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
-    }
-    .cascade-char {
-      display: inline-block;
-      animation: text-cascade-wave 1.4s ease-in-out infinite;
-      white-space: pre;
-    }
-
-    /* System Cursor/Typewriter animations */
-    @keyframes phosphor-flicker {
-      0%, 100% { opacity: 0.97; }
-      50% { opacity: 1.0; }
-    }
-    .animate-phosphor {
-      animation: phosphor-flicker 0.25s infinite;
-    }
-
-    /* Retro CRT Scanlines overlay */
-    .lcd-scanlines {
-      background: repeating-linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0) 0px,
-        rgba(0, 0, 0, 0) 1px,
-        rgba(0, 0, 0, 0.18) 1px,
-        rgba(0, 0, 0, 0.18) 2px
-      );
-    }
-
-    /* Sunken Well Bezel */
-    .surface-hardware-well {
-      background-color: #0c0d11;
-      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.95), inset 0 -1px 1px rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(0, 0, 0, 0.5);
-    }
-
-    /* Hardware Button */
-    .surface-hardware-btn {
-      background: linear-gradient(180deg, #1d1e24 0%, #121318 100%);
-      border: 1px solid rgba(0, 0, 0, 0.6);
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      border-bottom: 3px solid #08090b;
-      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1);
-    }
-    .surface-hardware-btn:active {
-      transform: translateY(1.5px);
-      border-bottom-width: 0px;
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 1px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Prismatic Background Sweep */
-    @keyframes prismatic-sweep {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    .text-prismatic-foil {
-      background: linear-gradient(90deg, #22c55e, #3b82f6, #a855f7, #ef4444, #22c55e);
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: prismatic-sweep 5s linear infinite;
-    }
-
-    /* Custom range fader knob with exact SVG layers encoded safely in CSS */
-    .custom-range-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 18px;
-      height: 24px;
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 24'><defs><linearGradient id='knob-body' x1='0' y1='0' x2='0' y2='1'><stop offset='0%25' stop-color='%23323238'/><stop offset='50%25' stop-color='%231a1a1f'/><stop offset='100%25' stop-color='%230c0c0e'/></linearGradient></defs><rect x='0.5' y='0.5' width='17' height='23' rx='3' fill='url(%23knob-body)' stroke='%23000' stroke-width='0.5'/><rect x='1.5' y='1.5' width='15' height='1' rx='0.5' fill='%23ffffff' opacity='0.12'/><line x1='2.5' y1='3' x2='2.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='3.5' y1='3' x2='3.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/><line x1='15.5' y1='3' x2='15.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='14.5' y1='3' x2='14.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/></svg>");
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      cursor: pointer;
-      border: none;
-      background-color: transparent;
-    }
-    .custom-range-slider::-moz-range-thumb {
-      width: 18px;
-      height: 24px;
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 24'><defs><linearGradient id='knob-body' x1='0' y1='0' x2='0' y2='1'><stop offset='0%25' stop-color='%23323238'/><stop offset='50%25' stop-color='%231a1a1f'/><stop offset='100%25' stop-color='%230c0c0e'/></linearGradient></defs><rect x='0.5' y='0.5' width='17' height='23' rx='3' fill='url(%23knob-body)' stroke='%23000' stroke-width='0.5'/><rect x='1.5' y='1.5' width='15' height='1' rx='0.5' fill='%23ffffff' opacity='0.12'/><line x1='2.5' y1='3' x2='2.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='3.5' y1='3' x2='3.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/><line x1='15.5' y1='3' x2='15.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='14.5' y1='3' x2='14.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/></svg>");
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      cursor: pointer;
-      border: none;
-      background-color: transparent;
-    }
-
-    /* Continuous physical rotation loops */
-    @keyframes spin-clockwise {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    @keyframes spin-counterclockwise {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(-360deg); }
-    }
-    .gear-spin-clockwise {
-      animation: spin-clockwise 14s linear infinite;
-    }
-    .gear-spin-counterclockwise {
-      animation: spin-counterclockwise 11s linear infinite;
-    }
-    .gear-paused {
-      animation-play-state: paused !important;
-    }
-  </style>
+  <!-- External CSS Styles -->
+  <link rel="stylesheet" href="./merge_later/styles.css">
 </head>
 <body class="selection:bg-primary selection:text-void relative min-h-screen">
-
-  <!-- Local File Warning Shield -->
-  <div id="protocol-warning" style="display: none; position: fixed; inset: 0; z-index: 99999; background-color: #050505; color: #f2f2f2; font-family: 'Recursive', sans-serif; padding: 2rem; box-sizing: border-box; align-items: center; justify-content: center; overflow-y: auto;">
-    <div style="max-width: 520px; width: 100%; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; background-color: #0a0a0a; padding: 2.5rem; text-align: center; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);">
-      <h2 style="font-size: 20px; font-weight: 800; margin-top: 0; margin-bottom: 1.75rem; color: #ffffff; line-height: 1.3; font-family: 'Bricolage Grotesque', sans-serif;">
-        YOU'RE <span class="wavy-breathe-text"><span class="cascade-char" style="animation-delay: 0s;">1</span><span class="cascade-char" style="animation-delay: 0.08s;">0</span><span class="cascade-char" style="animation-delay: 0.16s;"> </span><span class="cascade-char" style="animation-delay: 0.24s;">M</span><span class="cascade-char" style="animation-delay: 0.32s;">I</span><span class="cascade-char" style="animation-delay: 0.4s;">N</span><span class="cascade-char" style="animation-delay: 0.48s;">U</span><span class="cascade-char" style="animation-delay: 0.56s;">T</span><span class="cascade-char" style="animation-delay: 0.64s;">E</span><span class="cascade-char" style="animation-delay: 0.72s;">S</span><span class="cascade-char" style="animation-delay: 0.8s;"> </span><span class="cascade-char" style="animation-delay: 0.88s;">A</span><span class="cascade-char" style="animation-delay: 0.96s;">W</span><span class="cascade-char" style="animation-delay: 1.04s;">A</span><span class="cascade-char" style="animation-delay: 1.12s;">Y</span></span> FROM A PERSONAL LIVE WEBSITE
-      </h2>
-      <div style="border-radius: 12px; text-align: left; margin-bottom: 1.75rem;">
-        <p style="margin: 0 0 1rem 0; font-weight: 800; color: #f59e0b; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'Bricolage Grotesque', sans-serif;">
-          REQUIRED ONBOARDING TASKS
-        </p>
-        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-          <a href="https://github.com/signup" target="_blank" class="onboarding-link-card">
-            <div style="display: flex; align-items: center; gap: 1rem;">
-              <div style="font-size: 1.25rem; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.08);">⚙️</div>
-              <span class="url-text" style="font-size: 13px; font-family: monospace; color: #ffffff; transition: text-decoration 0.2s;">https://github.com/signup</span>
-            </div>
-            <div style="color: #22c55e; font-size: 11px; font-weight: 700; font-family: monospace; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 4px;">
-              <span>Free</span>
-              <span style="font-size: 12px; line-height: 1;">➔</span>
-            </div>
-          </a>
-          <a href="https://dash.cloudflare.com/sign-up/workers-and-pages" target="_blank" class="onboarding-link-card">
-            <div style="display: flex; align-items: center; gap: 1rem;">
-              <div style="font-size: 1.25rem; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.08);">☁️</div>
-              <span class="url-text" style="font-size: 13px; font-family: monospace; color: #ffffff; transition: text-decoration 0.2s;">https://dash.cloudflare.com/sign-up/workers-and-pages</span>
-            </div>
-            <div style="color: #22c55e; font-size: 11px; font-weight: 700; font-family: monospace; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 4px;">
-              <span>Free</span>
-              <span style="font-size: 12px; line-height: 1;">➔</span>
-            </div>
-          </a>
-        </div>
-      </div>
-      <div style="background-color: rgba(239, 68, 68, 0.02); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 8px; padding: 1.5rem; text-align: left; margin-bottom: 2rem; position: relative; overflow: hidden;">
-        <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background-color: #ef4444;"></div>
-        <p style="margin: 0 0 0.5rem 0; font-weight: 700; color: #ffffff; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
-          <span>🚀</span> Next Step
-        </p>
-        <p style="margin: 0; color: #a0a0a0; font-size: 13px; line-height: 1.45;">
-          Drag and drop this file into ChatGPT. The AI has instructions inside to guide you through set up.
-        </p>
-      </div>
-    </div>
-  </div>
-  <script>
-    if (window.location.protocol === 'file:') {
-      document.getElementById('protocol-warning').style.display = 'flex';
-    }
-  </script>
 
   <!-- Custom Cursor Elements -->
   <div id="custom-cursor" class="custom-cursor">
@@ -560,432 +268,402 @@ protocol based on scope:
   <!-- Root React Mounting Node -->
   <div id="root"></div>
 
-  <!-- Main System Script -->
-  <script type="module" vite-ignore>
-    import React, { useState, useEffect, useRef } from 'react';
-    import ReactDOM from 'react-dom/client';
-    import htm from 'htm';
-    import Lenis from 'lenis';
-    
-    // Import configurations from data module
-    import { AUDIO_TRACKS } from 'media-data';
+  <!-- Main React System script -->
+  <script type="module" src="./merge_later/App.js"></script>
 
-    // Import isolated components from merge_later
-    import { GlobalScrollbar } from './merge_later/GlobalScrollbar.js';
-    import { Sidebar } from './merge_later/Sidebar.js';
-    import { HeroHeader } from './merge_later/HeroHeader.js';
-    import { MainContent } from './merge_later/MainContent.js';
-    import { audioEngine } from './merge_later/AudioEngine.js';
-    import { AudioConsoleModal } from './merge_later/AudioConsoleModal.js';
-
-    const html = htm.bind(React.createElement);
-
-    function getShuffledIndices(length) {
-      const arr = Array.from({ length }, (_, i) => i);
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
-
-    // ── MAIN APP COMPONENT ───────────────────────────────────────────────────
-    function App() {
-      // Lightbox / Modal Context
-      const [lightbox, setLightbox] = useState(null);
-      const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-      const [isConsoleOpen, setIsConsoleOpen] = useState(false);
-      const [activeSection, setActiveSection] = useState("audio");
-
-      const [seqStep, setSeqStep] = useState("line1");
-      const [lenis, setLenis] = useState(null);
-
-      // Audio Player Context
-      const audioElRef = useRef(null);
-      const [playerState, setPlayerState] = useState(() => {
-        const savedShuffle = localStorage.getItem('mesoelfy_player_shuffle');
-        const useShuffle = savedShuffle !== null ? savedShuffle === 'true' : true;
-        const queue = useShuffle
-          ? getShuffledIndices(AUDIO_TRACKS.length)
-          : Array.from({ length: AUDIO_TRACKS.length }, (_, i) => i);
-        const savedTrackIdx = localStorage.getItem('mesoelfy_player_track_index');
-        let startTrackIdx = 0;
-        if (savedTrackIdx !== null) {
-          const idx = parseInt(savedTrackIdx, 10);
-          if (idx >= 0 && idx < AUDIO_TRACKS.length) {
-            startTrackIdx = idx;
-          }
-        }
-        const queueIdx = queue.indexOf(startTrackIdx);
-        const currentIdx = queueIdx >= 0 ? queueIdx : 0;
-        return { queue, currentIdx };
-      });
-      const [isPlaying, setIsPlaying] = useState(false);
-      const [volume, setVolume] = useState(() => {
-        const savedVolume = localStorage.getItem('mesoelfy_player_volume');
-        return savedVolume !== null ? parseFloat(savedVolume) : 0.75;
-      });
-      const [isShuffle, setIsShuffle] = useState(() => {
-        const savedShuffle = localStorage.getItem('mesoelfy_player_shuffle');
-        return savedShuffle !== null ? savedShuffle === 'true' : true;
-      });
-      const [currentTime, setCurrentTime] = useState(0);
-      const [duration, setDuration] = useState(0);
-
-      // Initialize / Restore Audio Context dynamically on user interaction
-      const ensureAudioInitialized = () => {
-        if (!audioEngine.isInitialized && audioElRef.current) {
-          audioEngine.init(audioElRef.current);
-          audioEngine.setVolume("master", 1.0);
-          audioEngine.setVolume("music", volume);
-          audioEngine.setVolume("sfx", 0.8);
-          audioEngine.setVolume("ambience", 0.5);
-        }
-        if (audioEngine.ctx && audioEngine.ctx.state === 'suspended') {
-          audioEngine.ctx.resume().catch(() => {});
-        }
-      };
-
-      // Initialize Lenis Smooth Scroll
-      useEffect(() => {
-        const lenisInst = new Lenis({
-          duration: 1.2,
-          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-          smoothWheel: true,
-          touchMultiplier: 1.15
-        });
-
-        function raf(time) {
-          lenisInst.raf(time);
-          requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
-
-        setLenis(lenisInst);
-
-        return () => {
-          lenisInst.destroy();
-        };
-      }, []);
-
-      // Active Section Tracker (Scroll Spy Setup)
-      useEffect(() => {
-        const handleSpy = () => {
-          const sections = [
-            "misc-art", "misc-media"
-          ];
-          let current = "audio";
-          for (const s of sections) {
-            const el = document.getElementById(s);
-            if (el) {
-              const htmlRect = el.getBoundingClientRect();
-              if (htmlRect.top <= window.innerHeight * 0.40) {
-                current = s;
-              }
-            }
-          }
-          setActiveSection(current);
-        };
-        window.addEventListener("scroll", handleSpy);
-        return () => window.removeEventListener("scroll", handleSpy);
-      }, []);
-
-      useEffect(() => {
-        const savedPosition = localStorage.getItem('mesoelfy_player_position');
-        const savedAutoplay = localStorage.getItem('mesoelfy_player_autoplay');
-
-        if (savedPosition !== null && audioElRef.current) {
-          audioElRef.current.currentTime = parseFloat(savedPosition);
-        }
-
-        const handleUnlock = () => {
-          if (savedAutoplay === 'true' && audioElRef.current) {
-            ensureAudioInitialized();
-            audioElRef.current.play()
-              .then(() => setIsPlaying(true))
-              .catch(() => {});
-          }
-          document.removeEventListener('click', handleUnlock);
-        };
-        document.addEventListener('click', handleUnlock);
-
-        return () => document.removeEventListener('click', handleUnlock);
-      }, []);
-
-      const activeTrackIdx = playerState.queue[playerState.currentIdx] !== undefined ? playerState.queue[playerState.currentIdx] : 0;
-      const activeTrack = AUDIO_TRACKS[activeTrackIdx] || AUDIO_TRACKS[0];
-
-      // Track updates
-      useEffect(() => {
-        if (!audioElRef.current) return;
-        localStorage.setItem('mesoelfy_player_track_index', activeTrackIdx.toString());
-        audioElRef.current.load();
-        if (isPlaying) {
-          audioElRef.current.play().catch(() => setIsPlaying(false));
-        }
-      }, [activeTrackIdx]);
-
-      useEffect(() => {
-        if (audioElRef.current) {
-          audioElRef.current.volume = volume;
-          localStorage.setItem('mesoelfy_player_volume', volume.toString());
-          if (audioEngine.isInitialized) {
-            audioEngine.setVolume("music", volume);
-          }
-        }
-      }, [volume]);
-
-      const togglePlay = () => {
-        if (!audioElRef.current) return;
-        ensureAudioInitialized();
-        if (isPlaying) {
-          audioElRef.current.pause();
-          setIsPlaying(false);
-          localStorage.setItem('mesoelfy_player_autoplay', 'false');
-        } else {
-          audioElRef.current.play()
-            .then(() => {
-              setIsPlaying(true);
-              localStorage.setItem('mesoelfy_player_autoplay', 'true');
-            })
-            .catch((err) => console.log("Play failed: interaction required", err));
-        }
-      };
-
-      const handleNext = () => {
-        if (playerState.queue.length === 0) return;
-        ensureAudioInitialized();
-        setPlayerState((prev) => ({
-          ...prev,
-          currentIdx: (prev.currentIdx + 1) % prev.queue.length
-        }));
-      };
-
-      const handlePrev = () => {
-        if (playerState.queue.length === 0) return;
-        ensureAudioInitialized();
-        setPlayerState((prev) => ({
-          ...prev,
-          currentIdx: (prev.currentIdx - 1 + prev.queue.length) % prev.queue.length
-        }));
-      };
-
-      const handleTimeUpdate = () => {
-        if (audioElRef.current) {
-          setCurrentTime(audioElRef.current.currentTime);
-          localStorage.setItem('mesoelfy_player_position', audioElRef.current.currentTime.toString());
-        }
-      };
-
-      const handleLoadedMetadata = () => {
-        if (audioElRef.current) {
-          setDuration(audioElRef.current.duration);
-        }
-      };
-
-      const handleScrubberChange = (e) => {
-        const val = parseFloat(e.target.value);
-        ensureAudioInitialized();
-        if (audioElRef.current) {
-          audioElRef.current.currentTime = val;
-          setCurrentTime(val);
-        }
-      };
-
-      const toggleShuffleState = () => {
-        const targetState = !isShuffle;
-        ensureAudioInitialized();
-        setIsShuffle(targetState);
-        localStorage.setItem('mesoelfy_player_shuffle', targetState.toString());
-        
-        let newQueue = [];
-        if (targetState) {
-          newQueue = getShuffledIndices(AUDIO_TRACKS.length);
-          const activeIndexInNew = newQueue.indexOf(activeTrackIdx);
-          if (activeIndexInNew >= 0) {
-            newQueue.splice(activeIndexInNew, 1);
-            newQueue.unshift(activeTrackIdx);
-          }
-        } else {
-          newQueue = Array.from({ length: AUDIO_TRACKS.length }, (_, i) => i);
-        }
-        setPlayerState({
-          queue: newQueue,
-          currentIdx: 0
-        });
-      };
-
-      const formatTime = (secs) => {
-        if (isNaN(secs)) return "0:00";
-        const m = Math.floor(secs / 60);
-        const s = Math.floor(secs % 60).toString().padStart(2, '0');
-        return `${m}:${s}`;
-      };
-
-      // Navigation Link Scrolling Coordinator
-      const handleNavigation = (targetId) => {
-        setIsSidebarOpen(false);
-        if (targetId === "audio") {
-          if (lenis) {
-            lenis.scrollTo(0);
-          } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-          return;
-        }
-        const target = document.getElementById(targetId);
-        if (target) {
-          if (lenis) {
-            lenis.scrollTo(target, { offset: -32 });
-          } else {
-            target.scrollIntoView({ behavior: 'smooth' });
-          }
-        }
-      };
-
-      const playerProps = {
-        activeTrack,
-        isPlaying,
-        currentTime,
-        duration,
-        volume,
-        isShuffle,
-        handleScrubberChange,
-        handlePrev,
-        togglePlay,
-        handleNext,
-        toggleShuffleState,
-        setVolume,
-        formatTime
-      };
-
-      return html`
-        <div class="relative w-full flex flex-col md:flex-row min-h-screen" onClick=${ensureAudioInitialized}>
-          <audio 
-            ref=${audioElRef} 
-            src="https://www.stevencasteel.com/assets/audio/music/elf_girl/${activeTrack.folder}/${activeTrack.name}"
-            crossOrigin="anonymous"
-            onTimeUpdate=${handleTimeUpdate}
-            onLoadedMetadata=${handleLoadedMetadata}
-            onEnded=${handleNext}
-          />
-
-          <!-- ── NAVIGATION & HEADER SYSTEM ── -->
-          <${Sidebar} 
-            isSidebarOpen=${isSidebarOpen}
-            setIsSidebarOpen=${setIsSidebarOpen}
-            activeSection=${activeSection}
-            handleNavigation=${handleNavigation}
-            playerProps=${playerProps}
-            onOpenConsole=${() => { ensureAudioInitialized(); setIsConsoleOpen(true); }}
-          />
-
-          <!-- ── MAIN CONTENT ZONE ── -->
-          <div class="flex-1 md:pl-64 min-w-0 pb-20 pt-14 md:pt-0">
-            <${HeroHeader} 
-              seqStep=${seqStep}
-              setSeqStep=${setSeqStep}
-            />
-
-            <${MainContent} 
-              setLightbox=${setLightbox}
-            />
-          </div>
-
-          <!-- ── GLOBAL CUSTOM SCROLLBAR ── -->
-          <${GlobalScrollbar} lenisInstance=${lenis} />
-
-          <!-- ── LIGHTBOX MODAL PORTAL ── -->
-          ${lightbox && html`
-            <div 
-              onClick=${() => setLightbox(null)}
-              class="fixed inset-0 bg-void/95 backdrop-blur-md z-[100] flex items-center justify-center p-4 transition-opacity duration-300 cursor-none"
-            >
-              <div class="relative max-w-full max-h-full flex items-center justify-center select-none animate-lightbox-entry">
-                <img 
-                  src=${lightbox.src} 
-                  alt=${lightbox.alt} 
-                  class="max-w-[90vw] max-h-[90vh] object-contain rounded-lg border border-white/10 shadow-2xl"
-                />
-                <div class="absolute -top-12 right-0 text-white font-mono text-xs tracking-widest uppercase">
-                  Click anywhere to close
-                </div>
-              </div>
-            </div>
-          `}
-
-          <!-- ── FULL SCREEN AUDIO CONSOLE MIXER MODAL ── -->
-          <${AudioConsoleModal} 
-            isOpen=${isConsoleOpen}
-            onClose=${() => setIsConsoleOpen(false)}
-            activeTrack=${activeTrack}
-            isPlaying=${isPlaying}
-            currentTime=${currentTime}
-            duration=${duration}
-            volume=${volume}
-            isShuffle=${isShuffle}
-            handleScrubberChange=${handleScrubberChange}
-            handlePrev=${handlePrev}
-            togglePlay=${togglePlay}
-            handleNext=${handleNext}
-            toggleShuffleState=${toggleShuffleState}
-            setVolume=${setVolume}
-            formatTime=${formatTime}
-            playTrackByIndex=${(idx) => {
-              setPlayerState(prev => ({ ...prev, currentIdx: idx }));
-              setIsPlaying(true);
-            }}
-          />
-
-        </div>
-      `;
-    }
-
-    // Mount System
-    const rootNode = ReactDOM.createRoot(document.getElementById('root'));
-    rootNode.render(React.createElement(App));
-  </script>
-
-  <!-- vanilla pointer coordinate controller -->
-  <script>
-    const globalCursor = document.getElementById('custom-cursor');
-    const arrow = document.getElementById('cursor-arrow');
-    const ibeam = document.getElementById('cursor-ibeam');
-    
-    document.addEventListener('pointermove', (e) => {
-      globalCursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
-    });
-    
-    // spring physical wind-up click states
-    document.addEventListener('pointerdown', () => {
-      arrow.style.transform = 'scale(0.82)';
-      ibeam.style.transform = 'scale(0.82)';
-    });
-    document.addEventListener('pointerup', () => {
-      arrow.style.transform = 'scale(1)';
-      ibeam.style.transform = 'scale(1)';
-    });
-
-    // state observer
-    document.addEventListener('mouseover', (e) => {
-      const target = e.target;
-      if (!target) return;
-      
-      const isText = ['p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'input', 'textarea'].includes(target.tagName.toLowerCase());
-      const isInteractive = target.closest('a') || target.closest('button') || target.closest('[role="button"]') || target.classList.contains('cursor-pointer');
-      const isWarningScreen = target.closest('#protocol-warning');
-      
-      if (isText && !isInteractive && !isWarningScreen) {
-        arrow.style.display = 'none';
-        ibeam.style.display = 'block';
-      } else {
-        arrow.style.display = 'block';
-        ibeam.style.display = 'none';
-      }
-    });
-  </script>
+  <!-- Vanilla pointer coordinate controller script -->
+  <script type="module" src="./merge_later/CustomCursor.js"></script>
 </body>
 </html>
+
+
+
+● ./merge_later/App.js
+────────────────────────────────────────────────────
+import React, { useState, useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom/client';
+import htm from 'htm';
+import Lenis from 'lenis';
+
+// Import configurations from data module
+import { AUDIO_TRACKS } from 'media-data';
+
+// Import isolated components from merge_later
+import { ProtocolWarning } from './ProtocolWarning.js';
+import { GlobalScrollbar } from './GlobalScrollbar.js';
+import { Sidebar } from './Sidebar.js';
+import { HeroHeader } from './HeroHeader.js';
+import { MainContent } from './MainContent.js';
+import { audioEngine } from './AudioEngine.js';
+import { AudioConsoleModal } from './AudioConsoleModal.js';
+
+const html = htm.bind(React.createElement);
+
+function getShuffledIndices(length) {
+  const arr = Array.from({ length }, (_, i) => i);
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ── MAIN APP COMPONENT ───────────────────────────────────────────────────
+function App() {
+  // Lightbox / Modal Context
+  const [lightbox, setLightbox] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isConsoleOpen, setIsConsoleOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("audio");
+
+  const [seqStep, setSeqStep] = useState("line1");
+  const [lenis, setLenis] = useState(null);
+
+  // Audio Player Context
+  const audioElRef = useRef(null);
+  const [playerState, setPlayerState] = useState(() => {
+    const savedShuffle = localStorage.getItem('mesoelfy_player_shuffle');
+    const useShuffle = savedShuffle !== null ? savedShuffle === 'true' : true;
+    const queue = useShuffle
+      ? getShuffledIndices(AUDIO_TRACKS.length)
+      : Array.from({ length: AUDIO_TRACKS.length }, (_, i) => i);
+    const savedTrackIdx = localStorage.getItem('mesoelfy_player_track_index');
+    let startTrackIdx = 0;
+    if (savedTrackIdx !== null) {
+      const idx = parseInt(savedTrackIdx, 10);
+      if (idx >= 0 && idx < AUDIO_TRACKS.length) {
+        startTrackIdx = idx;
+      }
+    }
+    const queueIdx = queue.indexOf(startTrackIdx);
+    const currentIdx = queueIdx >= 0 ? queueIdx : 0;
+    return { queue, currentIdx };
+  });
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(() => {
+    const savedVolume = localStorage.getItem('mesoelfy_player_volume');
+    return savedVolume !== null ? parseFloat(savedVolume) : 0.75;
+  });
+  const [isShuffle, setIsShuffle] = useState(() => {
+    const savedShuffle = localStorage.getItem('mesoelfy_player_shuffle');
+    return savedShuffle !== null ? savedShuffle === 'true' : true;
+  });
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  // Initialize / Restore Audio Context dynamically on user interaction
+  const ensureAudioInitialized = () => {
+    if (!audioEngine.isInitialized && audioElRef.current) {
+      audioEngine.init(audioElRef.current);
+      audioEngine.setVolume("master", 1.0);
+      audioEngine.setVolume("music", volume);
+      audioEngine.setVolume("sfx", 0.8);
+      audioEngine.setVolume("ambience", 0.5);
+    }
+    if (audioEngine.ctx && audioEngine.ctx.state === 'suspended') {
+      audioEngine.ctx.resume().catch(() => {});
+    }
+  };
+
+  // Initialize Lenis Smooth Scroll
+  useEffect(() => {
+    const lenisInst = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      touchMultiplier: 1.15
+    });
+
+    function raf(time) {
+      lenisInst.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    setLenis(lenisInst);
+
+    return () => {
+      lenisInst.destroy();
+    };
+  }, []);
+
+  // Active Section Tracker (Scroll Spy Setup)
+  useEffect(() => {
+    const handleSpy = () => {
+      const sections = [
+        "misc-art", "misc-media"
+      ];
+      let current = "audio";
+      for (const s of sections) {
+        const el = document.getElementById(s);
+        if (el) {
+          const htmlRect = el.getBoundingClientRect();
+          if (htmlRect.top <= window.innerHeight * 0.40) {
+            current = s;
+          }
+        }
+      }
+      setActiveSection(current);
+    };
+    window.addEventListener("scroll", handleSpy);
+    return () => window.removeEventListener("scroll", handleSpy);
+  }, []);
+
+  useEffect(() => {
+    const savedPosition = localStorage.getItem('mesoelfy_player_position');
+    const savedAutoplay = localStorage.getItem('mesoelfy_player_autoplay');
+
+    if (savedPosition !== null && audioElRef.current) {
+      audioElRef.current.currentTime = parseFloat(savedPosition);
+    }
+
+    const handleUnlock = () => {
+      if (savedAutoplay === 'true' && audioElRef.current) {
+        ensureAudioInitialized();
+        audioElRef.current.play()
+          .then(() => setIsPlaying(true))
+          .catch(() => {});
+      }
+      document.removeEventListener('click', handleUnlock);
+    };
+    document.addEventListener('click', handleUnlock);
+
+    return () => document.removeEventListener('click', handleUnlock);
+  }, []);
+
+  const activeTrackIdx = playerState.queue[playerState.currentIdx] !== undefined ? playerState.queue[playerState.currentIdx] : 0;
+  const activeTrack = AUDIO_TRACKS[activeTrackIdx] || AUDIO_TRACKS[0];
+
+  // Track updates
+  useEffect(() => {
+    if (!audioElRef.current) return;
+    localStorage.setItem('mesoelfy_player_track_index', activeTrackIdx.toString());
+    audioElRef.current.load();
+    if (isPlaying) {
+      audioElRef.current.play().catch(() => setIsPlaying(false));
+    }
+  }, [activeTrackIdx]);
+
+  useEffect(() => {
+    if (audioElRef.current) {
+      audioElRef.current.volume = volume;
+      localStorage.setItem('mesoelfy_player_volume', volume.toString());
+      if (audioEngine.isInitialized) {
+        audioEngine.setVolume("music", volume);
+      }
+    }
+  }, [volume]);
+
+  const togglePlay = () => {
+    if (!audioElRef.current) return;
+    ensureAudioInitialized();
+    if (isPlaying) {
+      audioElRef.current.pause();
+      setIsPlaying(false);
+      localStorage.setItem('mesoelfy_player_autoplay', 'false');
+    } else {
+      audioElRef.current.play()
+        .then(() => {
+          setIsPlaying(true);
+          localStorage.setItem('mesoelfy_player_autoplay', 'true');
+        })
+        .catch((err) => console.log("Play failed: interaction required", err));
+    }
+  };
+
+  const handleNext = () => {
+    if (playerState.queue.length === 0) return;
+    ensureAudioInitialized();
+    setPlayerState((prev) => ({
+      ...prev,
+      currentIdx: (prev.currentIdx + 1) % prev.queue.length
+    }));
+  };
+
+  const handlePrev = () => {
+    if (playerState.queue.length === 0) return;
+    ensureAudioInitialized();
+    setPlayerState((prev) => ({
+      ...prev,
+      currentIdx: (prev.currentIdx - 1 + prev.queue.length) % prev.queue.length
+    }));
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioElRef.current) {
+      setCurrentTime(audioElRef.current.currentTime);
+      localStorage.setItem('mesoelfy_player_position', audioElRef.current.currentTime.toString());
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (audioElRef.current) {
+      setDuration(audioElRef.current.duration);
+    }
+  };
+
+  const handleScrubberChange = (e) => {
+    const val = parseFloat(e.target.value);
+    ensureAudioInitialized();
+    if (audioElRef.current) {
+      audioElRef.current.currentTime = val;
+      setCurrentTime(val);
+    }
+  };
+
+  const toggleShuffleState = () => {
+    const targetState = !isShuffle;
+    ensureAudioInitialized();
+    setIsShuffle(targetState);
+    localStorage.setItem('mesoelfy_player_shuffle', targetState.toString());
+    
+    let newQueue = [];
+    if (targetState) {
+      newQueue = getShuffledIndices(AUDIO_TRACKS.length);
+      const activeIndexInNew = newQueue.indexOf(activeTrackIdx);
+      if (activeIndexInNew >= 0) {
+        newQueue.splice(activeIndexInNew, 1);
+        newQueue.unshift(activeTrackIdx);
+      }
+    } else {
+      newQueue = Array.from({ length: AUDIO_TRACKS.length }, (_, i) => i);
+    }
+    setPlayerState({
+      queue: newQueue,
+      currentIdx: 0
+    });
+  };
+
+  const formatTime = (secs) => {
+    if (isNaN(secs)) return "0:00";
+    const m = Math.floor(secs / 60);
+    const s = Math.floor(secs % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  };
+
+  // Navigation Link Scrolling Coordinator
+  const handleNavigation = (targetId) => {
+    setIsSidebarOpen(false);
+    if (targetId === "audio") {
+      if (lenis) {
+        lenis.scrollTo(0);
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      return;
+    }
+    const target = document.getElementById(targetId);
+    if (target) {
+      if (lenis) {
+        lenis.scrollTo(target, { offset: -32 });
+      } else {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
+  const playerProps = {
+    activeTrack,
+    isPlaying,
+    currentTime,
+    duration,
+    volume,
+    isShuffle,
+    handleScrubberChange,
+    handlePrev,
+    togglePlay,
+    handleNext,
+    toggleShuffleState,
+    setVolume,
+    formatTime
+  };
+
+  return html`
+    <div class="relative w-full flex flex-col md:flex-row min-h-screen" onClick=${ensureAudioInitialized}>
+      <${ProtocolWarning} />
+      <audio 
+        ref=${audioElRef} 
+        src="https://www.stevencasteel.com/assets/audio/music/elf_girl/${activeTrack.folder}/${activeTrack.name}"
+        crossOrigin="anonymous"
+        onTimeUpdate=${handleTimeUpdate}
+        onLoadedMetadata=${handleLoadedMetadata}
+        onEnded=${handleNext}
+      />
+
+      <!-- ── NAVIGATION & HEADER SYSTEM ── -->
+      <${Sidebar} 
+        isSidebarOpen=${isSidebarOpen}
+        setIsSidebarOpen=${setIsSidebarOpen}
+        activeSection=${activeSection}
+        handleNavigation=${handleNavigation}
+        playerProps=${playerProps}
+        onOpenConsole=${() => { ensureAudioInitialized(); setIsConsoleOpen(true); }}
+      />
+
+      <!-- ── MAIN CONTENT ZONE ── -->
+      <div class="flex-1 md:pl-64 min-w-0 pb-20 pt-14 md:pt-0">
+        <${HeroHeader} 
+          seqStep=${seqStep}
+          setSeqStep=${setSeqStep}
+        />
+
+        <${MainContent} 
+          setLightbox=${setLightbox}
+        />
+      </div>
+
+      <!-- ── GLOBAL CUSTOM SCROLLBAR ── -->
+      <${GlobalScrollbar} lenisInstance=${lenis} />
+
+      <!-- ── LIGHTBOX MODAL PORTAL ── -->
+      ${lightbox && html`
+        <div 
+          onClick=${() => setLightbox(null)}
+          class="fixed inset-0 bg-void/95 backdrop-blur-md z-[100] flex items-center justify-center p-4 transition-opacity duration-300 cursor-none"
+        >
+          <div class="relative max-w-full max-h-full flex items-center justify-center select-none animate-lightbox-entry">
+            <img 
+              src=${lightbox.src} 
+              alt=${lightbox.alt} 
+              class="max-w-[90vw] max-h-[90vh] object-contain rounded-lg border border-white/10 shadow-2xl"
+            />
+            <div class="absolute -top-12 right-0 text-white font-mono text-xs tracking-widest uppercase">
+              Click anywhere to close
+            </div>
+          </div>
+        </div>
+      `}
+
+      <!-- ── FULL SCREEN AUDIO CONSOLE MIXER MODAL ── -->
+      <${AudioConsoleModal} 
+        isOpen=${isConsoleOpen}
+        onClose=${() => setIsConsoleOpen(false)}
+        activeTrack=${activeTrack}
+        isPlaying=${isPlaying}
+        currentTime=${currentTime}
+        duration=${duration}
+        volume=${volume}
+        isShuffle=${isShuffle}
+        handleScrubberChange=${handleScrubberChange}
+        handlePrev=${handlePrev}
+        togglePlay=${togglePlay}
+        handleNext=${handleNext}
+        toggleShuffleState=${toggleShuffleState}
+        setVolume=${setVolume}
+        formatTime=${formatTime}
+        playTrackByIndex=${(idx) => {
+          setPlayerState(prev => ({ ...prev, currentIdx: idx }));
+          setIsPlaying(true);
+        }}
+      />
+
+    </div>
+  `;
+}
+
+// Mount System
+const rootNode = ReactDOM.createRoot(document.getElementById('root'));
+rootNode.render(React.createElement(App));
 
 
 
@@ -1552,6 +1230,49 @@ class AudioEngine {
 }
 
 export const audioEngine = new AudioEngine();
+
+
+
+● ./merge_later/CustomCursor.js
+────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  const globalCursor = document.getElementById('custom-cursor');
+  const arrow = document.getElementById('cursor-arrow');
+  const ibeam = document.getElementById('cursor-ibeam');
+  if (!globalCursor || !arrow || !ibeam) return;
+
+  document.addEventListener('pointermove', (e) => {
+    globalCursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+  });
+
+  // Spring physical wind-up click states
+  document.addEventListener('pointerdown', () => {
+    arrow.style.transform = 'scale(0.82)';
+    ibeam.style.transform = 'scale(0.82)';
+  });
+  document.addEventListener('pointerup', () => {
+    arrow.style.transform = 'scale(1)';
+    ibeam.style.transform = 'scale(1)';
+  });
+
+  // Hover state observer
+  document.addEventListener('mouseover', (e) => {
+    const target = e.target;
+    if (!target) return;
+
+    const isText = ['p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'input', 'textarea'].includes(target.tagName.toLowerCase());
+    const isInteractive = target.closest('a') || target.closest('button') || target.closest('[role="button"]') || target.classList.contains('cursor-pointer');
+    const isWarningScreen = target.closest('#protocol-warning');
+
+    if (isText && !isInteractive && !isWarningScreen) {
+      arrow.style.display = 'none';
+      ibeam.style.display = 'block';
+    } else {
+      arrow.style.display = 'block';
+      ibeam.style.display = 'none';
+    }
+  });
+});
 
 
 
@@ -2344,6 +2065,220 @@ export function MusicPlayerDeck({
 
 
 
+● ./merge_later/ProtocolWarning.js
+────────────────────────────────────────────────────
+import React, { useState, useEffect } from 'react';
+import htm from 'htm';
+
+const html = htm.bind(React.createElement);
+
+export function ProtocolWarning() {
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    if (window.location.protocol === 'file:') {
+      setShow(true);
+    }
+  }, []);
+
+  if (!show) return null;
+
+  return html`
+    <div id="protocol-warning" style=${{
+      position: 'fixed',
+      inset: 0,
+      zIndex: 99999,
+      backgroundColor: '#050505',
+      color: '#f2f2f2',
+      fontFamily: '"Recursive", sans-serif',
+      padding: '2rem',
+      boxSizing: 'border-box',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      overflowY: 'auto'
+    }}>
+      <style>
+        .onboarding-link-card {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 1rem;
+          border-radius: 8px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background-color: rgba(255, 255, 255, 0.02);
+          text-decoration: none;
+          transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+          width: 100%;
+          box-sizing: border-box;
+        }
+        .onboarding-link-card:hover {
+          border-color: rgba(34, 197, 94, 0.4);
+          background-color: rgba(34, 197, 94, 0.04);
+          box-shadow: 0 4px 12px rgba(34, 197, 94, 0.05);
+        }
+        .onboarding-link-card:hover .url-text {
+          text-decoration: underline;
+          text-decoration-color: #22c55e;
+        }
+        @keyframes text-cascade-wave {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-6px);
+          }
+        }
+        .wavy-breathe-text {
+          display: inline-block;
+          color: #22c55e;
+          text-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+        }
+        .cascade-char {
+          display: inline-block;
+          animation: text-cascade-wave 1.4s ease-in-out infinite;
+          white-space: pre;
+        }
+      </style>
+      <div style=${{
+        maxWidth: '520px',
+        width: '100%',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: '12px',
+        backgroundColor: '#0a0a0a',
+        padding: '2.5rem',
+        textAlign: 'center',
+        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.8)'
+      }}>
+        <h2 style=${{
+          fontSize: '20px',
+          fontWeight: '800',
+          marginTop: 0,
+          marginBottom: '1.75rem',
+          color: '#ffffff',
+          lineHeight: '1.3',
+          fontFamily: '"Bricolage Grotesque", sans-serif'
+        }}>
+          YOU'RE <span class="wavy-breathe-text"><span class="cascade-char" style=${{ animationDelay: '0s' }}>1</span><span class="cascade-char" style=${{ animationDelay: '0.08s' }}>0</span><span class="cascade-char" style=${{ animationDelay: '0.16s' }}> </span><span class="cascade-char" style=${{ animationDelay: '0.24s' }}>M</span><span class="cascade-char" style=${{ animationDelay: '0.32s' }}>I</span><span class="cascade-char" style=${{ animationDelay: '0.4s' }}>N</span><span class="cascade-char" style=${{ animationDelay: '0.48s' }}>U</span><span class="cascade-char" style=${{ animationDelay: '0.56s' }}>T</span><span class="cascade-char" style=${{ animationDelay: '0.64s' }}>E</span><span class="cascade-char" style=${{ animationDelay: '0.72s' }}>S</span><span class="cascade-char" style=${{ animationDelay: '0.8s' }}> </span><span class="cascade-char" style=${{ animationDelay: '0.88s' }}>A</span><span class="cascade-char" style=${{ animationDelay: '0.96s' }}>W</span><span class="cascade-char" style=${{ animationDelay: '1.04s' }}>A</span><span class="cascade-char" style=${{ animationDelay: '1.12s' }}>Y</span></span> FROM A PERSONAL LIVE WEBSITE
+        </h2>
+        <div style=${{
+          borderRadius: '12px',
+          textAlign: 'left',
+          marginBottom: '1.75rem'
+        }}>
+          <p style=${{
+            margin: '0 0 1rem 0',
+            fontWeight: '800',
+            color: '#f59e0b',
+            fontSize: '11px',
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em',
+            fontFamily: '"Bricolage Grotesque", sans-serif'
+          }}>
+            REQUIRED ONBOARDING TASKS
+          </p>
+          <div style=${{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.75rem'
+          }}>
+            <a href="https://github.com/signup" target="_blank" class="onboarding-link-card">
+              <div style=${{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <div style=${{
+                  fontSize: '1.25rem',
+                  width: '36px',
+                  height: '36px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  borderRadius: '6px',
+                  border: '1px solid rgba(255, 255, 255, 0.08)'
+                }}>⚙️</div>
+                <span class="url-text" style=${{ fontSize: '13px', fontFamily: 'monospace', color: '#ffffff', transition: 'text-decoration 0.2s' }}>https://github.com/signup</span>
+              </div>
+              <div style=${{
+                color: '#22c55e',
+                fontSize: '11px',
+                fontWeight: '700',
+                fontFamily: 'monospace',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}>
+                <span>Free</span>
+                <span style=${{ fontSize: '12px', lineHeight: 1 }}>➔</span>
+              </div>
+            </a>
+            <a href="https://dash.cloudflare.com/sign-up/workers-and-pages" target="_blank" class="onboarding-link-card">
+              <div style=${{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <div style=${{
+                  fontSize: '1.25rem',
+                  width: '36px',
+                  height: '36px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  borderRadius: '6px',
+                  border: '1px solid rgba(255, 255, 255, 0.08)'
+                }}>☁️</div>
+                <span class="url-text" style=${{ fontSize: '13px', fontFamily: 'monospace', color: '#ffffff', transition: 'text-decoration 0.2s' }}>https://dash.cloudflare.com/sign-up/workers-and-pages</span>
+              </div>
+              <div style=${{
+                color: '#22c55e',
+                fontSize: '11px',
+                fontWeight: '700',
+                fontFamily: 'monospace',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}>
+                <span>Free</span>
+                <span style=${{ fontSize: '12px', lineHeight: 1 }}>➔</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div style=${{
+          backgroundColor: 'rgba(239, 68, 68, 0.02)',
+          border: '1px solid rgba(239, 68, 68, 0.25)',
+          borderRadius: '8px',
+          padding: '1.5rem',
+          textAlign: 'left',
+          marginBottom: '2rem',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          <div style=${{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '4px', backgroundColor: '#ef4444' }}></div>
+          <p style=${{
+            margin: '0 0 0.5rem 0',
+            fontWeight: 700,
+            color: '#ffffff',
+            fontSize: '14px',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
+          }}>
+            <span>🚀</span> Next Step
+          </p>
+          <p style=${{ margin: 0, color: '#a0a0a0', fontSize: '13px', lineHeight: '1.45' }}>
+            Drag and drop this file into ChatGPT. The AI has instructions inside to guide you through set up.
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+
+
 ● ./merge_later/Sidebar.js
 ────────────────────────────────────────────────────
 import React from 'react';
@@ -3054,6 +2989,213 @@ export const AUDIO_TRACKS = Object.entries(AUDIO_TRACK_GROUPS).flatMap(([folder,
     };
   })
 );
+
+
+
+● ./merge_later/styles.css
+────────────────────────────────────────────────────
+/* Custom Scrollbar Override */
+::-webkit-scrollbar {
+  display: none !important;
+}
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+body {
+  background-color: #050505;
+  color: #f2f2f2;
+  font-family: "Recursive", sans-serif;
+  font-variation-settings: "MONO" 0, "CASL" 0.35, "slnt" 0, "CRSV" 0.5, "wght" 400;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  cursor: none !important;
+}
+a, button, [role="button"], input, select, textarea, img {
+  cursor: none !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-variation-settings: "wght" 800;
+}
+
+/* Dynamic Variable Font Adjustments */
+.font-mono {
+  font-family: "Recursive", monospace !important;
+  font-variation-settings: "MONO" 1, "CASL" 0, "slnt" 0, "CRSV" 0, "wght" 400 !important;
+  transition: font-variation-settings 0.35s cubic-bezier(0.25, 0, 0, 1) !important;
+}
+.font-mono:hover {
+  font-variation-settings: "MONO" 1, "CASL" 0, "slnt" 0, "CRSV" 0, "wght" 700 !important;
+}
+
+nav a, nav button {
+  font-variation-settings: "MONO" 0, "CASL" 0.35, "slnt" 0, "CRSV" 0.5, "wght" 400;
+  transition: font-variation-settings 0.35s cubic-bezier(0.25, 0, 0, 1);
+}
+nav a:hover, nav button:hover {
+  font-variation-settings: "MONO" 0, "CASL" 0.35, "slnt" 0, "CRSV" 0.5, "wght" 750;
+}
+
+/* Custom Cursor styles with translation improvements */
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+  z-index: 100000;
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform;
+  display: none;
+}
+@media (pointer: fine) {
+  .custom-cursor {
+    display: block;
+  }
+}
+.cursor-element {
+  transition: transform 0.1s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center;
+}
+
+/* Dot Grid Backgrounds */
+.bg-grid-pattern {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Clean, stable grid card hover effects */
+.prismatic-border-hover {
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.prismatic-border-hover:hover {
+  border-color: rgba(255, 100, 255, 0.4) !important;
+  box-shadow: 0 0 15px rgba(255, 100, 255, 0.25);
+}
+
+/* GPU-Accelerated Lightbox Overlay Animations */
+@keyframes fade-in-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-lightbox-entry {
+  animation: fade-in-scale 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* System Cursor/Typewriter animations */
+@keyframes phosphor-flicker {
+  0%, 100% { opacity: 0.97; }
+  50% { opacity: 1.0; }
+}
+.animate-phosphor {
+  animation: phosphor-flicker 0.25s infinite;
+}
+
+/* Retro CRT Scanlines overlay */
+.lcd-scanlines {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 1px,
+    rgba(0, 0, 0, 0.18) 1px,
+    rgba(0, 0, 0, 0.18) 2px
+  );
+}
+
+/* Sunken Well Bezel */
+.surface-hardware-well {
+  background-color: #0c0d11;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.95), inset 0 -1px 1px rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+/* Hardware Button */
+.surface-hardware-btn {
+  background: linear-gradient(180deg, #1d1e24 0%, #121318 100%);
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 3px solid #08090b;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.surface-hardware-btn:active {
+  transform: translateY(1.5px);
+  border-bottom-width: 0px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+/* Prismatic Background Sweep */
+@keyframes prismatic-sweep {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.text-prismatic-foil {
+  background: linear-gradient(90deg, #22c55e, #3b82f6, #a855f7, #ef4444, #22c55e);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: prismatic-sweep 5s linear infinite;
+}
+
+/* Custom range fader knob with exact SVG layers encoded safely in CSS */
+.custom-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 24px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 24'><defs><linearGradient id='knob-body' x1='0' y1='0' x2='0' y2='1'><stop offset='0%25' stop-color='%23323238'/><stop offset='50%25' stop-color='%231a1a1f'/><stop offset='100%25' stop-color='%230c0c0e'/></linearGradient></defs><rect x='0.5' y='0.5' width='17' height='23' rx='3' fill='url(%23knob-body)' stroke='%23000' stroke-width='0.5'/><rect x='1.5' y='1.5' width='15' height='1' rx='0.5' fill='%23ffffff' opacity='0.12'/><line x1='2.5' y1='3' x2='2.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='3.5' y1='3' x2='3.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/><line x1='15.5' y1='3' x2='15.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='14.5' y1='3' x2='14.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/></svg>");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+}
+.custom-range-slider::-moz-range-thumb {
+  width: 18px;
+  height: 24px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 24'><defs><linearGradient id='knob-body' x1='0' y1='0' x2='0' y2='1'><stop offset='0%25' stop-color='%23323238'/><stop offset='50%25' stop-color='%231a1a1f'/><stop offset='100%25' stop-color='%230c0c0e'/></linearGradient></defs><rect x='0.5' y='0.5' width='17' height='23' rx='3' fill='url(%23knob-body)' stroke='%23000' stroke-width='0.5'/><rect x='1.5' y='1.5' width='15' height='1' rx='0.5' fill='%23ffffff' opacity='0.12'/><line x1='2.5' y1='3' x2='2.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='3.5' y1='3' x2='3.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/><line x1='15.5' y1='3' x2='15.5' y2='21' stroke='%23ffffff' stroke-width='0.5' opacity='0.05'/><line x1='14.5' y1='3' x2='14.5' y2='21' stroke='%23000000' stroke-width='0.5' opacity='0.4'/></svg>");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+}
+
+/* Continuous physical rotation loops */
+@keyframes spin-clockwise {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes spin-counterclockwise {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+.gear-spin-clockwise {
+  animation: spin-clockwise 14s linear infinite;
+}
+.gear-spin-counterclockwise {
+  animation: spin-counterclockwise 11s linear infinite;
+}
+.gear-paused {
+  animation-play-state: paused !important;
+}
 
 
 

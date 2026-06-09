@@ -6,7 +6,6 @@ import { AUDIO_TRACKS } from 'media-data';
 
 const html = htm.bind(React.createElement);
 
-// Group standard tracks programmatically to create logical catalog albums
 const ALBUMS = [];
 const grouped = {};
 AUDIO_TRACKS.forEach(t => {
@@ -47,10 +46,9 @@ export function AudioConsoleModal({
 
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
-  const [playlistView, setPlaylistView] = useState("albums"); // "albums" | "tracks"
+  const [playlistView, setPlaylistView] = useState("albums");
   const [viewingAlbumId, setViewingAlbumId] = useState(ALBUMS[0]?.id || "");
 
-  // Mixer volume states (synchronized with AudioEngine outputs)
   const [mixerMaster, setMixerMaster] = useState(1.0);
   const [mixerMusic, setMixerMusic] = useState(volume);
   const [mixerSfx, setMixerSfx] = useState(0.8);
@@ -61,7 +59,6 @@ export function AudioConsoleModal({
     setMixerMusic(volume);
   }, [volume]);
 
-  // Handle lowpass sweeps on modal mount/unmount
   useEffect(() => {
     audioEngine.setLowpass(true);
     return () => {
@@ -69,7 +66,6 @@ export function AudioConsoleModal({
     };
   }, []);
 
-  // Update values across AudioEngine gain nodes on state modifications
   useEffect(() => {
     if (isMuted) {
       audioEngine.setVolume("master", 0);
@@ -91,7 +87,6 @@ export function AudioConsoleModal({
     audioEngine.setVolume("ambience", mixerAmbience);
   }, [mixerAmbience]);
 
-  // Master 64-Bar Visualizer draw loop
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -115,16 +110,14 @@ export function AudioConsoleModal({
       const barWidth = (canvas.width / barCount) - 1.5;
       let x = 0;
 
-      // Color sweep gradient definition (emerald to indigo physical styling)
       const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
-      gradient.addColorStop(0, "#22c55e"); // emerald-500
-      gradient.addColorStop(0.5, "#3b82f6"); // blue-500
-      gradient.addColorStop(1, "#ec4899"); // pink-500
+      gradient.addColorStop(0, "rgb(34, 197, 94)");
+      gradient.addColorStop(0.5, "rgb(59, 130, 246)");
+      gradient.addColorStop(1, "rgb(236, 72, 153)");
 
       for (let i = 0; i < barCount; i++) {
         let rawValue = 0;
         if (isPlaying && analyser) {
-          // quadratic index spacing focusing on lower ranges
           const dataIndex = Math.min(
             bufferLength - 1,
             Math.floor(i * i * (bufferLength / (barCount * barCount * 1.1)) + 1)
@@ -135,7 +128,6 @@ export function AudioConsoleModal({
         smoothedValues[i] += (rawValue - smoothedValues[i]) * 0.15;
         const barHeight = (smoothedValues[i] / 255) * canvas.height * 0.9;
 
-        // Peak decay calculation
         if (barHeight > peaks[i]) {
           peaks[i] = barHeight;
         } else {
@@ -147,9 +139,8 @@ export function AudioConsoleModal({
           ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
         }
 
-        // Draw Peak indicator white ledger line
         if (peaks[i] > 0.5) {
-          ctx.fillStyle = "#ffffff";
+          ctx.fillStyle = "rgb(255, 255, 255)";
           ctx.fillRect(x, canvas.height - peaks[i] - 2, barWidth, 2);
         }
 
@@ -169,7 +160,7 @@ export function AudioConsoleModal({
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   const handleTrackSelect = (track) => {
-    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4);
+    audioEngine.playClick();
     const globalIdx = AUDIO_TRACKS.findIndex(t => t.name === track.name && t.folder === track.folder);
     if (globalIdx >= 0) {
       playTrackByIndex(globalIdx);
@@ -198,7 +189,6 @@ export function AudioConsoleModal({
             <div class="h-full bg-primary" style=${{ width: `${physicalPercent}%` }} />
           </div>
 
-          <!-- Vertical fader tick scale divisions -->
           <div class="absolute left-0 right-0 -bottom-2.5 h-1.5 pointer-events-none flex justify-between select-none">
             ${ticks.map((pct, i) => html`
               <div 
@@ -208,7 +198,6 @@ export function AudioConsoleModal({
             `)}
           </div>
 
-          <!-- Aluminum customized hardware range thumb fader knob -->
           <div 
             class="absolute pointer-events-none z-20 flex items-center justify-center transition-all duration-100" 
             style=${{ left: `calc(${physicalPercent}% - 9px)`, width: '18px', height: '24px' }}
@@ -218,7 +207,7 @@ export function AudioConsoleModal({
               class="absolute inset-0 w-full h-full object-contain pointer-events-none"
               draggable="false"
             />
-            <div class="w-[2px] h-3.5 bg-primary shadow-[0_0_6px_#22c55e] rounded-full z-10" />
+            <div class="w-[2px] h-3.5 bg-primary shadow-[0_0_6px_rgba(34,197,94,1)] rounded-full z-10" />
           </div>
 
           <input 
@@ -230,7 +219,7 @@ export function AudioConsoleModal({
             onChange=${(e) => {
               setter(parseFloat(e.target.value));
               if (type === "sfx") {
-                audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.3);
+                audioEngine.playTick();
               }
             }}
             class="absolute inset-0 w-full h-full opacity-0 cursor-none z-30" 
@@ -244,7 +233,6 @@ export function AudioConsoleModal({
     <div class="fixed inset-0 bg-void/90 backdrop-blur-md z-[110] flex items-center justify-center p-4 cursor-none animate-lightbox-entry">
       <div class="relative w-full max-w-4xl bg-panel rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-white/10 overflow-hidden flex flex-col cursor-none">
         
-        <!-- Mixer Console Header Bar -->
         <div class="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-ink">
           <div class="flex items-center gap-3 text-primary">
             <${Settings2} size=${22} />
@@ -254,7 +242,7 @@ export function AudioConsoleModal({
           </div>
           <button 
             onClick=${() => {
-              audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.35);
+              audioEngine.playClick();
               onClose();
             }}
             class="flex items-center justify-center w-8 h-8 rounded-md bg-white/5 border border-white/10 hover:border-primary/40 hover:text-primary transition-all duration-300 cursor-none"
@@ -263,13 +251,11 @@ export function AudioConsoleModal({
           </button>
         </div>
 
-        <!-- Scrollable Modal Interior Body -->
         <div class="p-6 flex flex-col gap-6 overflow-y-auto max-h-[80vh] custom-scrollbar">
           
-          <!-- Top Display Chassis Art Block -->
           <div class="flex flex-col md:flex-row gap-6 items-stretch bg-ink p-5 rounded-xl border border-white/5">
             <div class="w-full md:w-44 h-44 rounded-lg overflow-hidden border border-white/10 bg-void flex items-center justify-center relative shrink-0">
-              <span class="text-4xl">💿</span>
+              <span class="text-4xl select-none">💿</span>
               <div class=${`absolute inset-2 border border-white/5 rounded-full ${isPlaying ? 'animate-spin' : ''}`} style=${{ animationDuration: '8s' }} />
             </div>
 
@@ -281,16 +267,15 @@ export function AudioConsoleModal({
                 <h3 class="text-2xl font-display font-black text-white uppercase truncate mt-1">
                   ${activeTrack.title.replace(/_/g, ' ')}
                 </h3>
-                <p class="text-xs font-mono text-muted uppercase tracking-widest truncate mt-0.5">
+                <p class="text-xs font-mono text-muted uppercase tracking-widest truncate mt-0.5 select-none">
                   FOLDER: ${activeTrack.folder.replace(/_/g, ' ')}
                 </p>
               </div>
 
-              <!-- Audio Console Scrubber timeline -->
               <div class="space-y-1">
                 <div class="relative w-full h-1.5 bg-void rounded-full overflow-hidden">
                   <div 
-                    class="h-full bg-primary shadow-[0_0_8px_#22c55e]"
+                    class="h-full bg-primary shadow-[0_0_8px_rgba(34,197,94,1)]"
                     style=${{ width: `${progressPercent}%` }}
                   />
                   <input 
@@ -308,7 +293,6 @@ export function AudioConsoleModal({
                 </div>
               </div>
 
-              <!-- Primary playback controls alignment row -->
               <div class="flex items-center gap-2">
                 <button 
                   onClick=${toggleShuffleState}
@@ -341,7 +325,6 @@ export function AudioConsoleModal({
             </div>
           </div>
 
-          <!-- Master Spectrum Analyzer Section -->
           <div class="w-full bg-void rounded-xl border border-white/10 p-2 overflow-hidden h-32 relative shadow-inner">
             <canvas 
               ref=${canvasRef} 
@@ -352,16 +335,14 @@ export function AudioConsoleModal({
             <div class="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none select-none" style=${{ backgroundSize: '16px 16px' }} />
           </div>
 
-          <!-- Bottom Rack Split: Playlist Library Directory & Global Mixer Sliders -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
             
-            <!-- Category folder library indexing directory -->
             <div class="bg-ink rounded-xl border border-white/5 p-4 flex flex-col h-[320px]">
               <div class="flex items-center justify-between border-b border-white/5 pb-3 mb-3 shrink-0">
                 ${playlistView === "tracks" ? html`
                   <button 
                     onClick=${() => {
-                      audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.3);
+                      audioEngine.playClick();
                       setPlaylistView("albums");
                     }}
                     class="text-[10px] font-mono font-bold uppercase text-primary hover:underline cursor-none"
@@ -383,7 +364,7 @@ export function AudioConsoleModal({
                   <button 
                     key=${album.id}
                     onClick=${() => {
-                      audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.35);
+                      audioEngine.playClick();
                       setViewingAlbumId(album.id);
                       setPlaylistView("tracks");
                     }}
@@ -423,7 +404,6 @@ export function AudioConsoleModal({
               </div>
             </div>
 
-            <!-- Global Multichannel Mixer Deck -->
             <div class="bg-ink rounded-xl border border-white/5 p-5 flex flex-col justify-between gap-5 h-[320px]">
               <div class="flex items-center justify-between border-b border-white/5 pb-3 shrink-0 select-none">
                 <span class="text-[10px] font-mono font-bold text-muted uppercase tracking-widest">
@@ -431,7 +411,7 @@ export function AudioConsoleModal({
                 </span>
                 <button 
                   onClick=${() => {
-                    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.35);
+                    audioEngine.playClick();
                     setIsMuted(!isMuted);
                   }}
                   class=${`flex items-center gap-1.5 p-1 px-2.5 rounded text-[9px] font-mono font-bold uppercase transition border cursor-none ${isMuted ? 'border-red-500 bg-red-500/10 text-red-500 shadow-[0_0_8px_rgba(239,68,68,0.2)]' : 'border-white/10 hover:border-white/20 text-muted hover:text-white'}`}

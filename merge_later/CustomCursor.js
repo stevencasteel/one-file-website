@@ -1,3 +1,5 @@
+import { audioEngine } from './AudioEngine.js';
+
 window.addEventListener('DOMContentLoaded', () => {
   const globalCursor = document.getElementById('custom-cursor');
   const arrow = document.getElementById('cursor-arrow');
@@ -8,7 +10,6 @@ window.addEventListener('DOMContentLoaded', () => {
     globalCursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
   });
 
-  // Spring physical wind-up click states
   document.addEventListener('pointerdown', () => {
     arrow.style.transform = 'scale(0.82)';
     ibeam.style.transform = 'scale(0.82)';
@@ -18,7 +19,6 @@ window.addEventListener('DOMContentLoaded', () => {
     ibeam.style.transform = 'scale(1)';
   });
 
-  // Hover state observer
   document.addEventListener('mouseover', (e) => {
     const target = e.target;
     if (!target) return;
@@ -26,6 +26,12 @@ window.addEventListener('DOMContentLoaded', () => {
     const isText = ['p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'input', 'textarea'].includes(target.tagName.toLowerCase());
     const isInteractive = target.closest('a') || target.closest('button') || target.closest('[role="button"]') || target.classList.contains('cursor-pointer');
     const isWarningScreen = target.closest('#protocol-warning');
+
+    if (isInteractive && !isWarningScreen) {
+      audioEngine.playHover();
+    } else if (isText && !isInteractive && !isWarningScreen) {
+      audioEngine.playInnerTick();
+    }
 
     if (isText && !isInteractive && !isWarningScreen) {
       arrow.style.display = 'none';
