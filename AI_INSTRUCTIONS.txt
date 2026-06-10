@@ -148,6 +148,6 @@ protocol based on scope:
        node ./patch.js && rm ./patch.js
 
 3.5  Build Verification
-     Validate all TypeScript compilations and bundler configurations after any 
+     Validate all TypeScript compilations and linter configurations after any 
      file updates before concluding:
-       npm run build
+       npm run check

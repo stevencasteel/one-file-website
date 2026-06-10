@@ -5,7 +5,8 @@
     "dev": "vite --port 1111",
     "lint": "eslint merge_later/**/*.js",
     "typecheck": "tsc",
-    "build": "npm run lint && npm run typecheck && vite build && mkdir -p dist/merge_later && cp merge_later/media_data.js dist/merge_later/",
+    "check": "tsc && eslint .",
+    "build": "npm run check && vite build && mkdir -p dist/merge_later && cp merge_later/media_data.js dist/merge_later/",
     "format": "prettier --write \"merge_later/**/*.js\""
   },
   "devDependencies": {

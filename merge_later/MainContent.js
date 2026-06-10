@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import htm from 'htm';
 import { MISC_ART, MISC_MEDIA } from 'media-data';
 import { GlassContainer } from './components.js';

@@ -3,6 +3,15 @@ import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 
 export default [
+  {
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      'create_source_context.js',
+      'eslint.config.js',
+      'vite.config.js'
+    ]
+  },
   js.configs.recommended,
   {
     files: ['merge_later/**/*.js'],

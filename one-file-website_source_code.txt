@@ -2,7 +2,7 @@
 │          STEVEN CASTEEL ARCHIVE PROJECT          │
 │        Vite + React (ESM CDN) + Tailwind CSS     │
 └──────────────────────────────────────────────────┘
- [SYSTEM] Generated: 6/9/2026, 1:01:07 PM
+ [SYSTEM] Generated: 6/10/2026, 3:52:36 PM
  [BASELINE]: React 18, HTM, Lucide React, Lenis Scroll, Tailwind CSS
 
 ─── ABRIDGED DIRECTORY STRUCTURE ───────────────────
@@ -440,9 +440,9 @@ function App() {
   const [lightbox, setLightbox] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isConsoleOpen, setIsConsoleOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("audio");
+  const [activeSection, setActiveSection] = useState('audio');
 
-  const [seqStep, setSeqStep] = useState("line1");
+  const [seqStep, setSeqStep] = useState('line1');
   const [lenis, setLenis] = useState(null);
 
   // 1:1 Global Mixer State Variables
@@ -528,7 +528,7 @@ function App() {
   }, [mixerMaster, mixerSfx, mixerAmbience, isMuted]);
 
   useEffect(() => {
-    audioEngine.setVolume("music", mixerMusic);
+    audioEngine.setVolume('music', mixerMusic);
     localStorage.setItem('mesoelfy_mixer_music', mixerMusic.toString());
   }, [mixerMusic]);
 
@@ -546,7 +546,7 @@ function App() {
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      touchMultiplier: 1.15
+      touchMultiplier: 1.15,
     });
 
     function raf(time) {
@@ -565,21 +565,21 @@ function App() {
   // Active Section Tracker (Scroll Spy Setup)
   useEffect(() => {
     const handleSpy = () => {
-      const sections = ["misc-art", "misc-media"];
-      let current = "audio";
+      const sections = ['misc-art', 'misc-media'];
+      let current = 'audio';
       for (const s of sections) {
         const el = document.getElementById(s);
         if (el) {
           const htmlRect = el.getBoundingClientRect();
-          if (htmlRect.top <= window.innerHeight * 0.40) {
+          if (htmlRect.top <= window.innerHeight * 0.4) {
             current = s;
           }
         }
       }
       setActiveSection(current);
     };
-    window.addEventListener("scroll", handleSpy);
-    return () => window.removeEventListener("scroll", handleSpy);
+    window.addEventListener('scroll', handleSpy);
+    return () => window.removeEventListener('scroll', handleSpy);
   }, []);
 
   useEffect(() => {
@@ -593,7 +593,8 @@ function App() {
     const handleUnlock = () => {
       if (savedAutoplay === 'true' && audioElRef.current) {
         ensureAudioInitialized();
-        audioElRef.current.play()
+        audioElRef.current
+          .play()
           .then(() => setIsPlaying(true))
           .catch(() => {});
       }
@@ -604,18 +605,21 @@ function App() {
     return () => document.removeEventListener('click', handleUnlock);
   }, []);
 
-  const activeTrackIdx = playerState.queue[playerState.currentIdx] !== undefined ? playerState.queue[playerState.currentIdx] : 0;
+  const activeTrackIdx =
+    playerState.queue[playerState.currentIdx] !== undefined
+      ? playerState.queue[playerState.currentIdx]
+      : 0;
   const activeTrack = AUDIO_TRACKS[activeTrackIdx] || AUDIO_TRACKS[0];
 
   // Track changes & binary tag extraction trigger
   useEffect(() => {
     if (!audioElRef.current) return;
     localStorage.setItem('mesoelfy_player_track_index', activeTrackIdx.toString());
-    
+
     // Reset metadata block while decoding occurs
     setTrackMetadata(null);
     const url = `https://www.stevencasteel.com/assets/audio/music/elf_girl/${activeTrack.folder}/${activeTrack.name}`;
-    
+
     let isMounted = true;
     audioEngine.fetchID3Metadata(url).then((meta) => {
       if (isMounted) {
@@ -631,7 +635,7 @@ function App() {
     return () => {
       isMounted = false;
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTrackIdx]);
 
   const togglePlay = () => {
@@ -642,12 +646,13 @@ function App() {
       setIsPlaying(false);
       localStorage.setItem('mesoelfy_player_autoplay', 'false');
     } else {
-      audioElRef.current.play()
+      audioElRef.current
+        .play()
         .then(() => {
           setIsPlaying(true);
           localStorage.setItem('mesoelfy_player_autoplay', 'true');
         })
-        .catch((err) => console.log("Play failed: interaction required", err));
+        .catch((err) => console.log('Play failed: interaction required', err));
     }
   };
 
@@ -656,7 +661,7 @@ function App() {
     ensureAudioInitialized();
     setPlayerState((prev) => ({
       ...prev,
-      currentIdx: (prev.currentIdx + 1) % prev.queue.length
+      currentIdx: (prev.currentIdx + 1) % prev.queue.length,
     }));
   };
 
@@ -665,7 +670,7 @@ function App() {
     ensureAudioInitialized();
     setPlayerState((prev) => ({
       ...prev,
-      currentIdx: (prev.currentIdx - 1 + prev.queue.length) % prev.queue.length
+      currentIdx: (prev.currentIdx - 1 + prev.queue.length) % prev.queue.length,
     }));
   };
 
@@ -696,7 +701,7 @@ function App() {
     ensureAudioInitialized();
     setIsShuffle(targetState);
     localStorage.setItem('mesoelfy_player_shuffle', targetState.toString());
-    
+
     let newQueue = [];
     if (targetState) {
       newQueue = getShuffledIndices(AUDIO_TRACKS.length);
@@ -710,21 +715,23 @@ function App() {
     }
     setPlayerState({
       queue: newQueue,
-      currentIdx: 0
+      currentIdx: 0,
     });
   };
 
   const formatTime = (secs) => {
-    if (isNaN(secs)) return "0:00";
+    if (isNaN(secs)) return '0:00';
     const m = Math.floor(secs / 60);
-    const s = Math.floor(secs % 60).toString().padStart(2, '0');
+    const s = Math.floor(secs % 60)
+      .toString()
+      .padStart(2, '0');
     return `${m}:${s}`;
   };
 
   // Navigation Link Scrolling Coordinator
   const handleNavigation = (targetId) => {
     setIsSidebarOpen(false);
-    if (targetId === "audio") {
+    if (targetId === 'audio') {
       if (lenis) {
         lenis.scrollTo(0);
       } else {
@@ -757,59 +764,65 @@ function App() {
     handleNext,
     toggleShuffleState,
     setVolume: setMixerMusic, // Direct mapping of the slider
-    formatTime
+    formatTime,
   };
 
   return html`
-    <div class="relative w-full flex flex-col md:flex-row min-h-screen" onClick=${ensureAudioInitialized}>
+    <div
+      class="relative w-full flex flex-col md:flex-row min-h-screen"
+      onClick=${ensureAudioInitialized}
+    >
       <${ProtocolWarning} />
-      <audio 
-        ref=${audioElRef} 
+      <audio
+        ref=${audioElRef}
         src="https://www.stevencasteel.com/assets/audio/music/elf_girl/${activeTrack.folder}/${activeTrack.name}"
-        crossOrigin="anonymous"
+        crossorigin="anonymous"
         onTimeUpdate=${handleTimeUpdate}
         onLoadedMetadata=${handleLoadedMetadata}
         onEnded=${handleNext}
       />
 
       <!-- ── NAVIGATION & HEADER SYSTEM ── -->
-      <${Sidebar} 
+      <${Sidebar}
         isSidebarOpen=${isSidebarOpen}
         setIsSidebarOpen=${setIsSidebarOpen}
         activeSection=${activeSection}
         handleNavigation=${handleNavigation}
         playerProps=${playerProps}
-        onOpenConsole=${() => { ensureAudioInitialized(); setIsConsoleOpen(true); }}
+        onOpenConsole=${() => {
+          ensureAudioInitialized();
+          setIsConsoleOpen(true);
+        }}
       />
 
       <!-- ── MAIN CONTENT ZONE ── -->
       <div class="flex-1 md:pl-64 min-w-0 pb-20 pt-14 md:pt-0">
-        <${HeroHeader} 
-          seqStep=${seqStep}
-          setSeqStep=${setSeqStep}
-        />
+        <${HeroHeader} seqStep=${seqStep} setSeqStep=${setSeqStep} />
 
-        <${MainContent} 
-          setLightbox=${setLightbox}
-        />
+        <${MainContent} setLightbox=${setLightbox} />
       </div>
 
       <!-- ── GLOBAL CUSTOM SCROLLBAR ── -->
       <${GlobalScrollbar} lenisInstance=${lenis} />
 
       <!-- ── LIGHTBOX MODAL PORTAL ── -->
-      ${lightbox && html`
-        <div 
+      ${lightbox &&
+      html`
+        <div
           onClick=${() => setLightbox(null)}
           class="fixed inset-0 bg-void/95 backdrop-blur-md z-[100] flex items-center justify-center p-4 transition-opacity duration-300 cursor-none"
         >
-          <div class="relative max-w-full max-h-full flex items-center justify-center select-none animate-lightbox-entry">
-            <img 
-              src=${lightbox.src} 
-              alt=${lightbox.alt} 
+          <div
+            class="relative max-w-full max-h-full flex items-center justify-center select-none animate-lightbox-entry"
+          >
+            <img
+              src=${lightbox.src}
+              alt=${lightbox.alt}
               class="max-w-[90vw] max-h-[90vh] object-contain rounded-lg border border-white/10 shadow-2xl"
             />
-            <div class="absolute -top-12 right-0 text-white font-mono text-xs tracking-widest uppercase">
+            <div
+              class="absolute -top-12 right-0 text-white font-mono text-xs tracking-widest uppercase"
+            >
               Click anywhere to close
             </div>
           </div>
@@ -817,7 +830,7 @@ function App() {
       `}
 
       <!-- ── FULL SCREEN AUDIO CONSOLE MIXER MODAL ── -->
-      <${AudioConsoleModal} 
+      <${AudioConsoleModal}
         isOpen=${isConsoleOpen}
         isPrismaticEnabled=${isPrismaticEnabled}
         setIsPrismaticEnabled=${setIsPrismaticEnabled}
@@ -836,7 +849,6 @@ function App() {
         toggleShuffleState=${toggleShuffleState}
         setVolume=${setMixerMusic}
         formatTime=${formatTime}
-        
         mixerMaster=${mixerMaster}
         setMixerMaster=${setMixerMaster}
         mixerSfx=${mixerSfx}
@@ -845,13 +857,11 @@ function App() {
         setMixerAmbience=${setMixerAmbience}
         isMuted=${isMuted}
         setIsMuted=${setIsMuted}
-
         playTrackByIndex=${(idx) => {
-          setPlayerState(prev => ({ ...prev, currentIdx: idx }));
+          setPlayerState((prev) => ({ ...prev, currentIdx: idx }));
           setIsPlaying(true);
         }}
       />
-
     </div>
   `;
 }
@@ -866,7 +876,18 @@ rootNode.render(React.createElement(App));
 ────────────────────────────────────────────────────
 import React, { useEffect, useRef, useState } from 'react';
 import htm from 'htm';
-import { Settings2, Pause, Play, SkipForward, SkipBack, Shuffle, X, Library, ChevronLeft, Download } from 'lucide-react';
+import {
+  Settings2,
+  Pause,
+  Play,
+  SkipForward,
+  SkipBack,
+  Shuffle,
+  X,
+  Library,
+  ChevronLeft,
+  Download,
+} from 'lucide-react';
 import { audioEngine } from './AudioEngine.js';
 import { AUDIO_TRACKS } from 'media-data';
 
@@ -874,7 +895,7 @@ const html = htm.bind(React.createElement);
 
 const ALBUMS = [];
 const grouped = {};
-AUDIO_TRACKS.forEach(t => {
+AUDIO_TRACKS.forEach((t) => {
   if (!grouped[t.folder]) {
     grouped[t.folder] = [];
   }
@@ -885,8 +906,8 @@ Object.entries(grouped).forEach(([folder, tracks]) => {
   ALBUMS.push({
     id: folder,
     title: folder.replace(/_/g, ' ').toUpperCase(),
-    artist: "Steven Casteel",
-    tracks
+    artist: 'Steven Casteel',
+    tracks,
   });
 });
 
@@ -896,13 +917,19 @@ function ConsoleButton({
   active,
   label,
   isPrismatic = false,
-  className = "w-8 h-8"
+  className = 'w-8 h-8',
 }) {
   const handlePointerDown = () => {
-    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4);
+    audioEngine.playSFX(
+      'https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3',
+      0.4
+    );
   };
   const handlePointerUp = () => {
-    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+    audioEngine.playSFX(
+      'https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3',
+      0.4
+    );
   };
 
   return html`
@@ -912,13 +939,18 @@ function ConsoleButton({
         title=${label}
         onPointerDown=${handlePointerDown}
         onPointerUp=${handlePointerUp}
-        onClick=${(e) => { e.stopPropagation(); onClick(); }}
+        onClick=${(e) => {
+          e.stopPropagation();
+          onClick();
+        }}
         className=${`relative isolate flex items-center justify-center w-full h-full rounded-[5px] transition-[transform,color] duration-150 cursor-none overflow-hidden outline-none surface-hardware-btn ${active ? 'is-active text-primary' : 'text-fog hover:text-white'}`}
       >
         <span className="relative z-10 flex items-center justify-center w-full h-full">
           ${children}
         </span>
-        ${active && isPrismatic && html`
+        ${active &&
+        isPrismatic &&
+        html`
           <div className="console-btn-prismatic-border" />
           <div className="console-btn-prismatic-blur" />
         `}
@@ -952,13 +984,13 @@ function SpectrumVisualizer({ isPlaying }) {
         analyser.getByteFrequencyData(dataArray);
       }
 
-      const barWidth = (canvas.width / barCount) - 2;
+      const barWidth = canvas.width / barCount - 2;
       let x = 0;
 
       const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
-      gradient.addColorStop(0, "rgb(59, 130, 246)");
-      gradient.addColorStop(0.5, "rgb(168, 85, 247)");
-      gradient.addColorStop(1, "rgb(239, 68, 68)");
+      gradient.addColorStop(0, 'rgb(59, 130, 246)');
+      gradient.addColorStop(0.5, 'rgb(168, 85, 247)');
+      gradient.addColorStop(1, 'rgb(239, 68, 68)');
 
       const peaks = peaksRef.current;
       const smoothedValues = smoothedValuesRef.current;
@@ -969,13 +1001,12 @@ function SpectrumVisualizer({ isPlaying }) {
       for (let i = 0; i < barCount; i++) {
         let rawValue = 0;
         if (isPlaying && analyser) {
-          const dataIndex = Math.floor(
-            i * i * (bufferLength / (barCount * barCount * 1.2)) + 1
-          );
+          const dataIndex = Math.floor(i * i * (bufferLength / (barCount * barCount * 1.2)) + 1);
           rawValue = dataArray[dataIndex] || 0;
         }
 
-        smoothedValues[i] += (rawValue - smoothedValues[i]) * (rawValue > smoothedValues[i] ? 0.8 : decayRate);
+        smoothedValues[i] +=
+          (rawValue - smoothedValues[i]) * (rawValue > smoothedValues[i] ? 0.8 : decayRate);
         const barHeight = (smoothedValues[i] / 255) * canvas.height;
 
         if (barHeight > peaks[i]) {
@@ -990,7 +1021,7 @@ function SpectrumVisualizer({ isPlaying }) {
         }
 
         if (peaks[i] > 0.5) {
-          ctx.fillStyle = "rgb(255, 255, 255)";
+          ctx.fillStyle = 'rgb(255, 255, 255)';
           ctx.fillRect(x, canvas.height - peaks[i] - 2, barWidth, 2);
         }
 
@@ -1006,14 +1037,14 @@ function SpectrumVisualizer({ isPlaying }) {
 
   return html`
     <div className="w-full overflow-hidden shrink-0 animate-lightbox-entry">
-      <div className="relative rounded-xl overflow-hidden border border-white/5 shadow-inner bg-void h-32 w-full">
-        <canvas 
-          ref=${canvasRef} 
-          width="600" 
-          height="128" 
-          className="w-full h-full opacity-90"
+      <div
+        className="relative rounded-xl overflow-hidden border border-white/5 shadow-inner bg-void h-32 w-full"
+      >
+        <canvas ref=${canvasRef} width="600" height="128" className="w-full h-full opacity-90" />
+        <div
+          className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none select-none"
+          style=${{ backgroundSize: '16px 16px' }}
         />
-        <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none select-none" style=${{ backgroundSize: '16px 16px' }} />
       </div>
     </div>
   `;
@@ -1046,11 +1077,11 @@ export function AudioConsoleModal({
   setMixerAmbience,
   isMuted,
   setIsMuted,
-  isPrismaticEnabled
+  isPrismaticEnabled,
 }) {
   const [showShader, setShowShader] = useState(true);
-  const [playlistView, setPlaylistView] = useState("tracks");
-  const [viewingAlbumId, setViewingAlbumId] = useState(ALBUMS[0]?.id || "");
+  const [playlistView, setPlaylistView] = useState('tracks');
+  const [viewingAlbumId, setViewingAlbumId] = useState(ALBUMS[0]?.id || '');
 
   useEffect(() => {
     if (isOpen && activeTrack) {
@@ -1069,12 +1100,14 @@ export function AudioConsoleModal({
 
   if (!isOpen) return null;
 
-  const activeAlbum = ALBUMS.find(a => a.id === viewingAlbumId) || ALBUMS[0];
+  const activeAlbum = ALBUMS.find((a) => a.id === viewingAlbumId) || ALBUMS[0];
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   const handleTrackSelect = (track) => {
     audioEngine.playClick();
-    const globalIdx = AUDIO_TRACKS.findIndex(t => t.name === track.name && t.folder === track.folder);
+    const globalIdx = AUDIO_TRACKS.findIndex(
+      (t) => t.name === track.name && t.folder === track.folder
+    );
     if (globalIdx >= 0) {
       playTrackByIndex(globalIdx);
     }
@@ -1090,14 +1123,16 @@ export function AudioConsoleModal({
   };
 
   const cleanTitle = trackMetadata?.title || activeTrack.title.replace(/_/g, ' ');
-  const cleanAlbum = trackMetadata?.artist ? `${trackMetadata.artist} // ${activeTrack.folder.replace(/_/g, ' ')}` : activeTrack.folder.replace(/_/g, ' ');
+  const cleanAlbum = trackMetadata?.artist
+    ? `${trackMetadata.artist} // ${activeTrack.folder.replace(/_/g, ' ')}`
+    : activeTrack.folder.replace(/_/g, ' ');
 
   const ticks = Array.from({ length: 13 }, (_, i) => i * 8.33);
 
   const renderSlider = (label, type, value, setter) => {
     const displayPercent = Math.round(value * 100);
     const physicalPercent = Math.round((value / 3.0) * 100);
-    
+
     const active = displayPercent > 0 && !isMuted;
     const baseHue = 142;
     let hue = baseHue;
@@ -1114,55 +1149,81 @@ export function AudioConsoleModal({
     return html`
       <div className="flex flex-col gap-2.5 cursor-none group">
         <div className="flex justify-between text-[11px] font-mono select-none">
-          <span className="uppercase tracking-widest font-bold text-muted group-hover:text-white transition duration-200">
+          <span
+            className="uppercase tracking-widest font-bold text-muted group-hover:text-white transition duration-200"
+          >
             ${label}
           </span>
-          <span className="font-bold tabular-nums transition-colors" style=${{ color: sliderColor }}>
+          <span
+            className="font-bold tabular-nums transition-colors"
+            style=${{ color: sliderColor }}
+          >
             ${displayPercent}%
           </span>
         </div>
 
         <div className="relative h-7 flex items-center w-full select-none">
-          <div className="absolute left-0 right-0 h-2 bg-void rounded shadow-neumorph-recessed-sm border border-black/40" />
-          
-          <div className="absolute left-1 right-1 h-1 rounded overflow-hidden pointer-events-none z-10 opacity-75">
-            <div className="h-full transition-all duration-100 ease-out" style=${{ width: `${physicalPercent}%`, backgroundColor: sliderColor }} />
+          <div
+            className="absolute left-0 right-0 h-2 bg-void rounded shadow-neumorph-recessed-sm border border-black/40"
+          />
+
+          <div
+            className="absolute left-1 right-1 h-1 rounded overflow-hidden pointer-events-none z-10 opacity-75"
+          >
+            <div
+              className="h-full transition-all duration-100 ease-out"
+              style=${{ width: `${physicalPercent}%`, backgroundColor: sliderColor }}
+            />
           </div>
 
-          <div className="absolute left-0 right-0 -bottom-2 h-1.5 pointer-events-none flex justify-between select-none">
-            ${ticks.map((pct, i) => html`
-              <div 
-                key=${i} 
-                className=${`w-[1px] bg-white/20 transition-all ${i % 4 === 0 ? 'h-2 w-[1.5px] bg-white/40' : 'h-1'}`}
-                style=${{ left: `${pct}%` }}
-              />
-            `)}
+          <div
+            className="absolute left-0 right-0 -bottom-2 h-1.5 pointer-events-none flex justify-between select-none"
+          >
+            ${ticks.map(
+              (pct, i) => html`
+                <div
+                  key=${i}
+                  className=${`w-[1px] bg-white/20 transition-all ${i % 4 === 0 ? 'h-2 w-[1.5px] bg-white/40' : 'h-1'}`}
+                  style=${{ left: `${pct}%` }}
+                />
+              `
+            )}
           </div>
 
           <div className="peer-focus-ring-prismatic" />
 
-          <div 
+          <div
             className=${`thumb absolute pointer-events-none z-20 flex items-center justify-center border border-black shadow-[0_3px_5px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.12)] rounded-[3px] bg-gradient-to-b from-[#323238] via-[#1a1a1f] to-[#0c0c0e] scale-100 group-hover:scale-[1.05] group-active:scale-[0.98] ${isMuted ? 'opacity-40' : ''}`}
             style=${{ left: `calc(${physicalPercent}% - 9px)`, width: '18px', height: '24px' }}
           >
-            <div className="absolute inset-y-1.5 left-1 w-[1px] bg-white/5 shadow-[0.5px_0_0_rgba(0,0,0,0.4)]" />
-            <div className="absolute inset-y-1.5 right-1 w-[1px] bg-white/5 shadow-[-0.5px_0_0_rgba(0,0,0,0.4)]" />
-            <div className="w-[2px] h-3.5 rounded-full shadow-[0_0_6px_currentColor] transition-colors duration-200" style=${{ backgroundColor: active ? sliderColor : '#4b5563', color: active ? sliderColor : 'transparent' }} />
+            <div
+              className="absolute inset-y-1.5 left-1 w-[1px] bg-white/5 shadow-[0.5px_0_0_rgba(0,0,0,0.4)]"
+            />
+            <div
+              className="absolute inset-y-1.5 right-1 w-[1px] bg-white/5 shadow-[-0.5px_0_0_rgba(0,0,0,0.4)]"
+            />
+            <div
+              className="w-[2px] h-3.5 rounded-full shadow-[0_0_6px_currentColor] transition-colors duration-200"
+              style=${{
+                backgroundColor: active ? sliderColor : '#4b5563',
+                color: active ? sliderColor : 'transparent',
+              }}
+            />
           </div>
 
-          <input 
-            type="range" 
-            min="0" 
-            max="3" 
-            step="0.01" 
-            value=${value} 
+          <input
+            type="range"
+            min="0"
+            max="3"
+            step="0.01"
+            value=${value}
             onChange=${(e) => {
               setter(parseFloat(e.target.value));
-              if (type === "sfx") {
+              if (type === 'sfx') {
                 audioEngine.playHover();
               }
             }}
-            className="peer absolute inset-0 w-full h-full opacity-0 cursor-none z-30" 
+            className="peer absolute inset-0 w-full h-full opacity-0 cursor-none z-30"
           />
         </div>
       </div>
@@ -1182,7 +1243,10 @@ export function AudioConsoleModal({
           </div>
           <button 
             onClick=${() => {
-              audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/leave_modal.mp3", 0.4);
+              audioEngine.playSFX(
+                'https://www.stevencasteel.com/assets/audio/sfx/leave_modal.mp3',
+                0.4
+              );
               onClose();
             }}
             className="flex items-center justify-center w-8 h-8 rounded-md bg-white/5 border border-white/10 hover:border-primary-400 hover:text-primary-400 hover:bg-primary-400/10 transition-all duration-300 cursor-none outline-none"
@@ -1195,13 +1259,23 @@ export function AudioConsoleModal({
           
           <div className="flex flex-col md:flex-row gap-6 items-center md:items-stretch bg-[#111114] p-5 rounded-xl border border-white/5 shadow-inner">
             <div className="relative aspect-square shrink-0 rounded-xl border border-white/10 shadow-2xl overflow-hidden bg-ink w-full max-w-[240px] sm:max-w-[280px] md:max-w-none md:w-auto md:h-48 xl:h-56">
-              ${trackMetadata && trackMetadata.coverUrl ? html`
-                <img src=${trackMetadata.coverUrl} className="absolute inset-0 w-full h-full object-cover opacity-90 animate-lightbox-entry" alt="" />
-              ` : html`
-                <div className="w-full h-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center">
-                  <span className="text-5xl select-none">💿</span>
-                </div>
-              `}
+              ${
+                trackMetadata && trackMetadata.coverUrl
+                  ? html`
+                      <img
+                        src=${trackMetadata.coverUrl}
+                        className="absolute inset-0 w-full h-full object-cover opacity-90 animate-lightbox-entry"
+                        alt=""
+                      />
+                    `
+                  : html`
+                      <div
+                        className="w-full h-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center"
+                      >
+                        <span className="text-5xl select-none">💿</span>
+                      </div>
+                    `
+              }
               <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none z-20" />
             </div>
 
@@ -1224,14 +1298,16 @@ export function AudioConsoleModal({
                 
                 <button 
                   onClick=${() => {
-                    audioEngine.playSFX(showShader ? "audio.visualizerHide" : "audio.visualizerShow");
+                    audioEngine.playSFX(
+                      showShader ? 'audio.visualizerHide' : 'audio.visualizerShow'
+                    );
                     setShowShader(!showShader);
                   }}
                   className="text-muted hover:text-primary-400 transition cursor-none outline-none ml-2 shrink-0"
                   title="Toggle Visualizer"
                 >
                   <span className="text-sm font-mono tracking-widest uppercase">
-                    ${showShader ? "[ HIDE VIS ]" : "[ SHOW VIS ]"}
+                    ${showShader ? '[ HIDE VIS ]' : '[ SHOW VIS ]'}
                   </span>
                 </button>
               </div>
@@ -1280,15 +1356,20 @@ export function AudioConsoleModal({
                 </${ConsoleButton}>
 
                 <${ConsoleButton}
-                  label=${isPlaying ? "Pause" : "Play"}
+                  label=${isPlaying ? 'Pause' : 'Play'}
                   onClick=${togglePlay}
                   active=${isPlaying}
                   isPrismatic=${isPrismaticEnabled}
                   className="flex-1 max-w-[180px] h-12 md:h-14 lg:h-16 shadow-lg"
                 >
-                  ${isPlaying 
-                    ? html`<${Pause} size=${18} fill="currentColor" className="text-primary drop-shadow-[0_0_4px_rgba(34,197,94,1)]" />`
-                    : html`<${Play} size=${18} fill="currentColor" className="ml-0.5" />`
+                  ${
+                    isPlaying
+                      ? html`<${Pause}
+                          size=${18}
+                          fill="currentColor"
+                          className="text-primary drop-shadow-[0_0_4px_rgba(34,197,94,1)]"
+                        />`
+                      : html`<${Play} size=${18} fill="currentColor" className="ml-0.5" />`
                   }
                 </${ConsoleButton}>
 
@@ -1309,86 +1390,127 @@ export function AudioConsoleModal({
             
             <div className="w-full lg:flex-1 relative flex flex-col bg-ink rounded-xl border border-white/5 overflow-hidden shadow-inner h-[380px]">
               <div className="flex items-center justify-between px-3 py-3 border-b border-white/10 bg-ink shrink-0 h-[46px] select-none">
-                ${playlistView === "tracks" ? html`
-                  <button 
-                    onClick=${() => {
-                      audioEngine.playClick();
-                      setPlaylistView("albums");
-                    }}
-                    className="p-1.5 hover:bg-white/10 rounded cursor-none text-fog hover:text-white transition flex items-center gap-1 shrink-0 outline-none"
-                  >
-                    <${ChevronLeft} size={16} />
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest">Albums</span>
-                  </button>
-                ` : html`
-                  <div className="p-1.5 px-3 shrink-0">
-                    <span className="text-[10px] font-mono font-bold text-muted uppercase tracking-widest">Select Library</span>
-                  </div>
-                `}
+                ${
+                  playlistView === 'tracks'
+                    ? html`
+                        <button
+                          onClick=${() => {
+                            audioEngine.playClick();
+                            setPlaylistView('albums');
+                          }}
+                          className="p-1.5 hover:bg-white/10 rounded cursor-none text-fog hover:text-white transition flex items-center gap-1 shrink-0 outline-none"
+                        >
+                          <${ChevronLeft} size="{16}" />
+                          <span
+                            className="text-[10px] font-mono font-bold uppercase tracking-widest"
+                            >Albums</span
+                          >
+                        </button>
+                      `
+                    : html`
+                        <div className="p-1.5 px-3 shrink-0">
+                          <span
+                            className="text-[10px] font-mono font-bold text-muted uppercase tracking-widest"
+                            >Select Library</span
+                          >
+                        </div>
+                      `
+                }
 
-                ${playlistView === "tracks" && html`
-                  <span className="font-display font-bold text-sm uppercase tracking-widest text-right flex-1 px-2 truncate text-primary-400">
-                    ${activeAlbum.title}
-                  </span>
-                `}
+                ${
+                  playlistView === 'tracks' &&
+                  html`
+                    <span
+                      className="font-display font-bold text-sm uppercase tracking-widest text-right flex-1 px-2 truncate text-primary-400"
+                    >
+                      ${activeAlbum.title}
+                    </span>
+                  `
+                }
               </div>
 
               <div className="flex-1 overflow-y-auto custom-scrollbar p-2 pb-4 space-y-1">
-                ${playlistView === "albums" ? ALBUMS.map(album => html`
-                  <button 
-                    key=${album.id}
-                    onClick=${() => {
-                      audioEngine.playClick();
-                      setViewingAlbumId(album.id);
-                      setPlaylistView("tracks");
-                    }}
-                    className=${`w-full text-left px-3 py-3 rounded flex items-center gap-4 transition-all cursor-none group border border-transparent hover:border-white/10 hover:bg-white/5 outline-none`}
-                  >
-                    <div className="w-10 h-10 rounded bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                      <${Library} size=${16} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-bold truncate text-light group-hover:text-white">
-                        ${album.title}
-                      </div>
-                      <div className="text-[10px] font-mono text-muted uppercase tracking-widest">
-                        ${album.tracks.length} Channels
-                      </div>
-                    </div>
-                  </button>
-                `) : activeAlbum.tracks.map((t, idx) => {
-                  const isActive = activeTrack.name === t.name && activeTrack.folder === t.folder;
-                  
-                  return html`
-                    <div key=${t.name} className=${`w-full flex items-center justify-between rounded transition-all group ${isActive ? 'bg-primary/10 text-primary font-bold' : 'hover:bg-white/5 text-fog hover:text-white'}`}>
-                      <button 
-                        onClick=${() => handleTrackSelect(t)}
-                        className="flex-1 flex items-center gap-3 px-3 py-2.5 text-left cursor-none truncate outline-none rounded"
-                      >
-                        <span className="font-mono text-[10px] opacity-50 w-5 shrink-0">${idx + 1}</span>
-                        <span className="text-xs truncate uppercase font-bold">${t.title.replace(/_/g, ' ')}</span>
-                        ${isActive && html`
-                          <div className="w-1.5 h-1.5 rounded-full shadow-[0_0_8px_#22c55e] bg-primary animate-pulse shrink-0 ml-2" />
-                        `}
-                      </button>
-                      
-                      <a 
-                        href=${`https://www.stevencasteel.com/assets/audio/music/elf_girl/${t.folder}/${t.name}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        download
-                        className="p-2.5 shrink-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity cursor-none outline-none rounded hover:text-primary-400"
-                        title="Download track"
-                        onClick=${(e) => {
-                          audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
-                          e.stopPropagation();
-                        }}
-                      >
-                        <${Download} size=${14} />
-                      </a>
-                    </div>
-                  `;
-                })}
+                ${
+                  playlistView === 'albums'
+                    ? ALBUMS.map(
+                        (album) => html`
+                          <button
+                            key=${album.id}
+                            onClick=${() => {
+                              audioEngine.playClick();
+                              setViewingAlbumId(album.id);
+                              setPlaylistView('tracks');
+                            }}
+                            className=${`w-full text-left px-3 py-3 rounded flex items-center gap-4 transition-all cursor-none group border border-transparent hover:border-white/10 hover:bg-white/5 outline-none`}
+                          >
+                            <div
+                              className="w-10 h-10 rounded bg-primary/10 text-primary flex items-center justify-center shrink-0"
+                            >
+                              <${Library} size=${16} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div
+                                className="text-sm font-bold truncate text-light group-hover:text-white"
+                              >
+                                ${album.title}
+                              </div>
+                              <div
+                                className="text-[10px] font-mono text-muted uppercase tracking-widest"
+                              >
+                                ${album.tracks.length} Channels
+                              </div>
+                            </div>
+                          </button>
+                        `
+                      )
+                    : activeAlbum.tracks.map((t, idx) => {
+                        const isActive =
+                          activeTrack.name === t.name && activeTrack.folder === t.folder;
+
+                        return html`
+                          <div
+                            key=${t.name}
+                            className=${`w-full flex items-center justify-between rounded transition-all group ${isActive ? 'bg-primary/10 text-primary font-bold' : 'hover:bg-white/5 text-fog hover:text-white'}`}
+                          >
+                            <button
+                              onClick=${() => handleTrackSelect(t)}
+                              className="flex-1 flex items-center gap-3 px-3 py-2.5 text-left cursor-none truncate outline-none rounded"
+                            >
+                              <span className="font-mono text-[10px] opacity-50 w-5 shrink-0"
+                                >${idx + 1}</span
+                              >
+                              <span className="text-xs truncate uppercase font-bold"
+                                >${t.title.replace(/_/g, ' ')}</span
+                              >
+                              ${isActive &&
+                              html`
+                                <div
+                                  className="w-1.5 h-1.5 rounded-full shadow-[0_0_8px_#22c55e] bg-primary animate-pulse shrink-0 ml-2"
+                                />
+                              `}
+                            </button>
+
+                            <a
+                              href=${`https://www.stevencasteel.com/assets/audio/music/elf_girl/${t.folder}/${t.name}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              download
+                              className="p-2.5 shrink-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity cursor-none outline-none rounded hover:text-primary-400"
+                              title="Download track"
+                              onClick=${(e) => {
+                                audioEngine.playSFX(
+                                  'https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3',
+                                  0.4
+                                );
+                                e.stopPropagation();
+                              }}
+                            >
+                              <${Download} size=${14} />
+                            </a>
+                          </div>
+                        `;
+                      })
+                }
               </div>
             </div>
 
@@ -1411,16 +1533,16 @@ export function AudioConsoleModal({
                     }}
                     className=${`flex items-center p-1 px-2.5 rounded text-[9px] font-mono font-bold uppercase transition border cursor-none h-8 ${isMuted ? 'border-red-500 bg-red-500/10 text-red-500 shadow-[0_0_8px_rgba(239,68,68,0.2)]' : 'border-white/10 hover:border-white/20 text-muted hover:text-white'}`}
                   >
-                    <span>${isMuted ? "Unmute" : "Mute All"}</span>
+                    <span>${isMuted ? 'Unmute' : 'Mute All'}</span>
                   </button>
                 </div>
               </div>
 
               <div className="flex flex-col flex-1 justify-center gap-6 p-5 md:p-6 bg-void/50">
-                ${renderSlider("Master Out", "master", mixerMaster, setMixerMaster)}
-                ${renderSlider("Music Synthesizer", "music", volume, setVolume)}
-                ${renderSlider("Tactile SFX Engine", "sfx", mixerSfx, setMixerSfx)}
-                ${renderSlider("Ambient Noise Node", "ambience", mixerAmbience, setMixerAmbience)}
+                ${renderSlider('Master Out', 'master', mixerMaster, setMixerMaster)}
+                ${renderSlider('Music Synthesizer', 'music', volume, setVolume)}
+                ${renderSlider('Tactile SFX Engine', 'sfx', mixerSfx, setMixerSfx)}
+                ${renderSlider('Ambient Noise Node', 'ambience', mixerAmbience, setMixerAmbience)}
               </div>
             </div>
 
@@ -1462,7 +1584,7 @@ class AudioEngine {
       MASTER: 0.5,
       SFX: 0.8,
       AMBIENCE: 1.0,
-      MUSIC: 0.25
+      MUSIC: 0.25,
     };
 
     // Store Raw Values (1:1 with Store matrices)
@@ -1491,7 +1613,7 @@ class AudioEngine {
     this.ambienceGain = this.ctx.createGain();
 
     this.musicFilter = this.ctx.createBiquadFilter();
-    this.musicFilter.type = "lowpass";
+    this.musicFilter.type = 'lowpass';
     this.musicFilter.frequency.setValueAtTime(20000, this.ctx.currentTime);
     this.musicFilter.Q.setValueAtTime(0.0001, this.ctx.currentTime);
 
@@ -1537,22 +1659,25 @@ class AudioEngine {
     this.sfxGain.gain.linearRampToValueAtTime(this.sfxVol * this.SCALING.SFX, now + 0.2);
 
     this.ambienceGain.gain.cancelScheduledValues(now);
-    this.ambienceGain.gain.linearRampToValueAtTime(this.ambienceVol * this.SCALING.AMBIENCE, now + 0.2);
+    this.ambienceGain.gain.linearRampToValueAtTime(
+      this.ambienceVol * this.SCALING.AMBIENCE,
+      now + 0.2
+    );
   }
 
   setVolume(type, value) {
     if (!this.isInitialized || !this.ctx) return;
 
-    if (type === "master") {
+    if (type === 'master') {
       this.masterVol = value;
       this.applyVolumes();
-    } else if (type === "music") {
+    } else if (type === 'music') {
       this.musicVol = value;
       this.musicGain.gain.setValueAtTime(1.0, this.ctx.currentTime);
-    } else if (type === "sfx") {
+    } else if (type === 'sfx') {
       this.sfxVol = value;
       this.applyVolumes();
-    } else if (type === "ambience") {
+    } else if (type === 'ambience') {
       this.ambienceVol = value;
       this.applyVolumes();
     }
@@ -1592,15 +1717,15 @@ class AudioEngine {
     this.ambienceNode.loop = true;
 
     this.ambienceSynthFilter = this.ctx.createBiquadFilter();
-    this.ambienceSynthFilter.type = "lowpass";
+    this.ambienceSynthFilter.type = 'lowpass';
     this.ambienceSynthFilter.frequency.setValueAtTime(800, this.ctx.currentTime);
 
     this.ambienceMixerFilter = this.ctx.createBiquadFilter();
-    this.ambienceMixerFilter.type = "lowpass";
+    this.ambienceMixerFilter.type = 'lowpass';
     this.ambienceMixerFilter.frequency.setValueAtTime(300, this.ctx.currentTime);
 
     this.ambienceLFO = this.ctx.createOscillator();
-    this.ambienceLFO.type = "sine";
+    this.ambienceLFO.type = 'sine';
     this.ambienceLFO.frequency.setValueAtTime(0.2, this.ctx.currentTime);
 
     this.ambienceLFOGain = this.ctx.createGain();
@@ -1625,12 +1750,20 @@ class AudioEngine {
 
   stopAmbience() {
     if (this.ambienceNode) {
-      try { this.ambienceNode.stop(); } catch (e) { /* ignore */ }
+      try {
+        this.ambienceNode.stop();
+      } catch (e) {
+        /* ignore */
+      }
       this.ambienceNode.disconnect();
       this.ambienceNode = null;
     }
     if (this.ambienceLFO) {
-      try { this.ambienceLFO.stop(); } catch (e) { /* ignore */ }
+      try {
+        this.ambienceLFO.stop();
+      } catch (e) {
+        /* ignore */
+      }
       this.ambienceLFO.disconnect();
       this.ambienceLFO = null;
     }
@@ -1651,9 +1784,9 @@ class AudioEngine {
     }
 
     try {
-      const fetchUrl = url.includes("?") ? `${url}&meta=1` : `${url}?meta=1`;
+      const fetchUrl = url.includes('?') ? `${url}&meta=1` : `${url}?meta=1`;
       const INITIAL_BYTES = 524288;
-      
+
       let response;
       try {
         response = await fetch(fetchUrl, {
@@ -1675,15 +1808,20 @@ class AudioEngine {
         return metadata;
       }
     } catch (err) {
-      console.warn("ID3 parse failed, falling back to parsed URL data:", err);
+      console.warn('ID3 parse failed, falling back to parsed URL data:', err);
       try {
         const parts = url.split('/');
-        const fileName = parts[parts.length - 1] || "";
-        const cleanName = fileName.replace(/\.mp3$/, '').split('_').slice(2).join(' ').replace(/_/g, ' ');
-                const fallback = {
-          title: cleanName || "Unknown Track",
-          artist: "Steven Casteel",
-          coverUrl: null
+        const fileName = parts[parts.length - 1] || '';
+        const cleanName = fileName
+          .replace(/\.mp3$/, '')
+          .split('_')
+          .slice(2)
+          .join(' ')
+          .replace(/_/g, ' ');
+        const fallback = {
+          title: cleanName || 'Unknown Track',
+          artist: 'Steven Casteel',
+          coverUrl: null,
         };
         this.metadataCache[url] = fallback;
         return fallback;
@@ -1697,33 +1835,50 @@ class AudioEngine {
   parseBufferID3(arrayBuffer) {
     const view = new DataView(arrayBuffer);
     if (arrayBuffer.byteLength < 10) return null;
-    
+
     // Validate tag header (ID3)
     if (view.getUint8(0) !== 0x49 || view.getUint8(1) !== 0x44 || view.getUint8(2) !== 0x33) {
       return null;
     }
-    
+
     const majorVersion = view.getUint8(3);
     const sizeBytes = [view.getUint8(6), view.getUint8(7), view.getUint8(8), view.getUint8(9)];
-    const tagSize = (sizeBytes[0] << 21) | (sizeBytes[1] << 14) | (sizeBytes[2] << 7) | sizeBytes[3];
-    
+    const tagSize =
+      (sizeBytes[0] << 21) | (sizeBytes[1] << 14) | (sizeBytes[2] << 7) | sizeBytes[3];
+
     let offset = 10;
-    const metadata = { title: "", artist: "", coverUrl: "" };
+    const metadata = { title: '', artist: '', coverUrl: '' };
     const maxOffset = Math.min(arrayBuffer.byteLength, tagSize + 10);
-    
+
     while (offset < maxOffset - 10) {
-      let frameId = "";
+      let frameId = '';
       let frameSize = 0;
-      
+
       if (majorVersion === 2) {
-        frameId = String.fromCharCode(view.getUint8(offset), view.getUint8(offset + 1), view.getUint8(offset + 2));
-        frameSize = (view.getUint8(offset + 3) << 16) | (view.getUint8(offset + 4) << 8) | view.getUint8(offset + 5);
+        frameId = String.fromCharCode(
+          view.getUint8(offset),
+          view.getUint8(offset + 1),
+          view.getUint8(offset + 2)
+        );
+        frameSize =
+          (view.getUint8(offset + 3) << 16) |
+          (view.getUint8(offset + 4) << 8) |
+          view.getUint8(offset + 5);
         offset += 6;
       } else if (majorVersion === 3 || majorVersion === 4) {
-        frameId = String.fromCharCode(view.getUint8(offset), view.getUint8(offset + 1), view.getUint8(offset + 2), view.getUint8(offset + 3));
-        
+        frameId = String.fromCharCode(
+          view.getUint8(offset),
+          view.getUint8(offset + 1),
+          view.getUint8(offset + 2),
+          view.getUint8(offset + 3)
+        );
+
         if (majorVersion === 4) {
-          frameSize = (view.getUint8(offset + 4) << 21) | (view.getUint8(offset + 5) << 14) | (view.getUint8(offset + 6) << 7) | view.getUint8(offset + 7);
+          frameSize =
+            (view.getUint8(offset + 4) << 21) |
+            (view.getUint8(offset + 5) << 14) |
+            (view.getUint8(offset + 6) << 7) |
+            view.getUint8(offset + 7);
         } else {
           frameSize = view.getUint32(offset + 4);
         }
@@ -1731,27 +1886,27 @@ class AudioEngine {
       } else {
         break;
       }
-      
+
       if (frameSize <= 0 || offset + frameSize > arrayBuffer.byteLength) {
         break;
       }
-      
-      if (frameId === "TIT2" || frameId === "TT2") {
+
+      if (frameId === 'TIT2' || frameId === 'TT2') {
         metadata.title = this.decodeTextFrame(view, offset, frameSize);
-      } else if (frameId === "TPE1" || frameId === "TP1") {
+      } else if (frameId === 'TPE1' || frameId === 'TP1') {
         metadata.artist = this.decodeTextFrame(view, offset, frameSize);
-      } else if (frameId === "APIC" || frameId === "PIC") {
+      } else if (frameId === 'APIC' || frameId === 'PIC') {
         metadata.coverUrl = this.decodeApicFrame(arrayBuffer, offset, frameSize, majorVersion);
       }
-      
+
       offset += frameSize;
     }
-    
+
     return metadata;
   }
 
   decodeTextFrame(view, offset, size) {
-    if (size <= 1) return "";
+    if (size <= 1) return '';
     const encoding = view.getUint8(offset);
     return this.decodeString(view.buffer, offset + 1, size - 1, encoding);
   }
@@ -1759,24 +1914,28 @@ class AudioEngine {
   decodeString(buffer, offset, size, encoding) {
     const uint8 = new Uint8Array(buffer, offset, size);
     if (encoding === 0 || encoding === 3) {
-      const decoder = new TextDecoder(encoding === 3 ? "utf-8" : "iso-8859-1");
-      return decoder.decode(uint8).replace(/\0+$/, "").trim();
+      const decoder = new TextDecoder(encoding === 3 ? 'utf-8' : 'iso-8859-1');
+      return decoder.decode(uint8).replace(/\0+$/, '').trim();
     } else if (encoding === 1 || encoding === 2) {
-      const decoder = new TextDecoder(encoding === 2 ? "utf-16be" : "utf-16");
-      return decoder.decode(uint8).replace(/\0+$/, "").trim();
+      const decoder = new TextDecoder(encoding === 2 ? 'utf-16be' : 'utf-16');
+      return decoder.decode(uint8).replace(/\0+$/, '').trim();
     }
-    return "";
+    return '';
   }
 
   decodeApicFrame(buffer, offset, size, majorVersion) {
     const view = new DataView(buffer);
     let idx = offset;
     const encoding = view.getUint8(idx++);
-    
-    let mimeType = "";
+
+    let mimeType = '';
     if (majorVersion === 2) {
-      const fmt = String.fromCharCode(view.getUint8(idx++), view.getUint8(idx++), view.getUint8(idx++));
-      mimeType = fmt.toUpperCase() === "JPG" ? "image/jpeg" : `image/${fmt.toLowerCase()}`;
+      const fmt = String.fromCharCode(
+        view.getUint8(idx++),
+        view.getUint8(idx++),
+        view.getUint8(idx++)
+      );
+      mimeType = fmt.toUpperCase() === 'JPG' ? 'image/jpeg' : `image/${fmt.toLowerCase()}`;
     } else {
       while (idx < offset + size) {
         const charCode = view.getUint8(idx++);
@@ -1784,9 +1943,9 @@ class AudioEngine {
         mimeType += String.fromCharCode(charCode);
       }
     }
-    
+
     idx++;
-    
+
     if (encoding === 1 || encoding === 2) {
       while (idx < offset + size - 1) {
         if (view.getUint16(idx) === 0) {
@@ -1800,12 +1959,12 @@ class AudioEngine {
         if (view.getUint8(idx++) === 0) break;
       }
     }
-    
+
     const picDataOffset = idx;
-    const picDataSize = (offset + size) - picDataOffset;
-    
-    if (picDataSize <= 0) return "";
-    
+    const picDataSize = offset + size - picDataOffset;
+
+    if (picDataSize <= 0) return '';
+
     const picData = new Uint8Array(buffer, picDataOffset, picDataSize);
     const blob = new Blob([picData], { type: mimeType });
     return URL.createObjectURL(blob);
@@ -1816,7 +1975,7 @@ class AudioEngine {
     if (!this.isInitialized || !this.ctx || this.isMuted) return;
     const osc = this.ctx.createOscillator();
     const gainNode = this.ctx.createGain();
-    osc.type = "square";
+    osc.type = 'square';
     osc.frequency.setValueAtTime(400, this.ctx.currentTime);
     gainNode.gain.setValueAtTime(0, this.ctx.currentTime);
     gainNode.gain.linearRampToValueAtTime(0.08 * this.sfxVol, this.ctx.currentTime + 0.005);
@@ -1831,7 +1990,7 @@ class AudioEngine {
     if (!this.isInitialized || !this.ctx || this.isMuted) return;
     const osc = this.ctx.createOscillator();
     const gainNode = this.ctx.createGain();
-    osc.type = "sine";
+    osc.type = 'sine';
     osc.frequency.setValueAtTime(800, this.ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(400, this.ctx.currentTime + 0.03);
     gainNode.gain.setValueAtTime(0, this.ctx.currentTime);
@@ -1848,7 +2007,7 @@ class AudioEngine {
     const now = this.ctx.currentTime;
     const osc1 = this.ctx.createOscillator();
     const gain1 = this.ctx.createGain();
-    osc1.type = "sine";
+    osc1.type = 'sine';
     osc1.frequency.setValueAtTime(1046.5, now);
     gain1.gain.setValueAtTime(0, now);
     gain1.gain.linearRampToValueAtTime(0.08 * this.sfxVol, now + 0.01);
@@ -1860,7 +2019,7 @@ class AudioEngine {
 
     const osc2 = this.ctx.createOscillator();
     const gain2 = this.ctx.createGain();
-    osc2.type = "sine";
+    osc2.type = 'sine';
     osc2.frequency.setValueAtTime(1318.51, now + 0.08);
     gain2.gain.setValueAtTime(0, now + 0.08);
     gain2.gain.linearRampToValueAtTime(0.12 * this.sfxVol, now + 0.09);
@@ -1875,7 +2034,7 @@ class AudioEngine {
     if (!this.isInitialized || !this.ctx || this.isMuted) return;
     const osc = this.ctx.createOscillator();
     const gainNode = this.ctx.createGain();
-    osc.type = "triangle";
+    osc.type = 'triangle';
     osc.frequency.setValueAtTime(6000, this.ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(1000, this.ctx.currentTime + 0.01);
     gainNode.gain.setValueAtTime(0, this.ctx.currentTime);
@@ -1891,7 +2050,7 @@ class AudioEngine {
     if (!this.isInitialized || !this.ctx || this.isMuted) return;
     const osc = this.ctx.createOscillator();
     const gainNode = this.ctx.createGain();
-    osc.type = "sine";
+    osc.type = 'sine';
     osc.frequency.setValueAtTime(2000, this.ctx.currentTime);
     gainNode.gain.setValueAtTime(0, this.ctx.currentTime);
     gainNode.gain.linearRampToValueAtTime(0.015 * this.sfxVol, this.ctx.currentTime + 0.001);
@@ -1906,7 +2065,7 @@ class AudioEngine {
     if (!this.isInitialized || !this.ctx || this.isMuted) return;
     const osc = this.ctx.createOscillator();
     const gainNode = this.ctx.createGain();
-    osc.type = "sine";
+    osc.type = 'sine';
     osc.frequency.setValueAtTime(150, this.ctx.currentTime);
     osc.frequency.exponentialRampToValueAtTime(40, this.ctx.currentTime + 0.15);
     gainNode.gain.setValueAtTime(0, this.ctx.currentTime);
@@ -1925,7 +2084,7 @@ class AudioEngine {
       audio.play().catch(() => {});
       return;
     }
-    if (this.ctx.state === "suspended") {
+    if (this.ctx.state === 'suspended') {
       this.ctx.resume().catch(() => {});
     }
     fetch(url)
@@ -1954,7 +2113,6 @@ export const audioEngine = new AudioEngine();
 
 ● ./merge_later/CustomCursor.js
 ────────────────────────────────────────────────────
-
 import { audioEngine } from './AudioEngine.js';
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -1982,13 +2140,25 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const isCustomHover = target.closest('[data-custom-hover="true"]');
     const isRangeInput = target.tagName.toLowerCase() === 'input' && target.type === 'range';
-    const isInteractive = target.closest('a') || target.closest('button') || target.closest('[role="button"]') || target.classList.contains('cursor-pointer') || isRangeInput;
+    const isInteractive =
+      target.closest('a') ||
+      target.closest('button') ||
+      target.closest('[role="button"]') ||
+      target.classList.contains('cursor-pointer') ||
+      isRangeInput;
     const isWarningScreen = target.closest('#protocol-warning');
 
     // Ignore text cursors in hardware components
-    const isHardwareTrack = target.closest('.surface-hardware-track') || target.closest('.group\\/vol') || target.closest('.group\\/scrub');
-    const isText = (['p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'textarea'].includes(target.tagName.toLowerCase()) || 
-                   (target.tagName.toLowerCase() === 'input' && !isRangeInput)) && !isHardwareTrack;
+    const isHardwareTrack =
+      target.closest('.surface-hardware-track') ||
+      target.closest('.group\\/vol') ||
+      target.closest('.group\\/scrub');
+    const isText =
+      (['p', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'textarea'].includes(
+        target.tagName.toLowerCase()
+      ) ||
+        (target.tagName.toLowerCase() === 'input' && !isRangeInput)) &&
+      !isHardwareTrack;
 
     if (isInteractive && !isWarningScreen && !isCustomHover) {
       audioEngine.playHover();
@@ -2026,7 +2196,7 @@ export function GlobalScrollbar({ lenisInstance }) {
   useLayoutEffect(() => {
     const handleScroll = () => {
       const hero = document.getElementById('hero-header');
-      const offset = hero ? (hero.offsetTop + hero.offsetHeight) : 380;
+      const offset = hero ? hero.offsetTop + hero.offsetHeight : 380;
       setScrollOffset(offset);
       setScrollY(window.scrollY);
       setMaxScrollY(document.documentElement.scrollHeight - window.innerHeight);
@@ -2035,12 +2205,12 @@ export function GlobalScrollbar({ lenisInstance }) {
     window.addEventListener('resize', handleScroll);
     window.addEventListener('load', handleScroll);
     handleScroll();
-    
+
     const t1 = setTimeout(handleScroll, 100);
     const t2 = setTimeout(handleScroll, 500);
     const t3 = setTimeout(handleScroll, 1200);
     const t4 = setTimeout(handleScroll, 2500);
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
@@ -2052,18 +2222,19 @@ export function GlobalScrollbar({ lenisInstance }) {
     };
   }, []);
 
-  
-  
   const trackTopOffset = (window.innerWidth >= 768 ? 0 : 56) + 24;
-  
+
   const trackHeight = trackRef.current ? trackRef.current.clientHeight : 1;
   const thumbHeight = thumbRef.current ? thumbRef.current.clientHeight : 0;
   const usableHeight = Math.max(1, trackHeight - thumbHeight);
-  
+
   const heroBottomPadding = 8;
   const threshold = Math.max(0, scrollOffset + heroBottomPadding - trackTopOffset);
-  const initialProgress = Math.max(0, Math.min(1, (scrollOffset + heroBottomPadding - trackTopOffset) / usableHeight));
-  
+  const initialProgress = Math.max(
+    0,
+    Math.min(1, (scrollOffset + heroBottomPadding - trackTopOffset) / usableHeight)
+  );
+
   let clampedProgress = initialProgress;
   if (scrollY >= threshold) {
     const remainingScroll = maxScrollY - threshold;
@@ -2078,14 +2249,14 @@ export function GlobalScrollbar({ lenisInstance }) {
     const thumbRect = thumbRef.current.getBoundingClientRect();
     const thumbHeight = thumbRect.height;
     const clickY = e.clientY - rect.top;
-    
+
     const usableHeight = rect.height - thumbHeight;
     let ratio = 0;
     if (usableHeight > 0) {
       ratio = Math.max(0, Math.min(1, (clickY - thumbHeight / 2) / usableHeight));
     }
     const targetY = ratio * maxScrollY;
-    
+
     if (lenisInstance) {
       lenisInstance.scrollTo(targetY);
     } else {
@@ -2108,13 +2279,13 @@ export function GlobalScrollbar({ lenisInstance }) {
       const trackHeight = trackRef.current.clientHeight;
       const thumbHeight = thumbRef.current.clientHeight;
       const usableHeight = trackHeight - thumbHeight;
-      
+
       let scrollDelta = 0;
       if (usableHeight > 0) {
         scrollDelta = (deltaY / usableHeight) * capturedMax;
       }
       const targetY = Math.max(0, Math.min(capturedMax, startScroll + scrollDelta));
-      
+
       if (lenisInstance) {
         lenisInstance.scrollTo(targetY, { immediate: true });
       } else {
@@ -2135,40 +2306,44 @@ export function GlobalScrollbar({ lenisInstance }) {
   const trackTop = window.innerWidth >= 768 ? 0 : 56;
 
   return html`
-    <div class="global-scrollbar fixed inset-y-0 right-0 z-[80] w-[18px] md:w-12 pointer-events-none group transition-opacity duration-300">
-      <div 
+    <div
+      class="global-scrollbar fixed inset-y-0 right-0 z-[80] w-[18px] md:w-12 pointer-events-none group transition-opacity duration-300"
+    >
+      <div
         ref=${trackRef}
         onPointerDown=${handleTrackClick}
         class="absolute left-0 right-0 pointer-events-auto touch-none"
         style=${{ top: `${trackTop + 24}px`, bottom: '8px' }}
       >
-        <div 
+        <div
           ref=${thumbRef}
           onPointerDown=${handlePointerDown}
           class="absolute left-[3px] right-[3px] md:left-[8px] md:right-[8px] aspect-[492/1299] pointer-events-auto touch-none select-none group transition-opacity duration-300"
           style=${{
             top: `${clampedProgress * 100}%`,
             transform: `translateY(-${clampedProgress * 100}%)`,
-            willChange: 'top, transform'
+            willChange: 'top, transform',
           }}
         >
           <div class="relative w-full h-full">
-            <img 
-              src="https://www.stevencasteel.com/assets/brand/scrollbar.png" 
+            <img
+              src="https://www.stevencasteel.com/assets/brand/scrollbar.png"
               alt="Scrollbar Thumb"
               onLoad=${() => setIsImgLoaded(true)}
               class="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] z-10"
               style=${{ opacity: isImgLoaded ? 1 : 0 }}
               draggable="false"
             />
-            <div class="absolute inset-[2px] rounded-full opacity-0 group-hover:opacity-[0.15] transition-opacity duration-500 z-20 pointer-events-none blur-[4px] bg-primary-400" />
-            <div 
+            <div
+              class="absolute inset-[2px] rounded-full opacity-0 group-hover:opacity-[0.15] transition-opacity duration-500 z-20 pointer-events-none blur-[4px] bg-primary-400"
+            />
+            <div
               class="absolute opacity-90 z-30 pointer-events-none rounded-[1.5px] bg-primary-400 shadow-[0_0_8px_#22c55e]"
               style=${{
-                left: "8%",
-                width: "84%",
-                top: "calc(50% - 1px)",
-                height: "3px"
+                left: '8%',
+                width: '84%',
+                top: 'calc(50% - 1px)',
+                height: '3px',
               }}
             />
           </div>
@@ -2198,10 +2373,10 @@ export function HeroHeader({ seqStep, setSeqStep }) {
         <div 
           class="absolute inset-0 opacity-40"
           style=${{
-            filter: "blur(80px)",
-            WebkitFilter: "blur(80px)",
-            transform: "translate3d(0, 0, 0)",
-            background: "radial-gradient(circle, rgba(34,197,94,0.18) 0%, transparent 65%)"
+            filter: 'blur(80px)',
+            WebkitFilter: 'blur(80px)',
+            transform: 'translate3d(0, 0, 0)',
+            background: 'radial-gradient(circle, rgba(34,197,94,0.18) 0%, transparent 65%)',
           }}
         />
       </div>
@@ -2215,15 +2390,15 @@ export function HeroHeader({ seqStep, setSeqStep }) {
               text="YOUR" 
               delay=${200} 
               enabled=${true} 
-              onComplete=${() => setSeqStep("line2")} 
+              onComplete=${() => setSeqStep('line2')} 
             />
           </div>
-          <div class=${`inline-block transition-all duration-300 ${seqStep === "typing" ? 'text-prismatic-foil' : 'text-primary'}`}>
+          <div class=${`inline-block transition-all duration-300 ${seqStep === 'typing' ? 'text-prismatic-foil' : 'text-primary'}`}>
             <${ScrambleText} 
               text="NAME" 
               delay=${0} 
-              enabled=${seqStep !== "line1"} 
-              onComplete=${() => setSeqStep("typing")} 
+              enabled=${seqStep !== 'line1'} 
+              onComplete=${() => setSeqStep('typing')} 
             />
           </div>
         </h1>
@@ -2238,7 +2413,7 @@ export function HeroHeader({ seqStep, setSeqStep }) {
               text="📟 Digital Media Generalist | Creative Director of AI 🤖" 
               speed=${40} 
               delay=${0} 
-              enabled=${seqStep === "typing"} 
+              enabled=${seqStep === 'typing'} 
             />
           </span>
         </${GlassContainer}>
@@ -2260,7 +2435,7 @@ export function HeroHeader({ seqStep, setSeqStep }) {
 
 ● ./merge_later/MainContent.js
 ────────────────────────────────────────────────────
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import htm from 'htm';
 import { MISC_ART, MISC_MEDIA } from 'media-data';
 import { GlassContainer } from './components.js';
@@ -2281,146 +2456,200 @@ const SHUFFLED_MEDIA = shuffleArray(MISC_MEDIA);
 
 const getMediaTitle = (url) => {
   try {
-    const parts = url.split("/");
+    const parts = url.split('/');
     const file = parts[parts.length - 1];
-    const name = file.substring(0, file.lastIndexOf("."));
+    const name = file.substring(0, file.lastIndexOf('.'));
     return name
-      .split("_")
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
+      .split('_')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   } catch (e) {
-    return "Digital Media Asset";
+    return 'Digital Media Asset';
   }
 };
 
+export function StaggeredImageCard({ src, alt, index, setLightbox, aspectClass = '' }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const handleLoad = () => {
+    setIsLoaded(true);
+  };
+
+  const staggerDelay = `${(index % 12) * 60}ms`;
+  const isUniform = !!aspectClass;
+
+  return html`
+    <div 
+      onClick=${() => setLightbox({ src, alt })}
+      className=${`relative w-full ${isUniform ? aspectClass : 'h-auto'} overflow-hidden rounded-xl bg-[#0b0c10]/40 border border-white/5 shadow-inner cursor-none`}
+    >
+      <!-- Static placeholder background shown before loading -->
+      <div 
+        className=${`absolute inset-0 bg-[#0d0d11] transition-opacity duration-1000 z-10 ${
+          isLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}
+      >
+        <div className="absolute inset-0 bg-grid-pattern opacity-[0.04]" style=${{ backgroundSize: '16px 16px' }} />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="font-mono text-[9px] text-muted tracking-widest uppercase opacity-20 select-none">
+            LOADING // SC
+          </span>
+        </div>
+      </div>
+
+      <!-- Image tag is rendered immediately and downloads in parallel off-screen -->
+      <${GlassContainer} className=${`w-full ${isUniform ? 'h-full' : 'h-auto'} overflow-hidden prismatic-border-hover`}>
+        <img 
+          src=${src} 
+          alt=${alt} 
+          onLoad=${handleLoad}
+          className=${`w-full ${isUniform ? 'h-full object-cover' : 'h-auto'} block transition-all duration-[800ms] ease-out ${
+            isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-[1.02]'
+          }`}
+          style=${{
+            transitionDelay: isLoaded ? staggerDelay : '0ms',
+            willChange: 'transform, opacity',
+          }}
+        />
+      </${GlassContainer}>
+    </div>
+  `;
+}
+
 export function MainContent({ setLightbox }) {
   const cols4 = [[], [], [], []];
-  SHUFFLED_ART.forEach((url, i) => cols4[i % 4].push(url));
+  SHUFFLED_ART.forEach((url, i) => cols4[i % 4].push({ url, globalIndex: i }));
 
   const cols3 = [[], [], []];
-  SHUFFLED_ART.forEach((url, i) => cols3[i % 3].push(url));
+  SHUFFLED_ART.forEach((url, i) => cols3[i % 3].push({ url, globalIndex: i }));
 
   const cols2 = [[], []];
-  SHUFFLED_ART.forEach((url, i) => cols2[i % 2].push(url));
+  SHUFFLED_ART.forEach((url, i) => cols2[i % 2].push({ url, globalIndex: i }));
 
   return html`
     <main class="w-full py-12 flex flex-col gap-16 relative z-10">
-      
       <!-- ── PORTFOLIO SECTION ── -->
       <section id="misc-art" class="space-y-16 scroll-mt-20 pl-1.5 pr-[18px] md:px-12">
         <div class="border-b border-white/10 pb-4">
-          <h2 class="text-4xl font-display font-black uppercase text-white tracking-tight">PORTFOLIO</h2>
+          <h2 class="text-4xl font-display font-black uppercase text-white tracking-tight">
+            PORTFOLIO
+          </h2>
         </div>
 
         <div class="space-y-6">
-          <h3 class="text-xl font-display font-bold uppercase tracking-wider text-fog">// Misc Art</h3>
-          
+          <h3 class="text-xl font-display font-bold uppercase tracking-wider text-fog">
+            // Misc Art
+          </h3>
+
           <!-- Responsive 4-Column Grid -->
           <div class="hidden lg:grid grid-cols-4 gap-4">
-            ${cols4.map(col => html`
-              <div class="flex flex-col gap-4">
-                ${col.map(url => html`
-                  <div 
-                    key=${url} 
-                    onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
-                    class="relative transform hover:scale-[1.03] transition-all duration-300 hover:z-20 cursor-none"
-                  >
-                    <${GlassContainer} className="overflow-hidden prismatic-border-hover">
-                      <img 
-                        src=${url} 
-                        alt=${getMediaTitle(url)} 
-                        class="w-full h-auto block"
-                        loading="lazy"
-                      />
-                    </${GlassContainer}>
-                  </div>
-                `)}
-              </div>
-            `)}
+            ${cols4.map(
+              (col) => html`
+                <div class="flex flex-col gap-4">
+                  ${col.map(
+                    (item) => html`
+                      <div
+                        key=${item.url}
+                        class="relative transform hover:scale-[1.03] transition-all duration-300 hover:z-20 cursor-none"
+                      >
+                        <${StaggeredImageCard}
+                          src=${item.url}
+                          alt=${getMediaTitle(item.url)}
+                          index=${item.globalIndex}
+                          setLightbox=${setLightbox}
+                        />
+                      </div>
+                    `
+                  )}
+                </div>
+              `
+            )}
           </div>
 
           <!-- Responsive 3-Column Grid -->
           <div class="hidden sm:grid lg:hidden grid-cols-3 gap-4">
-            ${cols3.map(col => html`
-              <div class="flex flex-col gap-4">
-                ${col.map(url => html`
-                  <div 
-                    key=${url} 
-                    onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
-                    class="relative transform hover:scale-[1.03] transition-all duration-300 hover:z-20 cursor-none"
-                  >
-                    <${GlassContainer} className="overflow-hidden prismatic-border-hover">
-                      <img 
-                        src=${url} 
-                        alt=${getMediaTitle(url)} 
-                        class="w-full h-auto block"
-                        loading="lazy"
-                      />
-                    </${GlassContainer}>
-                  </div>
-                `)}
-              </div>
-            `)}
+            ${cols3.map(
+              (col) => html`
+                <div class="flex flex-col gap-4">
+                  ${col.map(
+                    (item) => html`
+                      <div
+                        key=${item.url}
+                        class="relative transform hover:scale-[1.03] transition-all duration-300 hover:z-20 cursor-none"
+                      >
+                        <${StaggeredImageCard}
+                          src=${item.url}
+                          alt=${getMediaTitle(item.url)}
+                          index=${item.globalIndex}
+                          setLightbox=${setLightbox}
+                        />
+                      </div>
+                    `
+                  )}
+                </div>
+              `
+            )}
           </div>
 
           <!-- Responsive 2-Column Grid -->
           <div class="grid sm:hidden grid-cols-2 gap-4">
-            ${cols2.map(col => html`
-              <div class="flex flex-col gap-4">
-                ${col.map(url => html`
-                  <div 
-                    key=${url} 
-                    onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
-                    class="relative transform hover:scale-[1.03] transition-all duration-300 hover:z-20 cursor-none"
-                  >
-                    <${GlassContainer} className="overflow-hidden prismatic-border-hover">
-                      <img 
-                        src=${url} 
-                        alt=${getMediaTitle(url)} 
-                        class="w-full h-auto block"
-                        loading="lazy"
-                      />
-                    </${GlassContainer}>
-                  </div>
-                `)}
-              </div>
-            `)}
+            ${cols2.map(
+              (col) => html`
+                <div class="flex flex-col gap-4">
+                  ${col.map(
+                    (item) => html`
+                      <div
+                        key=${item.url}
+                        class="relative transform hover:scale-[1.03] transition-all duration-300 hover:z-20 cursor-none"
+                      >
+                        <${StaggeredImageCard}
+                          src=${item.url}
+                          alt=${getMediaTitle(item.url)}
+                          index=${item.globalIndex}
+                          setLightbox=${setLightbox}
+                        />
+                      </div>
+                    `
+                  )}
+                </div>
+              `
+            )}
           </div>
-
         </div>
       </section>
 
       <!-- ── INTERESTS SECTION ── -->
       <section id="misc-media" class="space-y-16 scroll-mt-20 pl-1.5 pr-[18px] md:px-12">
         <div class="border-b border-white/10 pb-4">
-          <h2 class="text-4xl font-display font-black uppercase text-white tracking-tight">INTERESTS</h2>
+          <h2 class="text-4xl font-display font-black uppercase text-white tracking-tight">
+            INTERESTS
+          </h2>
         </div>
 
         <div class="space-y-6">
-          <h3 class="text-xl font-display font-bold uppercase tracking-wider text-fog">// Misc Media</h3>
+          <h3 class="text-xl font-display font-bold uppercase tracking-wider text-fog">
+            // Misc Media
+          </h3>
           <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-5 gap-4">
-            ${SHUFFLED_MEDIA.map((url) => html`
-              <div 
-                key=${url} 
-                onClick=${() => setLightbox({ src: url, alt: getMediaTitle(url) })}
-                class="aspect-[2/3] transform hover:scale-[1.05] hover:z-20 transition-all duration-300"
-              >
-                <${GlassContainer} 
-                  className="w-full h-full overflow-hidden prismatic-border-hover"
+            ${SHUFFLED_MEDIA.map(
+              (url, i) => html`
+                <div
+                  key=${url}
+                  class="transform hover:scale-[1.05] hover:z-20 transition-all duration-300"
                 >
-                  <img 
-                    src=${url} 
-                    alt=${getMediaTitle(url)} 
-                    class="w-full h-full object-cover block"
-                    loading="lazy"
+                  <${StaggeredImageCard}
+                    src=${url}
+                    alt=${getMediaTitle(url)}
+                    index=${i}
+                    setLightbox=${setLightbox}
+                    aspectClass="aspect-[2/3]"
                   />
-                </${GlassContainer}>
-              </div>
-            `)}
+                </div>
+              `
+            )}
           </div>
         </div>
       </section>
-
     </main>
   `;
 }
@@ -2429,7 +2658,6 @@ export function MainContent({ setLightbox }) {
 
 ● ./merge_later/MusicPlayerDeck.js
 ────────────────────────────────────────────────────
-
 import React, { useState, useEffect, useRef } from 'react';
 import htm from 'htm';
 import { Volume2, VolumeX, Shuffle, SkipForward, SkipBack, Play, Pause, Music } from 'lucide-react';
@@ -2440,16 +2668,16 @@ const html = htm.bind(React.createElement);
 
 function getFallbackCover(folder) {
   const mapping = {
-    "elf_girl_001": "sc_001",
-    "elf_girl_002": "sc_002",
-    "elf_girl_003": "sc_004",
-    "elf_girl_004": "sc_005",
-    "elf_girl_005": "sc_008",
-    "elf_girl_006": "sc_009",
-    "elf_girl_007": "sc_012",
-    "elf_girl_008": "sc_013"
+    elf_girl_001: 'sc_001',
+    elf_girl_002: 'sc_002',
+    elf_girl_003: 'sc_004',
+    elf_girl_004: 'sc_005',
+    elf_girl_005: 'sc_008',
+    elf_girl_006: 'sc_009',
+    elf_girl_007: 'sc_012',
+    elf_girl_008: 'sc_013',
   };
-  const scName = mapping[folder] || "sc_001";
+  const scName = mapping[folder] || 'sc_001';
   return `https://www.stevencasteel.com/assets/portfolio/seedream3_covers/${scName}.avif`;
 }
 
@@ -2458,21 +2686,27 @@ function ConsoleButton({
   onClick,
   active,
   label,
-  className = "w-8 h-8",
+  className = 'w-8 h-8',
   isPrismatic = true,
   id,
-  style
+  style,
 }) {
   const handleMouseDown = () => {
-    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4);
+    audioEngine.playSFX(
+      'https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3',
+      0.4
+    );
   };
   const handleMouseUp = () => {
-    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
+    audioEngine.playSFX(
+      'https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3',
+      0.4
+    );
   };
 
   return html`
-    <div 
-      className=\`relative rounded-lg surface-hardware-well p-[2.5px] shrink-0 ${className}\`
+    <div
+      className=${`relative rounded-lg surface-hardware-well p-[2.5px] shrink-0 ${className}`}
       style=${style}
     >
       <button
@@ -2481,13 +2715,18 @@ function ConsoleButton({
         title=${label}
         onMouseDown=${handleMouseDown}
         onMouseUp=${handleMouseUp}
-        onClick=${(e) => { e.stopPropagation(); onClick(); }}
-        className=\`relative isolate flex items-center justify-center w-full h-full rounded-[5px] transition-[transform,color] duration-150 cursor-none overflow-hidden outline-none surface-hardware-btn ${active ? 'is-active text-primary' : 'text-fog hover:text-white'}\`
+        onClick=${(e) => {
+          e.stopPropagation();
+          onClick();
+        }}
+        className=${`relative isolate flex items-center justify-center w-full h-full rounded-[5px] transition-[transform,color] duration-150 cursor-none overflow-hidden outline-none surface-hardware-btn ${active ? 'is-active text-primary' : 'text-fog hover:text-white'}`}
       >
         <span className="relative z-10 flex items-center justify-center w-full h-full">
           ${children}
         </span>
-        ${active && isPrismatic && html`
+        ${active &&
+        isPrismatic &&
+        html`
           <div className="console-btn-prismatic-border" />
           <div className="console-btn-prismatic-blur" />
         `}
@@ -2512,7 +2751,7 @@ export function MusicPlayerDeck({
   setVolume,
   formatTime,
   onOpenConsole,
-  isPrismaticEnabled = true
+  isPrismaticEnabled = true,
 }) {
   const [showVolumePopover, setShowVolumePopover] = useState(false);
   const gearTimeoutsRef = useRef([]);
@@ -2522,7 +2761,11 @@ export function MusicPlayerDeck({
     if (!showVolumePopover) return;
     const handleOutsideClick = (e) => {
       // Ignore clicks on the popover itself and the toggle button
-      if (popoverRef.current && !popoverRef.current.contains(e.target) && !e.target.closest('#volume-toggle-btn')) {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(e.target) &&
+        !e.target.closest('#volume-toggle-btn')
+      ) {
         setShowVolumePopover(false);
       }
     };
@@ -2554,7 +2797,6 @@ export function MusicPlayerDeck({
     gearTimeoutsRef.current.push(t1);
   };
 
-  
   const handleGearMouseEnter = () => {
     playGearEnterSound();
   };
@@ -2565,15 +2807,19 @@ export function MusicPlayerDeck({
 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
-  const UNIFIED_LCD_PATH = "M604.605,554 L3116.675,554 c65.83,0 120,54.17 120,120 c0,222.67 184.5,405.91 408.72,405.91 c65.83,0 120,54.17 120,120 L3765.395,1348.18 c0,66.27 -53.73,120 -120,120 L604.605,1468.18 c-66.27,0 -120,-53.73 -120,-120 L484.605,674 c0,-66.27 53.73,-120 120,-120 Z";
-  const CHASSIS_OUTLINE_PATH = "M451.625,383.598l2852.76,0a120,120 0 0,1 120,120a408.723,405.909 0 0,0 408.723,405.909a120,120 0 0,1 120,120l0,1792.06c0,85.533 -69.827,155.916 -154.684,155.916l-3346.8,0c-84.857,0 -154.684,-70.383 -154.684,-155.916l0,-2282.05c0,-85.533 69.827,-155.917 154.684,-155.917Z";
+  const UNIFIED_LCD_PATH =
+    'M604.605,554 L3116.675,554 c65.83,0 120,54.17 120,120 c0,222.67 184.5,405.91 408.72,405.91 c65.83,0 120,54.17 120,120 L3765.395,1348.18 c0,66.27 -53.73,120 -120,120 L604.605,1468.18 c-66.27,0 -120,-53.73 -120,-120 L484.605,674 c0,-66.27 53.73,-120 120,-120 Z';
+  const CHASSIS_OUTLINE_PATH =
+    'M451.625,383.598l2852.76,0a120,120 0 0,1 120,120a408.723,405.909 0 0,0 408.723,405.909a120,120 0 0,1 120,120l0,1792.06c0,85.533 -69.827,155.916 -154.684,155.916l-3346.8,0c-84.857,0 -154.684,-70.383 -154.684,-155.916l0,-2282.05c0,-85.533 69.827,-155.917 154.684,-155.917Z';
   const exactLcdMask = `url("data:image/svg+xml,%3Csvg viewBox='296 383 3658 2595' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='${UNIFIED_LCD_PATH}' fill='white'/%3E%3C/svg%3E")`;
 
   const fallbackCover = getFallbackCover(activeTrack.folder);
   const coverSrc = trackMetadata?.coverUrl || fallbackCover;
 
   const cleanTitle = trackMetadata?.title || activeTrack.title.replace(/_/g, ' ');
-  const cleanAlbum = trackMetadata?.artist ? `${trackMetadata.artist} // ${activeTrack.folder.replace(/_/g, ' ')}` : activeTrack.folder.replace(/_/g, ' ');
+  const cleanAlbum = trackMetadata?.artist
+    ? `${trackMetadata.artist} // ${activeTrack.folder.replace(/_/g, ' ')}`
+    : activeTrack.folder.replace(/_/g, ' ');
 
   const isUiActive = isPlaying;
 
@@ -2590,7 +2836,7 @@ export function MusicPlayerDeck({
             WebkitMaskSize: '100% 100%',
             maskImage: exactLcdMask,
             maskSize: '100% 100%',
-            backgroundColor: '#030402'
+            backgroundColor: '#030402',
           }}
         >
           <div className="absolute inset-0 lcd-scanlines opacity-40 pointer-events-none z-20 animate-lcd-flicker" />
@@ -2599,13 +2845,21 @@ export function MusicPlayerDeck({
 
           <div className="absolute flex items-stretch pointer-events-none group/track" style=${{ top: '6.59%', left: '5.16%', right: '5.16%', height: '35.23%', padding: '2%', gap: '4%' }}>
             <div className="relative aspect-square h-full shrink-0 pointer-events-auto overflow-hidden rounded-[8px] bg-black shadow-[0_2px_0_rgba(0,0,0,1),inset_0_1px_1px_rgba(255,255,255,0.2)] z-30">
-              ${coverSrc ? html`
-                <img src=${coverSrc} className="absolute inset-0 w-full h-full object-cover z-10 opacity-90" alt="" />
-              ` : html`
-                <div className="absolute inset-0 flex items-center justify-center z-10">
-                  <${Music} size=${24} className="text-muted/60" />
-                </div>
-              `}
+              ${
+                coverSrc
+                  ? html`
+                      <img
+                        src=${coverSrc}
+                        className="absolute inset-0 w-full h-full object-cover z-10 opacity-90"
+                        alt=""
+                      />
+                    `
+                  : html`
+                      <div className="absolute inset-0 flex items-center justify-center z-10">
+                        <${Music} size=${24} className="text-muted/60" />
+                      </div>
+                    `
+              }
               <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none z-20" />
             </div>
 
@@ -2623,7 +2877,7 @@ export function MusicPlayerDeck({
                       ${cleanTitle}
                     </span>
                     <span 
-                      className=${`absolute left-0 top-0 transition-opacity duration-300 pointer-events-none ${isUiActive ? "opacity-100" : "opacity-0"} ${isPrismaticEnabled ? "text-transparent bg-clip-text bg-prismatic-gradient bg-[length:200%_100%] animate-gradient-xy group-hover/titlelink:brightness-125 group-hover/titlelink:drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]" : "text-primary-400 drop-shadow-[0_0_8px_hsl(var(--color-primary-400)/0.5)] group-hover/titlelink:text-white group-hover/titlelink:drop-shadow-[0_0_12px_hsl(var(--color-primary-400)/0.8)]"}`}
+                      className=${`absolute left-0 top-0 transition-opacity duration-300 pointer-events-none ${isUiActive ? 'opacity-100' : 'opacity-0'} ${isPrismaticEnabled ? 'text-transparent bg-clip-text bg-prismatic-gradient bg-[length:200%_100%] animate-gradient-xy group-hover/titlelink:brightness-125 group-hover/titlelink:drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]' : 'text-primary-400 drop-shadow-[0_0_8px_hsl(var(--color-primary-400)/0.5)] group-hover/titlelink:text-white group-hover/titlelink:drop-shadow-[0_0_12px_hsl(var(--color-primary-400)/0.8)]'}`}
                       aria-hidden="true"
                     >
                       ${cleanTitle}
@@ -2638,7 +2892,7 @@ export function MusicPlayerDeck({
                     ${cleanAlbum}
                   </span>
                   <span 
-                    className=${`absolute left-0 top-0 transition-opacity duration-500 pointer-events-none ${isUiActive ? "opacity-100" : "opacity-0"} ${isPrismaticEnabled ? "text-transparent bg-clip-text bg-prismatic-gradient bg-[length:200%_100%] animate-gradient-xy" : "text-primary-400"}`}
+                    className=${`absolute left-0 top-0 transition-opacity duration-500 pointer-events-none ${isUiActive ? 'opacity-100' : 'opacity-0'} ${isPrismaticEnabled ? 'text-transparent bg-clip-text bg-prismatic-gradient bg-[length:200%_100%] animate-gradient-xy' : 'text-primary-400'}`}
                     aria-hidden="true"
                   >
                     ${cleanAlbum}
@@ -2653,8 +2907,13 @@ export function MusicPlayerDeck({
         <div 
           className="absolute pointer-events-none"
           style=${{
-            zIndex: -2, top: '-2%', right: '-1.5%', width: '23%', aspectRatio: '1 / 1',
-            filter: 'drop-shadow(0px 4px 6px rgba(0,0,0,0.8)) drop-shadow(-1px -1px 1px rgba(255,255,255,0.15))'
+            zIndex: -2,
+            top: '-2%',
+            right: '-1.5%',
+            width: '23%',
+            aspectRatio: '1 / 1',
+            filter:
+              'drop-shadow(0px 4px 6px rgba(0,0,0,0.8)) drop-shadow(-1px -1px 1px rgba(255,255,255,0.15))',
           }}
         >
           <button 
@@ -2667,7 +2926,8 @@ export function MusicPlayerDeck({
           >
             <div className="absolute inset-0 rounded-full bg-white/[0.001] z-10" />
             <div className="w-full h-full transition-transform duration-300 group-hover:rotate-90 group-active:scale-95 pointer-events-none"
-                 dangerouslySetInnerHTML=${{ __html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1280" width="100%" height="100%">
+                 dangerouslySetInnerHTML=${{
+                   __html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1280" width="100%" height="100%">
   <defs>
     <radialGradient id="gear-bg" cx="50%" cy="50%" r="50%">
       <stop offset="20%" stop-color="#3a3a40" />
@@ -2682,7 +2942,8 @@ export function MusicPlayerDeck({
     stroke-width="2"
     vector-effect="non-scaling-stroke"
   />
-</svg>` }} />
+</svg>`,
+                 }} />
           </button>
         </div>
 
@@ -2690,7 +2951,8 @@ export function MusicPlayerDeck({
         <div className="absolute inset-0 w-full h-full pointer-events-none" style=${{ zIndex: -1 }}>
           <div className="absolute inset-0 w-full h-full pointer-events-none z-0 [&>svg]:w-full [&>svg]:h-full [&>svg]:object-fill [&>svg]:pointer-events-none [&>svg_path]:pointer-events-auto"
             style=${{ filter: 'drop-shadow(4px 4px 8px rgba(0,0,0,0.7)) drop-shadow(-1px -1px 2px rgba(255,255,255,0.06))' }}
-            dangerouslySetInnerHTML=${{ __html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="296 383 3658 2595" preserveAspectRatio="none" width="100%" height="100%">
+            dangerouslySetInnerHTML=${{
+              __html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="296 383 3658 2595" preserveAspectRatio="none" width="100%" height="100%">
   <defs>
     <filter id="lcd-inner-shadow">
       <feOffset dx="0" dy="25"/>
@@ -2718,7 +2980,8 @@ export function MusicPlayerDeck({
     stroke-width="2"
     vector-effect="non-scaling-stroke"
   />
-</svg>` }}
+</svg>`,
+            }}
           />
         </div>
 
@@ -2747,17 +3010,17 @@ export function MusicPlayerDeck({
           <path 
             d=${CHASSIS_OUTLINE_PATH}
             fill="none"
-            stroke=${isPrismaticEnabled ? "url(#prismatic-stroke)" : "hsl(var(--color-primary-400))"}
+            stroke=${isPrismaticEnabled ? 'url(#prismatic-stroke)' : 'hsl(var(--color-primary-400))'}
             stroke-width="10"
-            className=${`transition-opacity duration-500 ${isUiActive ? "opacity-[0.15]" : "opacity-0"} ${isPrismaticEnabled ? "prismatic-anim" : ""}`}
+            className=${`transition-opacity duration-500 ${isUiActive ? 'opacity-[0.15]' : 'opacity-0'} ${isPrismaticEnabled ? 'prismatic-anim' : ''}`}
           />
           <path 
             d=${CHASSIS_OUTLINE_PATH}
             fill="none"
-            stroke=${isPrismaticEnabled ? "url(#prismatic-stroke)" : "hsl(var(--color-primary-400))"}
+            stroke=${isPrismaticEnabled ? 'url(#prismatic-stroke)' : 'hsl(var(--color-primary-400))'}
             stroke-width="2"
             vector-effect="non-scaling-stroke"
-            className=${`transition-opacity duration-500 ${isUiActive ? "opacity-100" : "opacity-0"} ${isPrismaticEnabled ? "prismatic-anim" : ""}`}
+            className=${`transition-opacity duration-500 ${isUiActive ? 'opacity-100' : 'opacity-0'} ${isPrismaticEnabled ? 'prismatic-anim' : ''}`}
           />
         </svg>
 
@@ -2767,7 +3030,7 @@ export function MusicPlayerDeck({
             <div className="relative flex items-center group/scrub flex-1 h-5 md:h-6">
               <div className="absolute inset-0 rounded-md surface-hardware-track pointer-events-none" />
               <div className="absolute inset-[3px] rounded-sm overflow-hidden pointer-events-none">
-                <div className=${`h-full w-0 ${isPrismaticEnabled ? "bg-prismatic-gradient bg-[length:200%_100%] prismatic-anim" : "bg-primary-400"}`} style=${{ width: `${progressPercent}%` }} />
+                <div className=${`h-full w-0 ${isPrismaticEnabled ? 'bg-prismatic-gradient bg-[length:200%_100%] prismatic-anim' : 'bg-primary-400'}`} style=${{ width: `${progressPercent}%` }} />
               </div>
               <div className="absolute inset-0 rounded-md shadow-[inset_0_1px_3px_rgba(0,0,0,0.3),inset_0_-1px_1px_rgba(255,255,255,0.12)] pointer-events-none" />
               
@@ -2793,10 +3056,14 @@ export function MusicPlayerDeck({
             <${SkipBack} className="w-[14px] h-[14px]" fill="currentColor" />
           </${ConsoleButton}>
 
-          <${ConsoleButton} label=${isPlaying ? "Pause" : "Play"} onClick=${togglePlay} active=${isPlaying} isPrismatic=${isPrismaticEnabled} className="w-[21%] aspect-square shadow-lg">
-            ${isPlaying 
-              ? html`<${Pause} className=${`w-[18px] h-[18px] transition-colors duration-300 ${isPrismaticEnabled ? "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]" : "text-primary-400 drop-shadow-[0_0_8px_hsl(var(--color-primary-400)/1)]"}`} fill="currentColor" />`
-              : html`<${Play} className="w-[18px] h-[18px] ml-0.5" fill="currentColor" />`
+          <${ConsoleButton} label=${isPlaying ? 'Pause' : 'Play'} onClick=${togglePlay} active=${isPlaying} isPrismatic=${isPrismaticEnabled} className="w-[21%] aspect-square shadow-lg">
+            ${
+              isPlaying
+                ? html`<${Pause}
+                    className=${`w-[18px] h-[18px] transition-colors duration-300 ${isPrismaticEnabled ? 'text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]' : 'text-primary-400 drop-shadow-[0_0_8px_hsl(var(--color-primary-400)/1)]'}`}
+                    fill="currentColor"
+                  />`
+                : html`<${Play} className="w-[18px] h-[18px] ml-0.5" fill="currentColor" />`
             }
           </${ConsoleButton}>
 
@@ -2808,7 +3075,9 @@ export function MusicPlayerDeck({
             <${ConsoleButton}
               id="volume-toggle-btn"
               label="Volume"
-              onClick=${() => { setShowVolumePopover(!showVolumePopover); }}
+              onClick=${() => {
+                setShowVolumePopover(!showVolumePopover);
+              }}
               active=${showVolumePopover}
               isPrismatic=${isPrismaticEnabled}
               className="w-full h-full"
@@ -2816,30 +3085,50 @@ export function MusicPlayerDeck({
               ${volume === 0 ? html`<${VolumeX} className="w-[12px] h-[12px]" />` : html`<${Volume2} className="w-[12px] h-[12px]" />`}
             </${ConsoleButton}>
 
-            ${showVolumePopover && html`
-              <div 
-                ref=${popoverRef}
-                className="absolute bottom-[115%] left-1/2 -translate-x-1/2 z-50 bg-transparent border-none overflow-visible p-0 cursor-none pb-3"
-                onClick=${(e) => e.stopPropagation()}
-              >
-                <div className="w-12 h-[130px] bg-[#1a1a1f] border border-white/10 rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.05)] flex items-center justify-center p-2 relative z-10">
-                  <div className="relative w-[114px] h-8 shrink-0 flex items-center group/vol -rotate-90 origin-center">
-                    <div className="absolute inset-0 rounded-md surface-hardware-track pointer-events-none" />
-                    <div className="absolute inset-[3px] rounded-sm overflow-hidden pointer-events-none">
-                      <div className=${`h-full w-0 rounded-md ${isPrismaticEnabled ? "bg-prismatic-gradient bg-[length:200%_100%] prismatic-anim" : "bg-primary-400"}`} style=${{ width: `${(volume / 1) * 100}%` }} />
+            ${
+              showVolumePopover &&
+              html`
+                <div
+                  ref=${popoverRef}
+                  className="absolute bottom-[115%] left-1/2 -translate-x-1/2 z-50 bg-transparent border-none overflow-visible p-0 cursor-none pb-3"
+                  onClick=${(e) => e.stopPropagation()}
+                >
+                  <div
+                    className="w-12 h-[130px] bg-[#1a1a1f] border border-white/10 rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.8),inset_0_1px_0_rgba(255,255,255,0.05)] flex items-center justify-center p-2 relative z-10"
+                  >
+                    <div
+                      className="relative w-[114px] h-8 shrink-0 flex items-center group/vol -rotate-90 origin-center"
+                    >
+                      <div
+                        className="absolute inset-0 rounded-md surface-hardware-track pointer-events-none"
+                      />
+                      <div
+                        className="absolute inset-[3px] rounded-sm overflow-hidden pointer-events-none"
+                      >
+                        <div
+                          className=${`h-full w-0 rounded-md ${isPrismaticEnabled ? 'bg-prismatic-gradient bg-[length:200%_100%] prismatic-anim' : 'bg-primary-400'}`}
+                          style=${{ width: `${(volume / 1) * 100}%` }}
+                        />
+                      </div>
+                      <div
+                        className="absolute inset-0 shadow-[inset_0_1px_3px_rgba(0,0,0,0.3),inset_0_-1px_1px_rgba(255,255,255,0.12)] rounded-md pointer-events-none"
+                      />
+
+                      <div className="peer-focus-ring-prismatic" />
+                      <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.01"
+                        value=${volume}
+                        onChange=${(e) => setVolume(parseFloat(e.target.value))}
+                        className="peer absolute inset-0 w-full h-full opacity-0 cursor-none z-30"
+                      />
                     </div>
-                    <div className="absolute inset-0 shadow-[inset_0_1px_3px_rgba(0,0,0,0.3),inset_0_-1px_1px_rgba(255,255,255,0.12)] rounded-md pointer-events-none" />
-                    
-                    <div className="peer-focus-ring-prismatic" />
-                    <input 
-                      type="range" min="0" max="1" step="0.01" value=${volume} 
-                      onChange=${(e) => setVolume(parseFloat(e.target.value))}
-                      className="peer absolute inset-0 w-full h-full opacity-0 cursor-none z-30" 
-                    />
                   </div>
                 </div>
-              </div>
-            `}
+              `
+            }
           </div>
 
         </div>
@@ -2871,20 +3160,23 @@ export function ProtocolWarning() {
   if (!show) return null;
 
   return html`
-    <div id="protocol-warning" style=${{
-      position: 'fixed',
-      inset: 0,
-      zIndex: 99999,
-      backgroundColor: '#050505',
-      color: '#f2f2f2',
-      fontFamily: '"Recursive", sans-serif',
-      padding: '2rem',
-      boxSizing: 'border-box',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      overflowY: 'auto'
-    }}>
+    <div
+      id="protocol-warning"
+      style=${{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 99999,
+        backgroundColor: '#050505',
+        color: '#f2f2f2',
+        fontFamily: '"Recursive", sans-serif',
+        padding: '2rem',
+        boxSizing: 'border-box',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflowY: 'auto',
+      }}
+    >
       <style>
         .onboarding-link-card {
           display: flex;
@@ -2909,7 +3201,8 @@ export function ProtocolWarning() {
           text-decoration-color: #22c55e;
         }
         @keyframes text-cascade-wave {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0);
           }
           50% {
@@ -2927,136 +3220,212 @@ export function ProtocolWarning() {
           white-space: pre;
         }
       </style>
-      <div style=${{
-        maxWidth: '520px',
-        width: '100%',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        borderRadius: '12px',
-        backgroundColor: '#0a0a0a',
-        padding: '2.5rem',
-        textAlign: 'center',
-        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.8)'
-      }}>
-        <h2 style=${{
-          fontSize: '20px',
-          fontWeight: '800',
-          marginTop: 0,
-          marginBottom: '1.75rem',
-          color: '#ffffff',
-          lineHeight: '1.3',
-          fontFamily: '"Bricolage Grotesque", sans-serif'
-        }}>
-          YOU'RE <span class="wavy-breathe-text"><span class="cascade-char" style=${{ animationDelay: '0s' }}>1</span><span class="cascade-char" style=${{ animationDelay: '0.08s' }}>0</span><span class="cascade-char" style=${{ animationDelay: '0.16s' }}> </span><span class="cascade-char" style=${{ animationDelay: '0.24s' }}>M</span><span class="cascade-char" style=${{ animationDelay: '0.32s' }}>I</span><span class="cascade-char" style=${{ animationDelay: '0.4s' }}>N</span><span class="cascade-char" style=${{ animationDelay: '0.48s' }}>U</span><span class="cascade-char" style=${{ animationDelay: '0.56s' }}>T</span><span class="cascade-char" style=${{ animationDelay: '0.64s' }}>E</span><span class="cascade-char" style=${{ animationDelay: '0.72s' }}>S</span><span class="cascade-char" style=${{ animationDelay: '0.8s' }}> </span><span class="cascade-char" style=${{ animationDelay: '0.88s' }}>A</span><span class="cascade-char" style=${{ animationDelay: '0.96s' }}>W</span><span class="cascade-char" style=${{ animationDelay: '1.04s' }}>A</span><span class="cascade-char" style=${{ animationDelay: '1.12s' }}>Y</span></span> FROM A PERSONAL LIVE WEBSITE
-        </h2>
-        <div style=${{
+      <div
+        style=${{
+          maxWidth: '520px',
+          width: '100%',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: '12px',
-          textAlign: 'left',
-          marginBottom: '1.75rem'
-        }}>
-          <p style=${{
-            margin: '0 0 1rem 0',
+          backgroundColor: '#0a0a0a',
+          padding: '2.5rem',
+          textAlign: 'center',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.8)',
+        }}
+      >
+        <h2
+          style=${{
+            fontSize: '20px',
             fontWeight: '800',
-            color: '#f59e0b',
-            fontSize: '11px',
-            textTransform: 'uppercase',
-            letterSpacing: '0.1em',
-            fontFamily: '"Bricolage Grotesque", sans-serif'
-          }}>
+            marginTop: 0,
+            marginBottom: '1.75rem',
+            color: '#ffffff',
+            lineHeight: '1.3',
+            fontFamily: '"Bricolage Grotesque", sans-serif',
+          }}
+        >
+          YOU'RE
+          <span class="wavy-breathe-text"
+            ><span class="cascade-char" style=${{ animationDelay: '0s' }}>1</span
+            ><span class="cascade-char" style=${{ animationDelay: '0.08s' }}>0</span
+            ><span class="cascade-char" style=${{ animationDelay: '0.16s' }}> </span
+            ><span class="cascade-char" style=${{ animationDelay: '0.24s' }}>M</span
+            ><span class="cascade-char" style=${{ animationDelay: '0.32s' }}>I</span
+            ><span class="cascade-char" style=${{ animationDelay: '0.4s' }}>N</span
+            ><span class="cascade-char" style=${{ animationDelay: '0.48s' }}>U</span
+            ><span class="cascade-char" style=${{ animationDelay: '0.56s' }}>T</span
+            ><span class="cascade-char" style=${{ animationDelay: '0.64s' }}>E</span
+            ><span class="cascade-char" style=${{ animationDelay: '0.72s' }}>S</span
+            ><span class="cascade-char" style=${{ animationDelay: '0.8s' }}> </span
+            ><span class="cascade-char" style=${{ animationDelay: '0.88s' }}>A</span
+            ><span class="cascade-char" style=${{ animationDelay: '0.96s' }}>W</span
+            ><span class="cascade-char" style=${{ animationDelay: '1.04s' }}>A</span
+            ><span class="cascade-char" style=${{ animationDelay: '1.12s' }}>Y</span></span
+          >
+          FROM A PERSONAL LIVE WEBSITE
+        </h2>
+        <div
+          style=${{
+            borderRadius: '12px',
+            textAlign: 'left',
+            marginBottom: '1.75rem',
+          }}
+        >
+          <p
+            style=${{
+              margin: '0 0 1rem 0',
+              fontWeight: '800',
+              color: '#f59e0b',
+              fontSize: '11px',
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              fontFamily: '"Bricolage Grotesque", sans-serif',
+            }}
+          >
             REQUIRED ONBOARDING TASKS
           </p>
-          <div style=${{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.75rem'
-          }}>
+          <div
+            style=${{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.75rem',
+            }}
+          >
             <a href="https://github.com/signup" target="_blank" class="onboarding-link-card">
               <div style=${{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <div style=${{
-                  fontSize: '1.25rem',
-                  width: '36px',
-                  height: '36px',
+                <div
+                  style=${{
+                    fontSize: '1.25rem',
+                    width: '36px',
+                    height: '36px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'rgba(255, 255, 255, 0.04)',
+                    borderRadius: '6px',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                  }}
+                >
+                  ⚙️
+                </div>
+                <span
+                  class="url-text"
+                  style=${{
+                    fontSize: '13px',
+                    fontFamily: 'monospace',
+                    color: '#ffffff',
+                    transition: 'text-decoration 0.2s',
+                  }}
+                  >https://github.com/signup</span
+                >
+              </div>
+              <div
+                style=${{
+                  color: '#22c55e',
+                  fontSize: '11px',
+                  fontWeight: '700',
+                  fontFamily: 'monospace',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  borderRadius: '6px',
-                  border: '1px solid rgba(255, 255, 255, 0.08)'
-                }}>⚙️</div>
-                <span class="url-text" style=${{ fontSize: '13px', fontFamily: 'monospace', color: '#ffffff', transition: 'text-decoration 0.2s' }}>https://github.com/signup</span>
-              </div>
-              <div style=${{
-                color: '#22c55e',
-                fontSize: '11px',
-                fontWeight: '700',
-                fontFamily: 'monospace',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px'
-              }}>
+                  gap: '4px',
+                }}
+              >
                 <span>Free</span>
                 <span style=${{ fontSize: '12px', lineHeight: 1 }}>➔</span>
               </div>
             </a>
-            <a href="https://dash.cloudflare.com/sign-up/workers-and-pages" target="_blank" class="onboarding-link-card">
+            <a
+              href="https://dash.cloudflare.com/sign-up/workers-and-pages"
+              target="_blank"
+              class="onboarding-link-card"
+            >
               <div style=${{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <div style=${{
-                  fontSize: '1.25rem',
-                  width: '36px',
-                  height: '36px',
+                <div
+                  style=${{
+                    fontSize: '1.25rem',
+                    width: '36px',
+                    height: '36px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'rgba(255, 255, 255, 0.04)',
+                    borderRadius: '6px',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                  }}
+                >
+                  ☁️
+                </div>
+                <span
+                  class="url-text"
+                  style=${{
+                    fontSize: '13px',
+                    fontFamily: 'monospace',
+                    color: '#ffffff',
+                    transition: 'text-decoration 0.2s',
+                  }}
+                  >https://dash.cloudflare.com/sign-up/workers-and-pages</span
+                >
+              </div>
+              <div
+                style=${{
+                  color: '#22c55e',
+                  fontSize: '11px',
+                  fontWeight: '700',
+                  fontFamily: 'monospace',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  borderRadius: '6px',
-                  border: '1px solid rgba(255, 255, 255, 0.08)'
-                }}>☁️</div>
-                <span class="url-text" style=${{ fontSize: '13px', fontFamily: 'monospace', color: '#ffffff', transition: 'text-decoration 0.2s' }}>https://dash.cloudflare.com/sign-up/workers-and-pages</span>
-              </div>
-              <div style=${{
-                color: '#22c55e',
-                fontSize: '11px',
-                fontWeight: '700',
-                fontFamily: 'monospace',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px'
-              }}>
+                  gap: '4px',
+                }}
+              >
                 <span>Free</span>
                 <span style=${{ fontSize: '12px', lineHeight: 1 }}>➔</span>
               </div>
             </a>
           </div>
         </div>
-        <div style=${{
-          backgroundColor: 'rgba(239, 68, 68, 0.02)',
-          border: '1px solid rgba(239, 68, 68, 0.25)',
-          borderRadius: '8px',
-          padding: '1.5rem',
-          textAlign: 'left',
-          marginBottom: '2rem',
-          position: 'relative',
-          overflow: 'hidden'
-        }}>
-          <div style=${{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '4px', backgroundColor: '#ef4444' }}></div>
-          <p style=${{
-            margin: '0 0 0.5rem 0',
-            fontWeight: 700,
-            color: '#ffffff',
-            fontSize: '14px',
-            textTransform: 'uppercase',
-            letterSpacing: '0.05em',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px'
-          }}>
+        <div
+          style=${{
+            backgroundColor: 'rgba(239, 68, 68, 0.02)',
+            border: '1px solid rgba(239, 68, 68, 0.25)',
+            borderRadius: '8px',
+            padding: '1.5rem',
+            textAlign: 'left',
+            marginBottom: '2rem',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <div
+            style=${{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: '4px',
+              backgroundColor: '#ef4444',
+            }}
+          ></div>
+          <p
+            style=${{
+              margin: '0 0 0.5rem 0',
+              fontWeight: 700,
+              color: '#ffffff',
+              fontSize: '14px',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+            }}
+          >
             <span>🚀</span> Next Step
           </p>
           <p style=${{ margin: 0, color: '#a0a0a0', fontSize: '13px', lineHeight: '1.45' }}>
-            Drag and drop this file into ChatGPT. The AI has instructions inside to guide you through set up.
+            Drag and drop this file into ChatGPT. The AI has instructions inside to guide you
+            through set up.
           </p>
         </div>
       </div>
@@ -3078,17 +3447,13 @@ const html = htm.bind(React.createElement);
 
 const NAV_SECTIONS = [
   {
-    group: "Portfolio",
-    items: [
-      { id: "misc-art", label: "Misc Art" }
-    ]
+    group: 'Portfolio',
+    items: [{ id: 'misc-art', label: 'Misc Art' }],
   },
   {
-    group: "Interests",
-    items: [
-      { id: "misc-media", label: "Misc Media" }
-    ]
-  }
+    group: 'Interests',
+    items: [{ id: 'misc-media', label: 'Misc Media' }],
+  },
 ];
 
 export function Sidebar({
@@ -3097,24 +3462,29 @@ export function Sidebar({
   activeSection,
   handleNavigation,
   playerProps,
-  onOpenConsole
+  onOpenConsole,
 }) {
   const handleNavClick = (targetId) => {
-    audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.35);
+    audioEngine.playSFX(
+      'https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3',
+      0.35
+    );
     handleNavigation(targetId);
   };
 
   return html`
     <div class="contents">
       <!-- MOBILE HEADER -->
-      <header class="md:hidden fixed top-0 left-0 w-full h-14 bg-gradient-to-b from-panel to-void z-[60] border-b border-black shadow-lg pr-4 pl-4 flex justify-between items-center cursor-none">
-        <button 
-          onClick=${() => handleNavClick("audio")}
+      <header
+        class="md:hidden fixed top-0 left-0 w-full h-14 bg-gradient-to-b from-panel to-void z-[60] border-b border-black shadow-lg pr-4 pl-4 flex justify-between items-center cursor-none"
+      >
+        <button
+          onClick=${() => handleNavClick('audio')}
           class="text-fog hover:text-white text-xs font-bold tracking-widest uppercase font-mono cursor-none"
         >
           SC // 2026
         </button>
-        <button 
+        <button
           onClick=${() => setIsSidebarOpen(!isSidebarOpen)}
           class="text-white p-1.5 cursor-none outline-none"
         >
@@ -3123,28 +3493,42 @@ export function Sidebar({
       </header>
 
       <!-- NAVIGATION SIDEBAR PANEL -->
-      <aside class=${`fixed top-14 md:top-0 left-0 h-[calc(100dvh-56px)] md:h-[100dvh] w-64 bg-ink border-r border-white/5 z-50 flex flex-col cursor-none transition-transform duration-300 md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        
+      <aside
+        class=${`fixed top-14 md:top-0 left-0 h-[calc(100dvh-56px)] md:h-[100dvh] w-64 bg-ink border-r border-white/5 z-50 flex flex-col cursor-none transition-transform duration-300 md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+      >
         <!-- Sunken Hardware-Style Toggle well -->
         <div class="p-4 lg:p-5 border-b border-black hidden md:block shrink-0 relative z-20">
           <div class="relative w-full rounded-lg surface-hardware-well p-[2.5px] isolate">
-            <button 
-              onPointerDown=${() => audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3", 0.4)}
+            <button
+              onPointerDown=${() =>
+                audioEngine.playSFX(
+                  'https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_click.mp3',
+                  0.4
+                )}
               onPointerUp=${() => {
-                audioEngine.playSFX("https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3", 0.4);
-                handleNavigation("audio");
+                audioEngine.playSFX(
+                  'https://www.stevencasteel.com/assets/audio/sfx/navbar_header_button_release.mp3',
+                  0.4
+                );
+                handleNavigation('audio');
               }}
               class="group relative flex items-center justify-center text-xs font-bold tracking-widest uppercase font-display w-full h-[38px] rounded-[5px] text-center transition-all duration-150 cursor-none overflow-hidden isolate outline-none surface-hardware-btn"
             >
-              <div class="absolute inset-0 pointer-events-none transition-opacity duration-300 bg-primary/5 opacity-0 group-hover:opacity-100 z-0" />
-              
+              <div
+                class="absolute inset-0 pointer-events-none transition-opacity duration-300 bg-primary/5 opacity-0 group-hover:opacity-100 z-0"
+              />
+
               <!-- Standard Text Layer (Green Glow Hover State) -->
-              <span class="relative z-10 transition-colors duration-300 text-fog group-hover:text-primary-400">
+              <span
+                class="relative z-10 transition-colors duration-300 text-fog group-hover:text-primary-400"
+              >
                 SC // 2026
               </span>
 
               <!-- Animated Illuminated Prismatic Foil (Hover Sweep) -->
-              <span class="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none text-prismatic-foil font-bold">
+              <span
+                class="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none text-prismatic-foil font-bold"
+              >
                 SC // 2026
               </span>
             </button>
@@ -3152,16 +3536,20 @@ export function Sidebar({
         </div>
 
         <!-- Navigation Tree -->
-        <nav class="flex-1 px-4 py-6 space-y-6 overflow-y-auto custom-scrollbar relative z-10 select-none">
+        <nav
+          class="flex-1 px-4 py-6 space-y-6 overflow-y-auto custom-scrollbar relative z-10 select-none"
+        >
           <!-- System Control Group -->
           <div>
             <div class="px-2 mb-2">
-              <h3 class="text-[10px] font-mono font-bold text-muted uppercase tracking-widest">/ Control Deck</h3>
+              <h3 class="text-[10px] font-mono font-bold text-muted uppercase tracking-widest">
+                / Control Deck
+              </h3>
             </div>
             <ul class="space-y-1">
               <li>
-                <button 
-                  onClick=${() => handleNavClick("audio")}
+                <button
+                  onClick=${() => handleNavClick('audio')}
                   class=${`flex items-center gap-2.5 px-3 py-2 text-sm rounded-md w-full text-left transition duration-200 cursor-none ${activeSection === 'audio' ? 'text-primary font-bold bg-white/5' : 'text-fog hover:text-white'}`}
                 >
                   <${Music} size=${16} />
@@ -3172,26 +3560,35 @@ export function Sidebar({
           </div>
 
           <!-- Programmatically Rendered Group Sections -->
-          ${NAV_SECTIONS.map((sec) => html`
-            <div key=${sec.group}>
-              <div class="px-2 mb-2 border-t border-white/5 pt-4">
-                <h3 class="text-[10px] font-mono font-bold text-muted uppercase tracking-widest">/ ${sec.group}</h3>
+          ${NAV_SECTIONS.map(
+            (sec) => html`
+              <div key=${sec.group}>
+                <div class="px-2 mb-2 border-t border-white/5 pt-4">
+                  <h3 class="text-[10px] font-mono font-bold text-muted uppercase tracking-widest">
+                    / ${sec.group}
+                  </h3>
+                </div>
+                <ul class="space-y-1">
+                  ${sec.items.map(
+                    (item) => html`
+                      <li key=${item.id}>
+                        <button
+                          onClick=${() => handleNavClick(item.id)}
+                          class=${`flex items-center gap-2.5 px-3 py-1.5 text-xs rounded-md w-full text-left transition duration-200 cursor-none ${activeSection === item.id ? 'text-white font-bold bg-white/5' : 'text-fog hover:text-white'}`}
+                        >
+                          <${ChevronRight}
+                            size=${12}
+                            class=${activeSection === item.id ? 'text-primary' : 'text-muted'}
+                          />
+                          <span>${item.label}</span>
+                        </button>
+                      </li>
+                    `
+                  )}
+                </ul>
               </div>
-              <ul class="space-y-1">
-                ${sec.items.map((item) => html`
-                  <li key=${item.id}>
-                    <button 
-                      onClick=${() => handleNavClick(item.id)}
-                      class=${`flex items-center gap-2.5 px-3 py-1.5 text-xs rounded-md w-full text-left transition duration-200 cursor-none ${activeSection === item.id ? 'text-white font-bold bg-white/5' : 'text-fog hover:text-white'}`}
-                    >
-                      <${ChevronRight} size=${12} class=${activeSection === item.id ? 'text-primary' : 'text-muted'} />
-                      <span>${item.label}</span>
-                    </button>
-                  </li>
-                `)}
-              </ul>
-            </div>
-          `)}
+            `
+          )}
         </nav>
 
         <!-- Tall Sidebar Music Player Deck -->
@@ -3212,17 +3609,20 @@ import anime from 'animejs';
 const html = htm.bind(React.createElement);
 
 export function ScrambleText({ text, delay = 0, onComplete, enabled = true }) {
-  const [displayText, setDisplayText] = useState("");
-  const DEFAULT_CHARS = "-_~=+*!@#%&<>";
+  const [displayText, setDisplayText] = useState('');
+  const DEFAULT_CHARS = '-_~=+*!@#%&<>';
   const settleDuration = 100;
   const onCompleteRef = useRef(onComplete);
-  useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
   useEffect(() => {
     if (!enabled) {
-      const scrambledPlaceholder = Array.from({ length: text.length }, () => 
-        DEFAULT_CHARS[Math.floor(Math.random() * DEFAULT_CHARS.length)]
-      ).join("");
+      const scrambledPlaceholder = Array.from(
+        { length: text.length },
+        () => DEFAULT_CHARS[Math.floor(Math.random() * DEFAULT_CHARS.length)]
+      ).join('');
       setDisplayText(scrambledPlaceholder);
       return;
     }
@@ -3240,7 +3640,7 @@ export function ScrambleText({ text, delay = 0, onComplete, enabled = true }) {
         easing: 'linear',
         update: () => {
           const elapsed = animObj.time;
-          let result = "";
+          let result = '';
           for (let i = 0; i < text.length; i++) {
             const revealTriggerTime = i * stepRevealTime;
             if (elapsed < revealTriggerTime) {
@@ -3256,7 +3656,7 @@ export function ScrambleText({ text, delay = 0, onComplete, enabled = true }) {
         complete: () => {
           setDisplayText(text);
           if (onCompleteRef.current) onCompleteRef.current();
-        }
+        },
       });
     }, delay);
 
@@ -3269,21 +3669,23 @@ export function ScrambleText({ text, delay = 0, onComplete, enabled = true }) {
 }
 
 export function TypedLog({ text, speed = 40, delay = 0, enabled = false, onComplete }) {
-  const [displayed, setDisplayed] = useState("");
+  const [displayed, setDisplayed] = useState('');
   const cursorRef = useRef(null);
   const onCompleteRef = useRef(onComplete);
-  useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
   useEffect(() => {
     if (!enabled) return;
 
     let timeoutId = setTimeout(() => {
       if (cursorRef.current) {
-        cursorRef.current.style.opacity = "1";
+        cursorRef.current.style.opacity = '1';
       }
 
       let currentIndex = 0;
-      let currentStr = "";
+      let currentStr = '';
       const intervalId = setInterval(() => {
         if (currentIndex < text.length) {
           currentStr += text[currentIndex];
@@ -3292,7 +3694,7 @@ export function TypedLog({ text, speed = 40, delay = 0, enabled = false, onCompl
         } else {
           clearInterval(intervalId);
           if (cursorRef.current) {
-            cursorRef.current.style.visibility = "hidden";
+            cursorRef.current.style.visibility = 'hidden';
           }
           if (onCompleteRef.current) onCompleteRef.current();
         }
@@ -3307,7 +3709,7 @@ export function TypedLog({ text, speed = 40, delay = 0, enabled = false, onCompl
   return html`
     <span style=${{ textShadow: '0 0 4px currentColor' }}>
       ${displayed}
-      <span 
+      <span
         ref=${cursorRef}
         class="w-2 h-[1.1em] bg-current inline-block ml-1 align-middle -translate-y-[2px] relative z-10 animate-phosphor shadow-[0_0_8px_currentColor]"
         style=${{ opacity: 0, transition: 'opacity 0.2s ease' }}
@@ -3316,7 +3718,7 @@ export function TypedLog({ text, speed = 40, delay = 0, enabled = false, onCompl
   `;
 }
 
-export function GlassContainer({ children, className = "", style = {} }) {
+export function GlassContainer({ children, className = '', style = {} }) {
   const [isInView, setIsInView] = useState(false);
   const ref = useRef(null);
 
@@ -3329,7 +3731,7 @@ export function GlassContainer({ children, className = "", style = {} }) {
         setIsInView(entry.isIntersecting);
       },
       {
-        rootMargin: "200px 0px"
+        rootMargin: '200px 0px',
       }
     );
 
@@ -3339,7 +3741,7 @@ export function GlassContainer({ children, className = "", style = {} }) {
     };
   }, []);
 
-  const borderClass = "border-white/10";
+  const borderClass = 'border-white/10';
 
   const optimizedStyles = {
     contentVisibility: 'auto',
@@ -3351,23 +3753,21 @@ export function GlassContainer({ children, className = "", style = {} }) {
     backgroundColor: 'rgba(17, 17, 20, 0.4)',
     backdropFilter: isInView ? 'blur(12px)' : 'none',
     WebkitBackdropFilter: isInView ? 'blur(12px)' : 'none',
-    ...style
+    ...style,
   };
 
   return html`
-    <div 
+    <div
       ref=${ref}
       style=${optimizedStyles}
       class="relative rounded-xl border shadow-[0_8px_32px_rgba(0,0,0,0.5)] transition-all duration-300 ${borderClass} ${className}"
     >
-      <div class="relative z-10 w-full h-full">
-        ${children}
-      </div>
+      <div class="relative z-10 w-full h-full">${children}</div>
     </div>
   `;
 }
 
-export function ScrollingText({ children, isUiActive = true, className = "" }) {
+export function ScrollingText({ children, isUiActive = true, className = '' }) {
   const containerRef = useRef(null);
   const textRef = useRef(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
@@ -3385,11 +3785,14 @@ export function ScrollingText({ children, isUiActive = true, className = "" }) {
 
   return html`
     <div ref=${containerRef} class="relative w-full overflow-hidden whitespace-nowrap select-none">
-      <div class=${`flex w-max ${isOverflowing && isUiActive ? 'animate-marquee-text' : ''}`} style=${{ gap: isOverflowing ? '1.5rem' : '0' }}>
+      <div
+        class=${`flex w-max ${isOverflowing && isUiActive ? 'animate-marquee-text' : ''}`}
+        style=${{ gap: isOverflowing ? '1.5rem' : '0' }}
+      >
         <span ref=${textRef} class=${className}>${children}</span>
-        ${isOverflowing && isUiActive && html`
-          <span class=${className} aria-hidden="true">${children}</span>
-        `}
+        ${isOverflowing &&
+        isUiActive &&
+        html` <span class=${className} aria-hidden="true">${children}</span> `}
       </div>
     </div>
   `;
@@ -3417,450 +3820,414 @@ declare module 'media-data' {
 
 ● ./merge_later/media_data.js
 ────────────────────────────────────────────────────
-const PORTFOLIO_BASE = "https://www.stevencasteel.com/assets/portfolio/";
-const INTERESTS_BASE = "https://www.stevencasteel.com/assets/interests/";
+const PORTFOLIO_BASE = 'https://www.stevencasteel.com/assets/portfolio/';
+const INTERESTS_BASE = 'https://www.stevencasteel.com/assets/interests/';
 
 const ART_GROUPS = {
-  "clickbait_thumbnails": [
-    "clickbait_22",
-    "clickbait_35",
-    "clickbait_37",
-    "clickbait_38",
-    "clickbait_49"
+  clickbait_thumbnails: [
+    'clickbait_22',
+    'clickbait_35',
+    'clickbait_37',
+    'clickbait_38',
+    'clickbait_49',
   ],
-  "elf_chartreuse": [
-    "ec_001",
-    "ec_002",
-    "ec_007",
-    "ec_076",
-    "ec_089"
+  elf_chartreuse: ['ec_001', 'ec_002', 'ec_007', 'ec_076', 'ec_089'],
+  elf_girls: [
+    'elf_girl_002',
+    'elf_girl_018',
+    'elf_girl_035',
+    'elf_girl_043',
+    'elf_girl_044',
+    'elf_girl_045',
+    'elf_girl_047',
+    'elf_girl_048',
+    'elf_girl_057',
+    'elf_girl_066',
+    'elf_girl_114',
+    'elf_girl_116',
+    'elf_girl_146',
+    'elf_girl_184',
+    'elf_girl_207',
+    'elf_girl_272',
+    'elf_girl_278',
+    'elf_girl_296',
   ],
-  "elf_girls": [
-    "elf_girl_002",
-    "elf_girl_018",
-    "elf_girl_035",
-    "elf_girl_043",
-    "elf_girl_044",
-    "elf_girl_045",
-    "elf_girl_047",
-    "elf_girl_048",
-    "elf_girl_057",
-    "elf_girl_066",
-    "elf_girl_114",
-    "elf_girl_116",
-    "elf_girl_146",
-    "elf_girl_184",
-    "elf_girl_207",
-    "elf_girl_272",
-    "elf_girl_278",
-    "elf_girl_296"
+  elf_nocturne: ['elf_noc_01', 'elf_noc_03', 'elf_noc_08'],
+  elf_technomancers: ['et_007', 'et_023', 'et_037'],
+  'esper_elfy/anime_screenshot': [
+    'anime_screenshot_005',
+    'anime_screenshot_016',
+    'anime_screenshot_028',
+    'anime_screenshot_035',
+    'anime_screenshot_053',
+    'anime_screenshot_058',
+    'anime_screenshot_076',
+    'anime_screenshot_094',
+    'anime_screenshot_128',
+    'anime_screenshot_166',
+    'anime_screenshot_173',
+    'anime_screenshot_175',
   ],
-  "elf_nocturne": [
-    "elf_noc_01",
-    "elf_noc_03",
-    "elf_noc_08"
+  'esper_elfy/elfy_alien_planet': [
+    'elfy_alien_planet_01',
+    'elfy_alien_planet_05',
+    'elfy_alien_planet_25',
+    'elfy_alien_planet_31',
+    'elfy_alien_planet_43',
   ],
-  "elf_technomancers": [
-    "et_007",
-    "et_023",
-    "et_037"
+  'esper_elfy/elfy_exploration': [
+    'elfy_exploration_003',
+    'elfy_exploration_059',
+    'elfy_exploration_087',
+    'elfy_exploration_116',
+    'elfy_exploration_119',
+    'elfy_exploration_146',
+    'elfy_exploration_159',
+    'elfy_exploration_200',
+    'elfy_exploration_219',
+    'elfy_exploration_222',
   ],
-  "esper_elfy/anime_screenshot": [
-    "anime_screenshot_005",
-    "anime_screenshot_016",
-    "anime_screenshot_028",
-    "anime_screenshot_035",
-    "anime_screenshot_053",
-    "anime_screenshot_058",
-    "anime_screenshot_076",
-    "anime_screenshot_094",
-    "anime_screenshot_128",
-    "anime_screenshot_166",
-    "anime_screenshot_173",
-    "anime_screenshot_175"
+  'esper_elfy/elfy_sora2': ['elfy_sora2_25', 'elfy_sora2_26', 'elfy_sora2_35'],
+  'esper_elfy/esper_elfy_character': [
+    'esper_elfy_character_001F_sm',
+    'esper_elfy_character_002_sm',
+    'esper_elfy_character_042A_sm',
+    'esper_elfy_character_057A_sm',
+    'esper_elfy_character_065_sm',
+    'esper_elfy_character_068_sm',
+    'esper_elfy_character_070_sm',
+    'esper_elfy_character_074B_sm',
+    'esper_elfy_character_078_sm',
+    'esper_elfy_character_081_sm',
+    'esper_elfy_character_099A_sm',
+    'esper_elfy_character_140A_sm',
+    'esper_elfy_character_141_sm',
+    'esper_elfy_character_142A_sm',
+    'esper_elfy_character_144_sm',
+    'esper_elfy_character_155_sm',
+    'esper_elfy_character_156_sm',
+    'esper_elfy_character_158_sm',
+    'esper_elfy_character_173_sm',
+    'esper_elfy_character_183_sm',
+    'esper_elfy_character_187_sm',
+    'esper_elfy_character_192A_sm',
+    'esper_elfy_character_200B_sm',
+    'esper_elfy_character_201_sm',
+    'esper_elfy_character_206B_sm',
+    'esper_elfy_character_209_sm',
+    'esper_elfy_character_216_sm',
+    'esper_elfy_character_219_sm',
+    'esper_elfy_character_221A_sm',
+    'esper_elfy_character_222_sm',
+    'esper_elfy_character_225_sm',
+    'esper_elfy_character_232_sm',
+    'esper_elfy_character_239_sm',
+    'esper_elfy_character_244_sm',
+    'esper_elfy_character_245_sm',
+    'esper_elfy_character_247_sm',
+    'esper_elfy_character_248_sm',
   ],
-  "esper_elfy/elfy_alien_planet": [
-    "elfy_alien_planet_01",
-    "elfy_alien_planet_05",
-    "elfy_alien_planet_25",
-    "elfy_alien_planet_31",
-    "elfy_alien_planet_43"
+  frutiger_liminal: [
+    'fru_lim_001',
+    'fru_lim_005',
+    'fru_lim_024',
+    'fru_lim_026',
+    'fru_lim_038',
+    'fru_lim_039',
+    'fru_lim_043',
+    'fru_lim_057',
+    'fru_lim_065',
+    'fru_lim_109',
+    'fru_lim_120',
+    'fru_lim_122',
+    'fru_lim_123',
+    'fru_lim_129',
+    'fru_lim_131',
+    'fru_lim_132',
+    'fru_lim_134',
+    'fru_lim_178',
+    'fru_lim_194',
+    'fru_lim_195',
+    'fru_lim_202',
+    'fru_lim_217',
+    'fru_lim_235',
+    'fru_lim_238',
+    'fru_lim_250',
+    'fru_lim_254',
   ],
-  "esper_elfy/elfy_exploration": [
-    "elfy_exploration_003",
-    "elfy_exploration_059",
-    "elfy_exploration_087",
-    "elfy_exploration_116",
-    "elfy_exploration_119",
-    "elfy_exploration_146",
-    "elfy_exploration_159",
-    "elfy_exploration_200",
-    "elfy_exploration_219",
-    "elfy_exploration_222"
+  'gpt%20_image2_covers': [
+    'gpt2_001',
+    'gpt2_002',
+    'gpt2_003',
+    'gpt2_004',
+    'gpt2_005',
+    'gpt2_006',
+    'gpt2_007',
+    'gpt2_008',
+    'gpt2_009',
+    'gpt2_016',
+    'gpt2_018',
+    'gpt2_023',
+    'gpt2_026',
+    'gpt2_031',
+    'gpt2_039',
+    'gpt2_062',
+    'gpt2_069',
+    'gpt2_071',
+    'gpt2_072',
+    'gpt2_076',
+    'gpt2_079',
   ],
-  "esper_elfy/elfy_sora2": [
-    "elfy_sora2_25",
-    "elfy_sora2_26",
-    "elfy_sora2_35"
+  imagen3_business: ['imgn_bus_004', 'imgn_bus_021', 'imgn_bus_048'],
+  imagen3_product: [
+    'imgn_pro_012',
+    'imgn_pro_086',
+    'imgn_pro_162',
+    'imgn_pro_229',
+    'imgn_pro_466',
+    'imgn_pro_493',
   ],
-  "esper_elfy/esper_elfy_character": [
-    "esper_elfy_character_001F_sm",
-    "esper_elfy_character_002_sm",
-    "esper_elfy_character_042A_sm",
-    "esper_elfy_character_057A_sm",
-    "esper_elfy_character_065_sm",
-    "esper_elfy_character_068_sm",
-    "esper_elfy_character_070_sm",
-    "esper_elfy_character_074B_sm",
-    "esper_elfy_character_078_sm",
-    "esper_elfy_character_081_sm",
-    "esper_elfy_character_099A_sm",
-    "esper_elfy_character_140A_sm",
-    "esper_elfy_character_141_sm",
-    "esper_elfy_character_142A_sm",
-    "esper_elfy_character_144_sm",
-    "esper_elfy_character_155_sm",
-    "esper_elfy_character_156_sm",
-    "esper_elfy_character_158_sm",
-    "esper_elfy_character_173_sm",
-    "esper_elfy_character_183_sm",
-    "esper_elfy_character_187_sm",
-    "esper_elfy_character_192A_sm",
-    "esper_elfy_character_200B_sm",
-    "esper_elfy_character_201_sm",
-    "esper_elfy_character_206B_sm",
-    "esper_elfy_character_209_sm",
-    "esper_elfy_character_216_sm",
-    "esper_elfy_character_219_sm",
-    "esper_elfy_character_221A_sm",
-    "esper_elfy_character_222_sm",
-    "esper_elfy_character_225_sm",
-    "esper_elfy_character_232_sm",
-    "esper_elfy_character_239_sm",
-    "esper_elfy_character_244_sm",
-    "esper_elfy_character_245_sm",
-    "esper_elfy_character_247_sm",
-    "esper_elfy_character_248_sm"
+  kaiju_cats: ['kaiju_cat_01', 'kaiju_cat_15'],
+  monster_drugs: ['monster_drugs_02', 'monster_drugs_04'],
+  mushishi: [
+    'mushishi_06',
+    'mushishi_07',
+    'mushishi_10',
+    'mushishi_15',
+    'mushishi_35',
+    'mushishi_38',
+    'mushishi_45',
+    'mushishi_47',
   ],
-  "frutiger_liminal": [
-    "fru_lim_001",
-    "fru_lim_005",
-    "fru_lim_024",
-    "fru_lim_026",
-    "fru_lim_038",
-    "fru_lim_039",
-    "fru_lim_043",
-    "fru_lim_057",
-    "fru_lim_065",
-    "fru_lim_109",
-    "fru_lim_120",
-    "fru_lim_122",
-    "fru_lim_123",
-    "fru_lim_129",
-    "fru_lim_131",
-    "fru_lim_132",
-    "fru_lim_134",
-    "fru_lim_178",
-    "fru_lim_194",
-    "fru_lim_195",
-    "fru_lim_202",
-    "fru_lim_217",
-    "fru_lim_235",
-    "fru_lim_238",
-    "fru_lim_250",
-    "fru_lim_254"
+  seedream3_covers: [
+    'sc_001',
+    'sc_002',
+    'sc_004',
+    'sc_005',
+    'sc_008',
+    'sc_009',
+    'sc_012',
+    'sc_013',
+    'sc_021',
+    'sc_030',
+    'sc_042',
+    'sc_043',
+    'sc_046',
+    'sc_049',
+    'sc_052',
+    'sc_054',
+    'sc_057',
+    'sc_063',
+    'sc_085',
   ],
-  "gpt%20_image2_covers": [
-    "gpt2_001",
-    "gpt2_002",
-    "gpt2_003",
-    "gpt2_004",
-    "gpt2_005",
-    "gpt2_006",
-    "gpt2_007",
-    "gpt2_008",
-    "gpt2_009",
-    "gpt2_016",
-    "gpt2_018",
-    "gpt2_023",
-    "gpt2_026",
-    "gpt2_031",
-    "gpt2_039",
-    "gpt2_062",
-    "gpt2_069",
-    "gpt2_071",
-    "gpt2_072",
-    "gpt2_076",
-    "gpt2_079"
-  ],
-  "imagen3_business": [
-    "imgn_bus_004",
-    "imgn_bus_021",
-    "imgn_bus_048"
-  ],
-  "imagen3_product": [
-    "imgn_pro_012",
-    "imgn_pro_086",
-    "imgn_pro_162",
-    "imgn_pro_229",
-    "imgn_pro_466",
-    "imgn_pro_493"
-  ],
-  "kaiju_cats": [
-    "kaiju_cat_01",
-    "kaiju_cat_15"
-  ],
-  "monster_drugs": [
-    "monster_drugs_02",
-    "monster_drugs_04"
-  ],
-  "mushishi": [
-    "mushishi_06",
-    "mushishi_07",
-    "mushishi_10",
-    "mushishi_15",
-    "mushishi_35",
-    "mushishi_38",
-    "mushishi_45",
-    "mushishi_47"
-  ],
-  "seedream3_covers": [
-    "sc_001",
-    "sc_002",
-    "sc_004",
-    "sc_005",
-    "sc_008",
-    "sc_009",
-    "sc_012",
-    "sc_013",
-    "sc_021",
-    "sc_030",
-    "sc_042",
-    "sc_043",
-    "sc_046",
-    "sc_049",
-    "sc_052",
-    "sc_054",
-    "sc_057",
-    "sc_063",
-    "sc_085"
-  ]
 };
 
 const MEDIA_GROUPS = {
-  "books": [
-    "captain_underpants",
-    "charlie_and_the_chocolate_factory",
-    "charlottes_web",
-    "dragon_ball_vol_1",
-    "dune",
-    "his_dark_materials_trilogy",
-    "mistborn_1_the_final_empire",
-    "snow_crash",
-    "steal_like_an_artist",
-    "the_berenstain_bears_and_the_messy_room",
-    "the_complete_calvin_and_hobbes",
-    "the_giver",
-    "the_hitchhikers_guide_to_the_galaxy",
-    "the_hobbit"
+  books: [
+    'captain_underpants',
+    'charlie_and_the_chocolate_factory',
+    'charlottes_web',
+    'dragon_ball_vol_1',
+    'dune',
+    'his_dark_materials_trilogy',
+    'mistborn_1_the_final_empire',
+    'snow_crash',
+    'steal_like_an_artist',
+    'the_berenstain_bears_and_the_messy_room',
+    'the_complete_calvin_and_hobbes',
+    'the_giver',
+    'the_hitchhikers_guide_to_the_galaxy',
+    'the_hobbit',
   ],
-  "movies": [
-    "air_bud",
-    "alien",
-    "american_beauty",
-    "august_rush",
-    "austin_powers_1",
-    "batman_beyond_return_of_the_joker",
-    "big_trouble_in_little_china",
-    "contact",
-    "coraline",
-    "dbz_the_history_of_trunks",
-    "dogma",
-    "dragon_ball_super_broly",
-    "dredd",
-    "falling_down",
-    "fear_and_loathing_in_las_vegas",
-    "fight_club",
-    "friday",
-    "from_dusk_till_dawn",
-    "galaxy_quest",
-    "ghostbusters_1",
-    "highlander",
-    "how_the_grinch_stole_christmas_2000",
-    "indiana_jones_2",
-    "killer_klowns_from_outer_space",
-    "limitless",
-    "little_shop_of_horrors",
-    "megamind",
-    "men_in_black_1",
-    "muppet_treasure_island",
-    "nimona",
-    "office_space",
-    "pirates_of_silicon_valley",
-    "predator_badlands",
-    "robocop",
-    "rush_hour",
-    "scott_pilgrim_vs_the_world",
-    "send_help",
-    "shrek",
-    "signs",
-    "smart_house",
-    "south_park_bigger_longer_and_uncut",
-    "space_jam",
-    "spider_man_2",
-    "spider_man_no_way_home",
-    "star_wars_episode_i_the_phantom_menace",
-    "star_wars_episode_vi_return_of_the_jedi",
-    "starship_troopers",
-    "tenacious_d_in_the_pick_of_destiny",
-    "terminator_2",
-    "the_amazing_spider_man",
-    "the_batman",
-    "the_brave_little_toaster",
-    "the_fly",
-    "the_hudsucker_proxy",
-    "the_karate_kid_1984",
-    "the_land_before_time",
-    "the_matrix",
-    "the_princess_bride",
-    "the_rescuers",
-    "the_rocketeer",
-    "the_sixth_sense",
-    "the_super_mario_bros_movie",
-    "the_time_travelers_wife",
-    "the_truman_show",
-    "they_live",
-    "tombstone",
-    "toy_story_2",
-    "tremors",
-    "twilight_1",
-    "uhf",
-    "upgrade",
-    "walk_hard_the_dewey_cox_story",
-    "what_we_do_in_the_shadows_movie"
+  movies: [
+    'air_bud',
+    'alien',
+    'american_beauty',
+    'august_rush',
+    'austin_powers_1',
+    'batman_beyond_return_of_the_joker',
+    'big_trouble_in_little_china',
+    'contact',
+    'coraline',
+    'dbz_the_history_of_trunks',
+    'dogma',
+    'dragon_ball_super_broly',
+    'dredd',
+    'falling_down',
+    'fear_and_loathing_in_las_vegas',
+    'fight_club',
+    'friday',
+    'from_dusk_till_dawn',
+    'galaxy_quest',
+    'ghostbusters_1',
+    'highlander',
+    'how_the_grinch_stole_christmas_2000',
+    'indiana_jones_2',
+    'killer_klowns_from_outer_space',
+    'limitless',
+    'little_shop_of_horrors',
+    'megamind',
+    'men_in_black_1',
+    'muppet_treasure_island',
+    'nimona',
+    'office_space',
+    'pirates_of_silicon_valley',
+    'predator_badlands',
+    'robocop',
+    'rush_hour',
+    'scott_pilgrim_vs_the_world',
+    'send_help',
+    'shrek',
+    'signs',
+    'smart_house',
+    'south_park_bigger_longer_and_uncut',
+    'space_jam',
+    'spider_man_2',
+    'spider_man_no_way_home',
+    'star_wars_episode_i_the_phantom_menace',
+    'star_wars_episode_vi_return_of_the_jedi',
+    'starship_troopers',
+    'tenacious_d_in_the_pick_of_destiny',
+    'terminator_2',
+    'the_amazing_spider_man',
+    'the_batman',
+    'the_brave_little_toaster',
+    'the_fly',
+    'the_hudsucker_proxy',
+    'the_karate_kid_1984',
+    'the_land_before_time',
+    'the_matrix',
+    'the_princess_bride',
+    'the_rescuers',
+    'the_rocketeer',
+    'the_sixth_sense',
+    'the_super_mario_bros_movie',
+    'the_time_travelers_wife',
+    'the_truman_show',
+    'they_live',
+    'tombstone',
+    'toy_story_2',
+    'tremors',
+    'twilight_1',
+    'uhf',
+    'upgrade',
+    'walk_hard_the_dewey_cox_story',
+    'what_we_do_in_the_shadows_movie',
   ],
-  "tv": [
-    "adventure_time",
-    "atlanta",
-    "avatar_the_last_airbender",
-    "batman_1966",
-    "doctor_who_10",
-    "fargo",
-    "firefly",
-    "flight_of_the_conchords",
-    "freaks_and_geeks",
-    "futurama",
-    "invader_zim",
-    "jonny_quest",
-    "malcolm_in_the_middle",
-    "mob_psycho_100",
-    "pokemon",
-    "primal",
-    "reboot",
-    "smallville",
-    "speed_racer",
-    "star_trek",
-    "star_wars_clone_wars",
-    "stargate_sg_1",
-    "super_friends",
-    "terminator_the_sarah_connor_chronicles",
-    "the_twilight_zone",
-    "the_venture_bros"
-  ]
+  tv: [
+    'adventure_time',
+    'atlanta',
+    'avatar_the_last_airbender',
+    'batman_1966',
+    'doctor_who_10',
+    'fargo',
+    'firefly',
+    'flight_of_the_conchords',
+    'freaks_and_geeks',
+    'futurama',
+    'invader_zim',
+    'jonny_quest',
+    'malcolm_in_the_middle',
+    'mob_psycho_100',
+    'pokemon',
+    'primal',
+    'reboot',
+    'smallville',
+    'speed_racer',
+    'star_trek',
+    'star_wars_clone_wars',
+    'stargate_sg_1',
+    'super_friends',
+    'terminator_the_sarah_connor_chronicles',
+    'the_twilight_zone',
+    'the_venture_bros',
+  ],
 };
 
 const AUDIO_TRACK_GROUPS = {
-  "elf_girl_001": [
-    "001_01_Duath_Maethor.mp3",
-    "001_02_Falas_Idh.mp3",
-    "001_04_Golodhram_Sereg.mp3",
-    "001_05_Pith_Niben.mp3",
-    "001_12_Nath_Aglar.mp3"
+  elf_girl_001: [
+    '001_01_Duath_Maethor.mp3',
+    '001_02_Falas_Idh.mp3',
+    '001_04_Golodhram_Sereg.mp3',
+    '001_05_Pith_Niben.mp3',
+    '001_12_Nath_Aglar.mp3',
   ],
-  "elf_girl_002": [
-    "002_01_Miltaurath.mp3",
-    "002_04_Harn_Galu.mp3",
-    "002_10_Narn_Gwath.mp3"
+  elf_girl_002: ['002_01_Miltaurath.mp3', '002_04_Harn_Galu.mp3', '002_10_Narn_Gwath.mp3'],
+  elf_girl_003: ['003_01_Edlothiad.mp3', '003_02_Lach_Gur.mp3', '003_29_Linnod_Tal_Blendor.mp3'],
+  elf_girl_004: [
+    '004_01_Tyalieli_Vende.mp3',
+    '004_02_Tolo_na_Naur.mp3',
+    '004_05_Edraith_o_Rhach.mp3',
+    '004_07_Lairelosse_Nith.mp3',
+    '004_08_Sanga_Ulundo.mp3',
+    '004_09_Sereg_Glir.mp3',
+    '004_11_Thol_Glae.mp3',
+    '004_12_Vasa_Oiolaire.mp3',
+    '004_13_Tul_Pent.mp3',
+    '004_18_Gonod_Menel.mp3',
+    '004_20_Palantir_Mornie.mp3',
   ],
-  "elf_girl_003": [
-    "003_01_Edlothiad.mp3",
-    "003_02_Lach_Gur.mp3",
-    "003_29_Linnod_Tal_Blendor.mp3"
+  elf_girl_005: [
+    '005_01_A_Apsene_Te.mp3',
+    '005_02_Liquis_Ear.mp3',
+    '005_03_Morn_Amloth.mp3',
+    '005_05_Hrave_Olori.mp3',
+    '005_14_Dram_Lim.mp3',
+    '005_15_Tulca_Fea.mp3',
+    '005_18_A_Mape_Maryat.mp3',
   ],
-  "elf_girl_004": [
-    "004_01_Tyalieli_Vende.mp3",
-    "004_02_Tolo_na_Naur.mp3",
-    "004_05_Edraith_o_Rhach.mp3",
-    "004_07_Lairelosse_Nith.mp3",
-    "004_08_Sanga_Ulundo.mp3",
-    "004_09_Sereg_Glir.mp3",
-    "004_11_Thol_Glae.mp3",
-    "004_12_Vasa_Oiolaire.mp3",
-    "004_13_Tul_Pent.mp3",
-    "004_18_Gonod_Menel.mp3",
-    "004_20_Palantir_Mornie.mp3"
+  elf_girl_006: [
+    '006_01_Glaur_Fuin.mp3',
+    '006_03_Glawar_Uruloke.mp3',
+    '006_06_Nessima_Tinwe.mp3',
+    '006_08_Voronda_Estel.mp3',
+    '006_11_Estel_Mornie.mp3',
+    '006_12_Ondo_Cale.mp3',
+    '006_13_Lisse_Lenda.mp3',
+    '006_18_Elen_Sila.mp3',
+    '006_21_Laire_Mordo.mp3',
   ],
-  "elf_girl_005": [
-    "005_01_A_Apsene_Te.mp3",
-    "005_02_Liquis_Ear.mp3",
-    "005_03_Morn_Amloth.mp3",
-    "005_05_Hrave_Olori.mp3",
-    "005_14_Dram_Lim.mp3",
-    "005_15_Tulca_Fea.mp3",
-    "005_18_A_Mape_Maryat.mp3"
+  elf_girl_007: [
+    '007_01_Angwedh_Thinnas.mp3',
+    '007_03_Bregedur.mp3',
+    '007_06_Raucima_Linde.mp3',
+    '007_07_Tuima_More.mp3',
+    '007_08_Lamatyave_Hlapula.mp3',
+    '007_10_Quiesse_Calina.mp3',
+    '007_14_Ea_Lomelinde.mp3',
+    '007_15_Taur_Gond.mp3',
+    '007_17_Sure_Mirima.mp3',
   ],
-  "elf_girl_006": [
-    "006_01_Glaur_Fuin.mp3",
-    "006_03_Glawar_Uruloke.mp3",
-    "006_06_Nessima_Tinwe.mp3",
-    "006_08_Voronda_Estel.mp3",
-    "006_11_Estel_Mornie.mp3",
-    "006_12_Ondo_Cale.mp3",
-    "006_13_Lisse_Lenda.mp3",
-    "006_18_Elen_Sila.mp3",
-    "006_21_Laire_Mordo.mp3"
+  elf_girl_008: [
+    '008_01_Galu_na_Vea.mp3',
+    '008_02_Mael_Amarth.mp3',
+    '008_03_Celu_Meluina.mp3',
+    '008_08_Alcar_mi_More.mp3',
+    '008_09_Miw_Wende.mp3',
+    '008_15_Glawar_Idh.mp3',
+    '008_18_Anirog_Aes.mp3',
+    '008_22_Na_Ya_Na.mp3',
   ],
-  "elf_girl_007": [
-    "007_01_Angwedh_Thinnas.mp3",
-    "007_03_Bregedur.mp3",
-    "007_06_Raucima_Linde.mp3",
-    "007_07_Tuima_More.mp3",
-    "007_08_Lamatyave_Hlapula.mp3",
-    "007_10_Quiesse_Calina.mp3",
-    "007_14_Ea_Lomelinde.mp3",
-    "007_15_Taur_Gond.mp3",
-    "007_17_Sure_Mirima.mp3"
-  ],
-  "elf_girl_008": [
-    "008_01_Galu_na_Vea.mp3",
-    "008_02_Mael_Amarth.mp3",
-    "008_03_Celu_Meluina.mp3",
-    "008_08_Alcar_mi_More.mp3",
-    "008_09_Miw_Wende.mp3",
-    "008_15_Glawar_Idh.mp3",
-    "008_18_Anirog_Aes.mp3",
-    "008_22_Na_Ya_Na.mp3"
-  ]
 };
 
 export const MISC_ART = Object.entries(ART_GROUPS).flatMap(([folder, files]) =>
-  files.map(file => `${PORTFOLIO_BASE}${folder}/${file}.avif`)
+  files.map((file) => `${PORTFOLIO_BASE}${folder}/${file}.avif`)
 );
 
 export const MISC_MEDIA = Object.entries(MEDIA_GROUPS).flatMap(([category, files]) =>
-  files.map(file => `${INTERESTS_BASE}${category}/${file}.avif`)
+  files.map((file) => `${INTERESTS_BASE}${category}/${file}.avif`)
 );
 
 export const AUDIO_TRACKS = Object.entries(AUDIO_TRACK_GROUPS).flatMap(([folder, tracks]) =>
-  tracks.map(name => {
+  tracks.map((name) => {
     const baseName = name.replace(/\.mp3$/, '');
     const parts = baseName.split('_');
     const title = parts.slice(0, 2).join('_') + ' ' + parts.slice(2).join(' ');
-    
+
     return {
       name,
       folder,
-      title
+      title,
     };
   })
 );
@@ -4132,9 +4499,10 @@ nav a:hover, nav button:hover {
   background: linear-gradient(90deg, #22c55e, #3b82f6, #a855f7, #ef4444, #22c55e);
   background-size: 200% auto;
   animation: prismatic-sweep 5s linear infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
-  -webkit-mask-composite: xor;
   padding: 1px;
   border: none;
 }
@@ -4185,9 +4553,10 @@ nav a:hover, nav button:hover {
   background: linear-gradient(90deg, #22c55e, #3b82f6, #a855f7, #ef4444, #22c55e);
   background-size: 200% auto;
   animation: prismatic-sweep 5s linear infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
-  -webkit-mask-composite: xor;
   padding: 2px;
   z-index: 20;
 }
@@ -4206,20 +4575,22 @@ input[type="range"]:focus ~ .peer-focus-ring-prismatic {
     "dev": "vite --port 1111",
     "lint": "eslint merge_later/**/*.js",
     "typecheck": "tsc",
-    "build": "npm run lint && npm run typecheck && vite build && mkdir -p dist/merge_later && cp merge_later/media_data.js dist/merge_later/"
+    "build": "npm run lint && npm run typecheck && vite build && mkdir -p dist/merge_later && cp merge_later/media_data.js dist/merge_later/",
+    "format": "prettier --write \"merge_later/**/*.js\""
   },
   "devDependencies": {
-    "vite": "^8.0.16",
-    "typescript": "^5.3.3",
-    "eslint": "^8.57.0",
-    "eslint-plugin-react": "^7.34.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
     "@eslint/js": "^8.57.0",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
-    "lucide-react": "^0.344.0",
     "animejs": "^3.2.2",
-    "lenis": "^1.1.13"
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "lenis": "^1.1.13",
+    "lucide-react": "^0.344.0",
+    "prettier": "^3.8.4",
+    "typescript": "^5.3.3",
+    "vite": "^8.0.16"
   }
 }
 
